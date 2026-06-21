@@ -442,24 +442,6 @@
             font-size: 0.8rem;
         }
 
-        .btn {
-            display: inline-block;
-            background-color: #0d233a;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            text-align: center;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn:hover {
-            background-color: #1a3a5c;
-        }
-
         /* 週間スケジュールセクションのレイアウト */
         .weekly-grid {
             display: grid;
@@ -514,49 +496,124 @@
         }
 
         /* --------------------------------------
-         * 相談予約用のテーブル＆予約完了スタイル
+         * カレンダー表示用の共通スタイル
          * -------------------------------------- */
-        .reservation-table {
-            width: 100%;
-            border-collapse: collapse;
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
             margin-top: 15px;
         }
 
-        .reservation-table th, .reservation-table td {
-            border: 1px solid #e2e8f0;
-            padding: 12px;
+        .calendar-header-cell {
+            background-color: #0d233a;
+            color: #fff;
             text-align: center;
-            font-size: 0.9rem;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 0.85rem;
         }
 
-        .reservation-table th {
-            background-color: #f8fafc;
+        .calendar-day-cell {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            min-height: 90px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .calendar-day-cell:hover {
+            background-color: #f0f4f8;
+        }
+
+        .calendar-day-cell.selected {
+            background-color: #ebf8ff;
+            border-color: #3182ce;
+        }
+
+        .calendar-day-cell.empty {
+            background-color: #edf2f7;
+            cursor: not-allowed;
+        }
+
+        .day-number {
+            font-weight: bold;
+            font-size: 0.9rem;
             color: #4a5568;
         }
 
-        .slot-btn {
-            background-color: #ebf8ff;
-            color: #2b6cb0;
-            border: 1px solid #bee3f8;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
+        .calendar-info-box {
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .info-badge-attendance {
+            background-color: #c6f6d5;
+            color: #22543d;
+            padding: 2px 4px;
+            border-radius: 3px;
             font-weight: bold;
-            font-size: 0.8rem;
-            width: 100%;
+            text-align: center;
+        }
+
+        .info-badge-meeting {
+            background-color: #feebc8;
+            color: #9c4221;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* 相談予約専用の時間選択枠 */
+        .time-slots-container {
+            margin-top: 20px;
+            display: none;
+            border-top: 1px dashed #cbd5e0;
+            padding-top: 20px;
+        }
+
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .time-slot-btn {
+            background-color: #fff;
+            border: 1px solid #cbd5e0;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-align: center;
             transition: all 0.2s;
         }
 
-        .slot-btn:hover {
-            background-color: #2b6cb0;
-            color: white;
+        .time-slot-btn:hover {
+            border-color: #0d233a;
+            background-color: #f7fafc;
         }
 
-        .slot-btn.disabled {
-            background-color: #edf2f7;
-            color: #a0aec0;
-            border: 1px solid #e2e8f0;
-            cursor: not-allowed;
+        .time-slot-btn.active {
+            background-color: #0d233a;
+            color: #fff;
+            border-color: #0d233a;
+        }
+
+        .confirm-container {
+            margin-top: 25px;
+            display: none;
+            text-align: right;
         }
 
         .success-banner {
@@ -590,7 +647,7 @@
         @media (max-width: 1024px) {
             .timeline-row { flex-direction: column; align-items: flex-start; gap: 10px; }
             .attendance-btn { width: 100%; text-align: center; }
-            .reservation-table th, .reservation-table td { padding: 8px 4px; font-size: 0.8rem; }
+            .calendar-day-cell { min-height: 75px; }
         }
     </style>
 </head>
@@ -621,7 +678,7 @@
             <div class="fixed-logo">
                 鉄緑会<span>医進会 塾生ページ</span>
             </div>
-            <button class="menu-toggle" onclick="toggleSidebar()">☰ メニュー</button>
+            <button class="menu-toggle" onclick="toggleSidebar()">メニュー</button>
         </div>
         
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -632,6 +689,7 @@
                 <ul>
                     <li><a href="#" class="menu-link active" onclick="switchSection('home', this)">ホーム（ダッシュボード）</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('weekly-schedule', this)">今週の受講スケジュール</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('attendance-calendar', this)">出欠記録・面談予定</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('student-profile', this)">所属クラス・生徒情報</a></li>
                 </ul>
 
@@ -664,6 +722,7 @@
                 </div>
             </header>
 
+            <!-- 1. ホーム（ダッシュボード）セクション -->
             <div id="section-home" class="content-section active">
                 <div id="todayLectureArea"></div>
 
@@ -691,6 +750,7 @@
                 </div>
             </div>
 
+            <!-- 2. 今週の受講スケジュール -->
             <div id="section-weekly-schedule" class="content-section">
                 <div class="weekly-grid">
                     <div class="weekly-day-card" id="sched-1"><div class="weekly-day-header" id="sched-head-1">月曜日</div><div class="weekly-day-body" id="weekly-body-1"></div></div>
@@ -703,6 +763,18 @@
                 </div>
             </div>
 
+            <!-- 3. 出欠記録・面談予定（新設カレンダーセクション） -->
+            <div id="section-attendance-calendar" class="content-section">
+                <div class="card">
+                    <h2>出欠および指導員面談予定（2026年6月）</h2>
+                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 15px;">
+                        ホーム画面で記録した本日の出席状況や、予約した面談スケジュールがカレンダー上に自動記録されます。
+                    </p>
+                    <div class="calendar-container" id="attendanceCalendarGrid"></div>
+                </div>
+            </div>
+
+            <!-- 4. 所属クラス・生徒情報セクション -->
             <div id="section-student-profile" class="content-section">
                 <div class="card" style="max-width: 700px; margin: 0 auto;">
                     <h2>ご登録生徒情報</h2>
@@ -730,6 +802,7 @@
                 </div>
             </div>
 
+            <!-- 5. 欠席連絡セクション -->
             <div id="section-absence" class="content-section">
                 <div class="card" style="max-width: 600px; margin: 0 auto;">
                     <h2>欠席連絡・振替申請フォーム</h2>
@@ -760,6 +833,7 @@
                 </div>
             </div>
 
+            <!-- 6. カリキュラムセクション -->
             <div id="section-curriculum" class="content-section">
                 <div class="card">
                     <h2>高3 年間カリキュラム・進行表 (主要4教科完全網羅版)</h2>
@@ -797,6 +871,7 @@
                 </div>
             </div>
 
+            <!-- 7. 成績アーカイブセクション -->
             <div id="section-grades" class="content-section">
                 <div class="card">
                     <h2>過去の全成績アーカイブ</h2>
@@ -804,6 +879,7 @@
                 </div>
             </div>
 
+            <!-- 8. 教材ダウンロードセクション -->
             <div id="section-materials" class="content-section">
                 <div class="card">
                     <h2>解答・解説プリントダウンロード</h2>
@@ -813,51 +889,29 @@
                 </div>
             </div>
 
+            <!-- 9. 医学部受験サポート（段階選択式カレンダーUIに修正） -->
             <div id="section-support" class="content-section">
                 <div class="success-banner" id="reserveSuccess">
-                    🎉 指導員相談の予約が完了しました！マイページにご登録のメールへ控えをお送りしました。
+                    指導員相談の予約が完了しました。マイページにご登録のメールへ控えをお送りしました。
                 </div>
 
                 <div class="card">
                     <h2>東大理Ⅲ・国公立大医学部現役指導員（OB/OG）相談予約</h2>
-                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 15px;">
-                        進路や学習計画、モチベーションの維持について、現役の東大理Ⅲをはじめとする医学部指導員に1対1で個別相談が可能です。（1枠30分）
+                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 20px;">
+                        進路や学習計画について個別相談が可能です（1枠30分）。希望する「日付」をカレンダーから選択し、その後に表示される「時間」を選んでください。
                     </p>
 
-                    <table class="reservation-table">
-                        <thead>
-                            <tr>
-                                <th>時間枠</th>
-                                <th>月曜日</th>
-                                <th>水曜日</th>
-                                <th>金曜日</th>
-                                <th>土曜日</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>17:00〜17:30</td>
-                                <td><button class="slot-btn" onclick="makeReservation('月曜 17:00')">受付中</button></td>
-                                <td><button class="slot-btn disabled" disabled>満席</button></td>
-                                <td><button class="slot-btn" onclick="makeReservation('金曜 17:00')">受付中</button></td>
-                                <td><button class="slot-btn" onclick="makeReservation('土曜 17:00')">受付中</button></td>
-                            </tr>
-                            <tr>
-                                <td>19:30〜20:00</td>
-                                <td><button class="slot-btn disabled" disabled>満席</button></td>
-                                <td><button class="slot-btn" onclick="makeReservation('水曜 19:30')">受付中</button></td>
-                                <td><button class="slot-btn" onclick="makeReservation('金曜 19:30')">受付中</button></td>
-                                <td><button class="slot-btn disabled" disabled>満席</button></td>
-                            </tr>
-                            <tr>
-                                <td>21:00〜21:30</td>
-                                <td><button class="slot-btn" onclick="makeReservation('月曜 21:00')">受付中</button></td>
-                                <td><button class="slot-btn" onclick="makeReservation('水曜 21:00')">受付中</button></td>
-                                <td><button class="slot-btn disabled" disabled>満席</button></td>
-                                <td><button class="slot-btn" onclick="makeReservation('土曜 21:00')">受付中</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h3>ステップ1：希望日を選択</h3>
+                    <div class="calendar-container" id="reservationCalendarGrid"></div>
+
+                    <div class="time-slots-container" id="timeSlotsArea">
+                        <h3>ステップ2：希望時間を選択（30分）</h3>
+                        <div class="slots-grid" id="slotsGridContainer"></div>
+                    </div>
+
+                    <div class="confirm-container" id="confirmArea">
+                        <button class="login-btn" style="max-width: 200px;" onclick="submitFinalReservation()">予約を確定</button>
+                    </div>
                 </div>
             </div>
 
@@ -918,6 +972,32 @@
             ]
         };
 
+        /* 30分ごとの面談時間枠リスト */
+        const masterTimeSlots = [
+            "17:00〜17:30", "17:30〜18:00", "18:00〜18:30", 
+            "19:00〜19:30", "19:30〜20:00", "20:00〜20:30", 
+            "21:00〜21:30"
+        ];
+
+        /* 永続化ステートの初期化（localStorage） */
+        let appState = {
+            attendance: {}, // キー: 'YYYY-MM-DD-index', 値: boolean
+            meetings: {}     // キー: 'YYYY-MM-DD', 値: '時間枠'
+        };
+
+        // データの読み込み
+        function loadState() {
+            const saved = localStorage.getItem('tetsuryoku_state');
+            if (saved) {
+                appState = JSON.parse(saved);
+            }
+        }
+
+        // データの保存
+        function saveState() {
+            localStorage.setItem('tetsuryoku_state', JSON.stringify(appState));
+        }
+
         // 1. ログイン処理
         function attemptLogin() {
             const idInput = document.getElementById('studentId').value.trim();
@@ -930,8 +1010,11 @@
                 document.body.style.display = 'block';
                 document.body.style.backgroundColor = '#f4f6f9';
                 
+                loadState();
                 generateWeeklySchedule();
                 checkTodayLecture();
+                buildAttendanceCalendar();
+                buildReservationCalendar();
             } else {
                 errorMsg.style.display = 'block';
             }
@@ -975,10 +1058,16 @@
                 const alertCard = document.createElement('div');
                 alertCard.className = 'today-lecture-card';
                 
-                let timelineHTML = `<div class="today-header">📅 本日の受講予定（全5講座・イベント）</div>`;
+                let timelineHTML = `<div class="today-header">本日の受講予定（全5講座・イベント）</div>`;
                 timelineHTML += `<div class="timeline">`;
                 
+                const dateKeyStr = getTodayKeyString();
+
                 lectures.forEach((lecture, index) => {
+                    const isChecked = appState.attendance[`${dateKeyStr}-${index}`] || false;
+                    const btnClass = isChecked ? 'attendance-btn checked' : 'attendance-btn';
+                    const btnText = isChecked ? '出席済み' : '出欠確認';
+
                     timelineHTML += `
                         <div class="timeline-row">
                             <div class="timeline-time">${lecture.time}</div>
@@ -987,7 +1076,7 @@
                                 <div class="timeline-meta">教室: <strong>${lecture.room}</strong> ｜ 対象: <strong>${lecture.class}</strong></div>
                             </div>
                             <div>
-                                <button class="attendance-btn" id="attBtn-${index}" onclick="toggleAttendance(${index})">出欠確認</button>
+                                <button class="${btnClass}" id="attBtn-${index}" onclick="toggleAttendance(${index})">${btnText}</button>
                             </div>
                         </div>
                     `;
@@ -999,25 +1088,202 @@
             }
         }
 
+        function getTodayKeyString() {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
         function toggleAttendance(index) {
             const btn = document.getElementById('attBtn-' + index);
+            const dateKeyStr = getTodayKeyString();
+            const stateKey = `${dateKeyStr}-${index}`;
+
             if (btn.classList.contains('checked')) {
                 btn.classList.remove('checked');
                 btn.innerText = '出欠確認';
-                btn.style.backgroundColor = '#0d233a';
+                appState.attendance[stateKey] = false;
             } else {
                 btn.classList.add('checked');
-                btn.innerText = '✓ 出席';
-                btn.style.backgroundColor = '#38a169';
+                btn.innerText = '出席済み';
+                appState.attendance[stateKey] = true;
+            }
+            saveState();
+            buildAttendanceCalendar(); // 反映用にカレンダー再描写
+        }
+
+        /* --------------------------------------
+         * カレンダー生成共通処理 (2026年6月固定)
+         * -------------------------------------- */
+        function getJune2026Grid() {
+            // 2026年6月1日は月曜日 (Day 1)
+            // 総日数 30日
+            const startPadding = 1; // 日曜日始まりの場合、月曜の前に1マスの空き
+            const totalDays = 30;
+            return { padding: startPadding, days: totalDays };
+        }
+
+        // 3. 出欠記録・面談予定カレンダーの作成
+        function buildAttendanceCalendar() {
+            const grid = document.getElementById('attendanceCalendarGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+            weekdays.forEach(w => {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-header-cell';
+                cell.innerText = w;
+                grid.appendChild(cell);
+            });
+
+            const conf = getJune2026Grid();
+            for (let i = 0; i < conf.padding; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day-cell empty';
+                grid.appendChild(cell);
+            }
+
+            for (let d = 1; d <= conf.days; d++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day-cell';
+                
+                const dayStr = String(d).padStart(2, '0');
+                const dateKey = `2026-06-${dayStr}`;
+
+                let innerHTML = `<div class="day-number">${d}</div>`;
+                innerHTML += `<div class="calendar-info-box">`;
+
+                // 出席バッジの判定 (その日に1つでも出席があれば表示)
+                let hasAttendance = false;
+                for (let index = 0; index < 5; index++) {
+                    if (appState.attendance[`${dateKey}-${index}`]) {
+                        hasAttendance = true;
+                        break;
+                    }
+                }
+                if (hasAttendance) {
+                    innerHTML += `<span class="info-badge-attendance">出席あり</span>`;
+                }
+
+                // 面談予定バッジの判定
+                if (appState.meetings[dateKey]) {
+                    innerHTML += `<span class="info-badge-meeting">面談:${appState.meetings[dateKey].split('〜')[0]}</span>`;
+                }
+
+                innerHTML += `</div>`;
+                cell.innerHTML = innerHTML;
+                grid.appendChild(cell);
             }
         }
 
-        // 相談のシミュレーション予約
-        function makeReservation(slotInfo) {
-            if (confirm(`${slotInfo} の枠で現役医大生指導員の相談を予約しますか？`)) {
+        /* --------------------------------------
+         * 面談予約用カレンダー・フロー制御
+         * -------------------------------------- */
+        let selectedDateKey = null;
+        let selectedTimeSlot = null;
+
+        function buildReservationCalendar() {
+            const grid = document.getElementById('reservationCalendarGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+            weekdays.forEach(w => {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-header-cell';
+                cell.innerText = w;
+                grid.appendChild(cell);
+            });
+
+            const conf = getJune2026Grid();
+            for (let i = 0; i < conf.padding; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day-cell empty';
+                grid.appendChild(cell);
+            }
+
+            for (let d = 1; d <= conf.days; d++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-day-cell';
+                cell.setAttribute('id', `res-day-${d}`);
+                
+                const dayStr = String(d).padStart(2, '0');
+                const dateKey = `2026-06-${dayStr}`;
+
+                let innerHTML = `<div class="day-number">${d}</div>`;
+                innerHTML += `<div class="calendar-info-box">`;
+                if (appState.meetings[dateKey]) {
+                    innerHTML += `<span class="info-badge-meeting">予約あり</span>`;
+                }
+                innerHTML += `</div>`;
+                
+                cell.innerHTML = innerHTML;
+                
+                cell.onclick = () => {
+                    // 過去の選択マークをリセット
+                    const allCells = document.querySelectorAll('#reservationCalendarGrid .calendar-day-cell');
+                    allCells.forEach(c => c.classList.remove('selected'));
+                    
+                    cell.classList.add('selected');
+                    selectedDateKey = dateKey;
+                    showTimeSlots();
+                };
+
+                grid.appendChild(cell);
+            }
+        }
+
+        function showTimeSlots() {
+            selectedTimeSlot = null;
+            document.getElementById('confirmArea').style.display = 'none';
+
+            const container = document.getElementById('timeSlotsArea');
+            const grid = document.getElementById('slotsGridContainer');
+            grid.innerHTML = '';
+            container.style.display = 'block';
+
+            masterTimeSlots.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.className = 'time-slot-btn';
+                btn.innerText = slot;
+                
+                // 既にその日にその枠が入っている場合は視覚的な効果等(今回は満席なしなので通常選択可能)
+                btn.onclick = () => {
+                    const allBtns = document.querySelectorAll('#slotsGridContainer .time-slot-btn');
+                    allBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    selectedTimeSlot = slot;
+                    document.getElementById('confirmArea').style.display = 'block';
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function submitFinalReservation() {
+            if (!selectedDateKey || !selectedTimeSlot) return;
+
+            const dateDisplay = selectedDateKey.replace('2026-06-', '6月');
+            if (confirm(`${dateDisplay}日 ${selectedTimeSlot} の枠で指導員面談を確定しますか？`)) {
+                // 保存
+                appState.meetings[selectedDateKey] = selectedTimeSlot;
+                saveState();
+
+                // UI更新
                 const banner = document.getElementById('reserveSuccess');
-                banner.innerText = `🎉 指導員相談の予約が完了しました！【枠：${slotInfo}】マイページにご登録のメールへ控えをお送りしました。`;
+                banner.innerText = `指導員相談の予約が完了しました。【日時：${dateDisplay}日 ${selectedTimeSlot}】`;
                 banner.style.display = 'block';
+
+                // 各種カレンダー再描写・リセット
+                buildReservationCalendar();
+                buildAttendanceCalendar();
+                
+                document.getElementById('timeSlotsArea').style.display = 'none';
+                document.getElementById('confirmArea').style.display = 'none';
+                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
@@ -1036,6 +1302,10 @@
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('show');
             document.getElementById('reserveSuccess').style.display = 'none';
+            if(document.getElementById('timeSlotsArea')) {
+                document.getElementById('timeSlotsArea').style.display = 'none';
+                document.getElementById('confirmArea').style.display = 'none';
+            }
         }
 
         // 3. ハンバーガーメニューの開閉
