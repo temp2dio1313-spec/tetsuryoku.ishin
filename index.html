@@ -112,7 +112,7 @@
             position: relative;
         }
 
-        /* 上部固定のナビゲーションバー（ロゴとメニューボタン用） */
+        /* 上部固定のナビゲーションバー */
         .top-navbar {
             position: fixed;
             top: 0;
@@ -128,7 +128,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* 左上の固定ロゴスタイル */
         .fixed-logo {
             color: #fff;
             font-size: 1.2rem;
@@ -143,7 +142,6 @@
             font-weight: normal;
         }
 
-        /* メニューボタン */
         .menu-toggle {
             background: #1a3a5c;
             color: white;
@@ -172,7 +170,7 @@
             flex-direction: column;
             position: fixed;
             top: 60px;
-            left: -280px; /* 通常時は隠す */
+            left: -280px;
             height: calc(100% - 60px);
             z-index: 999;
             transition: left 0.3s ease;
@@ -180,7 +178,6 @@
             border-top: 1px solid #1a3a5c;
         }
 
-        /* サイドバーが開いている状態 */
         aside.open {
             left: 0;
         }
@@ -270,13 +267,13 @@
             color: #0d233a;
         }
 
-        /* コンテンツセクション（切り替え用） */
+        /* コンテンツセクション */
         .content-section {
-            display: none; /* 基本は非表示 */
+            display: none;
         }
 
         .content-section.active {
-            display: block; /* activeクラスがついたものだけ表示 */
+            display: block;
         }
 
         /* ダッシュボードグリッド */
@@ -313,6 +310,63 @@
             border-radius: 2px;
         }
 
+        /* 【追加】本日の講義アラートカード専用スタイル */
+        .today-lecture-card {
+            background: linear-gradient(135deg, #fff 0%, #f7fafc 100%);
+            border: 2px solid #0d233a;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(13, 35, 58, 0.08);
+        }
+
+        .today-info-left h3 {
+            font-size: 1rem;
+            color: #c5a059;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 5px;
+        }
+
+        .today-info-left .lecture-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0d233a;
+        }
+
+        .today-info-left .lecture-meta {
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 3px;
+        }
+
+        /* 出欠確認ボタンのインタラクション */
+        .attendance-btn {
+            background-color: #0d233a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .attendance-btn:hover {
+            background-color: #1a3a5c;
+        }
+
+        .attendance-btn.checked {
+            background-color: #38a169;
+            box-shadow: none;
+        }
+
         /* テーブル・リストデザイン */
         .status-table {
             width: 100%;
@@ -331,7 +385,7 @@
             color: #4a5568;
         }
 
-        /* 教科クラスバッジのスタイル */
+        /* 教科クラスバッジ */
         .class-badge {
             display: inline-block;
             padding: 3px 8px;
@@ -372,7 +426,7 @@
             cursor: pointer;
         }
 
-        /* 【修正】週間スケジュールアイテムのデザイン強化 */
+        /* 週間スケジュールアイテム */
         .schedule-item {
             margin-bottom: 12px;
             padding: 10px 12px;
@@ -429,9 +483,10 @@
             display: block;
         }
 
-        /* レスポンシブ */
         @media (max-width: 1024px) {
             .grid-container { grid-template-columns: 1fr; }
+            .today-lecture-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .attendance-btn { width: 100%; text-align: center; }
         }
     </style>
 </head>
@@ -505,6 +560,10 @@
             </header>
 
             <div id="section-home" class="content-section active">
+                
+                <!-- 【追加】本日の講義予定表示エリア（講義がある曜日のみJSで自動生成されます） -->
+                <div id="todayLectureArea"></div>
+
                 <div class="grid-container">
                     <div class="left-column">
                         <div class="card">
@@ -526,42 +585,42 @@
                             </table>
                         </div>
                     </div>
-                    <!-- 【修正】右カラム：曜日ごとの1週間受講スケジュールを表示 -->
+                    
                     <div class="right-column">
                         <div class="card">
                             <h2>今週の受講スケジュール</h2>
                             
-                            <div class="schedule-item">
+                            <div class="schedule-item" id="sched-1">
                                 <div class="schedule-day">月曜日</div>
                                 <div class="schedule-text" style="color: #a0aec0; font-weight: normal;">講義なし</div>
                             </div>
                             
-                            <div class="schedule-item">
+                            <div class="schedule-item" id="sched-2">
                                 <div class="schedule-day">火曜日</div>
                                 <div class="schedule-text" style="color: #a0aec0; font-weight: normal;">講義なし</div>
                             </div>
                             
-                            <div class="schedule-item active-day">
+                            <div class="schedule-item active-day" id="sched-3">
                                 <div class="schedule-day">水曜日 <span class="schedule-time">17:00〜21:00</span></div>
                                 <div class="schedule-text">高3医進数学 <span>[SAクラス / 本館401]</span></div>
                             </div>
                             
-                            <div class="schedule-item active-day">
+                            <div class="schedule-item active-day" id="sched-4">
                                 <div class="schedule-day">木曜日 <span class="schedule-time">17:00〜21:00</span></div>
                                 <div class="schedule-text">高3医進化学 <span>[A1クラス / 本館302]</span></div>
                             </div>
                             
-                            <div class="schedule-item active-day">
+                            <div class="schedule-item active-day" id="sched-5">
                                 <div class="schedule-day">金曜日 <span class="schedule-time">17:00〜21:00</span></div>
                                 <div class="schedule-text">高3医進英語 <span>[A3クラス / 2号館201]</span></div>
                             </div>
                             
-                            <div class="schedule-item active-day">
+                            <div class="schedule-item active-day" id="sched-6">
                                 <div class="schedule-day">土曜日 <span class="schedule-time">14:00〜18:00</span></div>
                                 <div class="schedule-text">高3医進物理 <span>[A3クラス / 本館503]</span></div>
                             </div>
                             
-                            <div class="schedule-item">
+                            <div class="schedule-item" id="sched-0">
                                 <div class="schedule-day">日曜日</div>
                                 <div class="schedule-text" style="color: #a0aec0; font-weight: normal;">自習室のみ開放 (9:00〜18:00)</div>
                             </div>
@@ -629,7 +688,6 @@
                 </div>
             </div>
 
-            <!-- 【修正】横書きレイアウトに変更した年間カリキュラム表 -->
             <div id="section-curriculum" class="content-section">
                 <div class="card">
                     <h2>高3 年間カリキュラム・進行表 (教科別横書きレイアウト)</h2>
@@ -678,7 +736,7 @@
                                 </td>
                                 <td>
                                     ・波動・原子物理分野の集中攻略と定着<br>
-                                    ・東大・難関国公立大医学部入試の実戦的演習<br>
+                                    ・東大・難関国公立大医学部入試の実戦적演習<br>
                                     ・難系・ハイレベル過去問ベースのテストゼミ
                                 </td>
                             </tr>
@@ -690,8 +748,6 @@
                                     ・有機化学の構造決定における思考パターンの網羅
                                 </td>
                                 <td>
-                                    ・無機化学全般の総合整理と各論各物質の深掘り<br>
-                                    <td>
                                     ・無機化学全般の総合整理と各論各物質の深掘り<br>
                                     ・高分子化合物および天然有機物質の決定打対策<br>
                                     ・入試直結の実戦演習を伴う総合テストゼミ
@@ -731,6 +787,14 @@
     </div>
 
     <script>
+        // 曜日ごとの講義データ定義
+        const lectureSchedule = {
+            3: { name: "高3医進数学", time: "17:00〜21:00", room: "本館401", class: "SAクラス" },
+            4: { name: "高3医進化学", time: "17:00〜21:00", room: "本館302", class: "A1クラス" },
+            5: { name: "高3医進英語", time: "17:00〜21:00", room: "2号館201", class: "A3クラス" },
+            6: { name: "高3医進物理", time: "14:00〜18:00", room: "本館503", class: "A3クラス" }
+        };
+
         // 1. ログイン処理
         function attemptLogin() {
             const idInput = document.getElementById('studentId').value.trim();
@@ -742,8 +806,61 @@
                 document.getElementById('myPageBox').style.display = 'block';
                 document.body.style.display = 'block';
                 document.body.style.backgroundColor = '#f4f6f9';
+                
+                // ログイン成功時に「本日の講義予定」をチェックして生成
+                checkTodayLecture();
             } else {
                 errorMsg.style.display = 'block';
+            }
+        }
+
+        // 【追加】本日の講義を判定して最上部に差し込む関数
+        function checkTodayLecture() {
+            const today = new Date();
+            const currentDay = today.getDay(); // 0:日, 1:月, ... 6:土
+            const container = document.getElementById('todayLectureArea');
+            container.innerHTML = ''; // 初期化
+
+            // 今日の曜日のスケジュールアイテムを強調表示にする
+            const currentSchedItem = document.getElementById('sched-' + currentDay);
+            if (currentSchedItem) {
+                // すべての強調を一度外してから今日をハイライト
+                document.querySelectorAll('.schedule-item').forEach(el => el.classList.remove('active-day'));
+                currentSchedItem.classList.add('active-day');
+                currentSchedItem.style.borderLeftColor = '#38a169'; // 本日は緑色のラインに
+            }
+
+            // 講義がある曜日（水・木・金・土）の場合のみ要素を生成
+            if (lectureSchedule[currentDay]) {
+                const lecture = lectureSchedule[currentDay];
+                
+                const alertCard = document.createElement('div');
+                alertCard.className = 'today-lecture-card';
+                alertCard.innerHTML = `
+                    <div class="today-info-left">
+                        <h3><span style="color:#38a169;">●</span> 本日の受講予定</h3>
+                        <div class="lecture-name">${lecture.name} <span style="font-size:0.9rem; color:#718096;">(${lecture.class})</span></div>
+                        <div class="lecture-meta">時間：<strong>${lecture.time}</strong> ｜ 教室：<strong>${lecture.room}</strong></div>
+                    </div>
+                    <div>
+                        <button class="attendance-btn" id="attendanceBtn" onclick="toggleAttendance()">出欠確認を行う</button>
+                    </div>
+                `;
+                container.appendChild(alertCard);
+            }
+        }
+
+        // 【追加】出欠確認ボタンのトグル切り替え関数
+        function toggleAttendance() {
+            const btn = document.getElementById('attendanceBtn');
+            if (btn.classList.contains('checked')) {
+                btn.classList.remove('checked');
+                btn.innerText = '出欠確認を行う';
+                btn.style.backgroundColor = '#0d233a';
+            } else {
+                btn.classList.add('checked');
+                btn.innerText = '✓ 出席記録済み';
+                btn.style.backgroundColor = '#38a169';
             }
         }
 
