@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>塾生マイページ | 鉄緑会 医進会</title>
+    <style>
+        /* 全体のリセットと基本スタイル */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --------------------------------------
+         * ログイン画面のスタイル
+         * -------------------------------------- */
+        .login-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #0d233a;
+            margin-bottom: 5px;
+            letter-spacing: 0.1em;
+        }
+
+        .login-subtitle {
+            color: #c5a059;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #0d233a;
+        }
+
+        .login-btn {
+            width: 100%;
+            background-color: #0d233a;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: #1a3a5c;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* --------------------------------------
+         * マイページ（ログイン後）のスタイル
+         * -------------------------------------- */
+        .mypage-container {
+            display: none; /* 初期状態は非表示 */
+            width: 100%;
+            min-height: 100vh;
+            flex-direction: row;
+        }
+
+        /* サイドバー */
+        aside {
+            width: 280px;
+            background-color: #0d233a;
+            color: #fff;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        aside .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #1a3a5c;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        aside .logo span {
+            color: #c5a059;
+            display: block;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        aside nav {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .menu-category {
+            font-size: 0.75rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 15px 0 5px 10px;
+            font-weight: bold;
+        }
+
+        aside nav ul {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+
+        aside nav ul li a {
+            color: #b8c7ce;
+            text-decoration: none;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        aside nav ul li a:hover, Lauren aside nav ul li a.active {
+            background-color: #1a3a5c;
+            color: #fff;
+        }
+
+        .logout-btn {
+            background-color: #c53030;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: auto;
+        }
+
+        /* メインコンテンツ */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background-color: #f4f6f9;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            color: #0d233a;
+        }
+
+        .student-info {
+            font-size: 0.95rem;
+            text-align: right;
+        }
+
+        .student-info strong {
+            font-size: 1.1rem;
+            color: #0d233a;
+        }
+
+        /* レイアウト */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            color: #0d233a;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .card h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 3px;
+            width: 4px;
+            height: 18px;
+            background-color: #c5a059;
+            border-radius: 2px;
+        }
+
+        /* テーブル・リスト各種 */
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .status-table th, .status-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.9rem;
+        }
+
+        .status-table th {
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .news-list {
+            list-style: none;
+        }
+
+        .news-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.9rem;
+        }
+
+        .news-date {
+            color: #718096;
+            margin-right: 10px;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #0d233a;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .schedule-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dotted #e2e8f0;
+        }
+
+        .schedule-time {
+            font-size: 0.8rem;
+            color: #c5a059;
+            font-weight: bold;
+        }
+
+        /* レスポンシブ */
+        @media (max-width: 1024px) {
+            .grid-container { grid-template-columns: 1fr; }
+            body { flex-direction: column; }
+            .mypage-container { flex-direction: column; }
+            aside { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ======================================
+         1. ログイン画面エリア
+         ====================================== -->
+    <div class="login-container" id="loginBox">
+        <div class="login-logo">鉄緑会</div>
+        <div class="login-subtitle">医進会 塾生ログイン</div>
+        
+        <div class="form-group">
+            <label for="studentId">生徒ID (塾生番号)</label>
+            <input type="text" id="studentId" placeholder="ihsr2730 と入力">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="password" id="password" placeholder="etf20064 と入力">
+        </div>
+        
+        <button class="login-btn" onclick="attemptLogin()">ログイン</button>
+        <div class="error-message" id="errorMsg">生徒IDまたはパスワードが正しくありません。</div>
+    </div>
+
+
+    <!-- ======================================
+         2. マイページエリア（ログイン後に表示）
+         ====================================== -->
+    <div class="mypage-container" id="myPageBox">
+        
+        <!-- 拡張されたサイドバーメニュー -->
+        <aside>
+            <div class="logo">
+                鉄緑会
+                <span>医進会 塾生ページ</span>
+            </div>
+            <nav>
+                <div class="menu-category">メインメニュー</div>
+                <ul>
+                    <li><a href="#" class="active">ホーム（ダッシュボード）</a></li>
+                    <li><a href="#">重要なお知らせ・通達</a></li>
+                </ul>
+
+                <div class="menu-category">学習・講義管理</div>
+                <ul>
+                    <li><a href="#">カリキュラム・授業スケジュール</a></li>
+                    <li><a href="#">欠席連絡・振替授業申請</a></li>
+                    <li><a href="#">オンデマンド講義 視聴</a></li>
+                </ul>
+
+                <div class="menu-category">成績・演習</div>
+                <ul>
+                    <li><a href="#">校内模試・直前模試成績推移</a></li>
+                    <li><a href="#">復習テスト・総復習テスト記録</a></li>
+                    <li><a href="#">記述答案提出・添削指導</a></li>
+                    <li><a href="#">教材・解答プリントDL</a></li>
+                </ul>
+
+                <div class="menu-category">医学部受験サポート</div>
+                <ul>
+                    <li><a href="#">面接・小論文対策講座予約</a></li>
+                    <li><a href="#">過去問研究データベース</a></li>
+                    <li><a href="#">現役医大生クラス指導員（OB/OG）相談</a></li>
+                    <li><a href="#">教務面談・進路指導予約</a></li>
+                </ul>
+
+                <div class="menu-category">設定</div>
+                <ul>
+                    <li><a href="#">登録情報・志望校変更</a></li>
+                </ul>
+            </nav>
+            <button class="logout-btn" onclick="logout()">ログアウト</button>
+        </aside>
+
+        <!-- メインコンテンツ -->
+        <main>
+            <header>
+                <h1>塾生ダッシュボード</h1>
+                <div class="student-info">
+                    塾生番号: <strong>ihsr2730</strong><br>
+                    <strong>柿原 拓真</strong> 様（高3・東大理Ⅲ/医学部コース）
+                </div>
+            </header>
+
+            <div class="grid-container">
+                <!-- 左側エリア -->
+                <div class="left-column">
+                    
+                    <!-- お知らせ -->
+                    <div class="card">
+                        <h2>事務局からの最新情報</h2>
+                        <ul class="news-list">
+                            <li><span class="news-date">2026/06/21</span><strong style="color: #c53030;">[重要]</strong> 【医進会】第2回東大・国公立大医学部記述模試の申込受付開始</li>
+                            <li><span class="news-date">2026/06/18</span> ［夏期講習］医進数学・医進英語特論の推奨クラス分け発表</li>
+                            <li><span class="news-date">2026/06/15</span> プレミアム小論文・面接対策ワークショップの開催案内</li>
+                        </ul>
+                    </div>
+
+                    <!-- 成績状況 -->
+                    <div class="card">
+                        <h2>直近の選抜・校内模試結果</h2>
+                        <table class="status-table">
+                            <thead>
+                                <tr>
+                                    <th>実施時期</th>
+                                    <th>模試・テスト名称</th>
+                                    <th>総合評価</th>
+                                    <th>医進会内順位</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>5月度</td>
+                                    <td>第1回 医進会選抜校内模試</td>
+                                    <td><strong style="color: #2b6cb0;">A判定</strong></td>
+                                    <td>15位 / 220人</td>
+                                </tr>
+                                <tr>
+                                    <td>6月上旬</td>
+                                    <td>東大理Ⅲ記述演習（第4回）</td>
+                                    <td><strong style="color: #2b6cb0;">優秀</strong></td>
+                                    <td>8位 / 180人</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 課題・添削 -->
+                    <div class="card">
+                        <h2>未提出・添削中の課題</h2>
+                        <table class="status-table">
+                            <thead>
+                                <tr>
+                                    <th>科目</th>
+                                    <th>課題名</th>
+                                    <th>提出期限</th>
+                                    <th>ステータス</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>医進数学</td>
+                                    <td>第12週：過去問徹底演習（数Ⅲ・微積分）</td>
+                                    <td>6月24日(水)</td>
+                                    <td><span style="color: #dd6b20; font-weight: bold;">未提出</span></td>
+                                </tr>
+                                <tr>
+                                    <td>医進英語</td>
+                                    <td>第11週：医学部特有長文読解・英作文</td>
+                                    <td>提出済</td>
+                                    <td><span style="color: #4a5568;">添削中</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 右側エリア -->
+                <div class="right-column">
+                    <!-- 今週の通塾スケジュール -->
+                    <div class="card">
+                        <h2>今週の受講スケジュール</h2>
+                        <div class="schedule-item">
+                            <div class="schedule-time">6月24日(水) 17:00〜21:00</div>
+                            <div class="schedule-text">高3医進数学（担当：藤田講師）<br><small style="color: #718096;">教室：本館401</small></div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">6月26日(金) 17:00〜21:00</div>
+                            <div class="schedule-text">高3医進英語（担当：佐藤講師）<br><small style="color: #718096;">教室：本館403</small></div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="schedule-time">6月27日(土) 15:30〜16:30</div>
+                            <div class="schedule-text" style="font-weight: bold; color: #2b6cb0;">理Ⅲ現役指導員（OB）個別面談<br><small style="color: #718096;">場所：面談室B</small></div>
+                        </div>
+                    </div>
+
+                    <!-- クイックアクション -->
+                    <div class="card">
+                        <h2>クイックリンク</h2>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <a href="#" class="btn">本日の欠席・振替申請</a>
+                            <a href="#" class="btn" style="background-color: #fff; color: #0d233a; border: 1px solid #0d233a;">質問・相談シート作成</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ======================================
+         3. ログイン制御用のJavaScript
+         ====================================== -->
+    <script>
+        function attemptLogin() {
+            // 入力値の取得
+            const idInput = document.getElementById('studentId').value.trim();
+            const passInput = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+
+            // 指定されたアカウント情報で認証
+            if (idInput === 'ihsr2730' && passInput === 'etf20064') {
+                // ログイン成功：ログイン箱を隠し、マイページを表示
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('myPageBox').style.display = 'flex';
+                // ボディのスタイルをマイページ用に最適化
+                document.body.style.display = 'block';
+                document.body.style.backgroundColor = '#f4f6f9';
+            } else {
+                // ログイン失敗：エラーメッセージを表示
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            // ログアウト処理：状態を元に戻す
+            document.getElementById('myPageBox').style.display = 'none';
+            document.getElementById('loginBox').style.display = 'block';
+            
+            // ボディのスタイルをログイン画面用に中央寄せに戻す
+            document.body.style.display = 'flex';
+            document.body.style.justifyContent = 'center';
+            document.body.style.alignItems = 'center';
+            
+            // 入力フォームをクリア
+            document.getElementById('studentId').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
