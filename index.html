@@ -276,10 +276,10 @@
             display: block;
         }
 
-        /* ダッシュボードグリッド */
+        /* ダッシュボードグリッド（スケジュール削除に伴い1カラム構成へ最適化可能に） */
         .grid-container {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr;
             gap: 30px;
         }
 
@@ -454,44 +454,60 @@
             cursor: pointer;
         }
 
-        /* 週間スケジュール（折りたたみ対応スタイル） */
+        /* --------------------------------------
+         * 新設：週間スケジュールセクションのレイアウト
+         * -------------------------------------- */
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
         .weekly-day-card {
-            margin-bottom: 15px;
             border: 1px solid #e2e8f0;
-            border-radius: 6px;
+            border-radius: 8px;
             background: #fff;
             overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
         .weekly-day-header {
-            background: #f8fafc;
-            padding: 10px 15px;
-            font-size: 0.9rem;
+            background: #0d233a;
+            color: #fff;
+            padding: 12px 15px;
+            font-size: 1rem;
             font-weight: bold;
-            color: #4a5568;
-            border-bottom: 1px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+        }
+
+        .weekly-day-header.today-highlight {
+            background: #c5a059;
+            color: #0d233a;
         }
 
         .weekly-day-body {
-            padding: 10px 15px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
         .weekly-sub-item {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #2d3748;
             border-left: 3px solid #cbd5e0;
-            padding-left: 8px;
+            padding-left: 10px;
+            padding-y: 4px;
         }
 
         .weekly-sub-item span {
             color: #c5a059;
             font-weight: bold;
-            margin-right: 6px;
+            display: block;
+            font-size: 0.8rem;
+            margin-bottom: 2px;
         }
 
         /* 背景マスク */
@@ -511,7 +527,6 @@
         }
 
         @media (max-width: 1024px) {
-            .grid-container { grid-template-columns: 1fr; }
             .timeline-row { flex-direction: column; align-items: flex-start; gap: 10px; }
             .attendance-btn { width: 100%; text-align: center; }
         }
@@ -554,6 +569,7 @@
                 <div class="menu-category">メインメニュー</div>
                 <ul>
                     <li><a href="#" class="menu-link active" onclick="switchSection('home', this)">ホーム（ダッシュボード）</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('weekly-schedule', this)">今週の受講スケジュール</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('student-profile', this)">所属クラス・生徒情報</a></li>
                 </ul>
 
@@ -586,9 +602,9 @@
                 </div>
             </header>
 
+            <!-- 1. ホーム（ダッシュボード）セクション -->
             <div id="section-home" class="content-section active">
-                
-                <!-- 本日の講義予定表示エリア（1日5コマをタイムライン表示） -->
+                <!-- 本日の講義予定表示エリア -->
                 <div id="todayLectureArea"></div>
 
                 <div class="grid-container">
@@ -612,52 +628,44 @@
                             </table>
                         </div>
                     </div>
-                    
-                    <!-- 右カラム：週間受講スケジュール（各曜日5講座） -->
-                    <div class="right-column">
-                        <div class="card">
-                            <h2>今週の受講スケジュール</h2>
-                            
-                            <div class="weekly-day-card" id="sched-1">
-                                <div class="weekly-day-header">月曜日</div>
-                                <div class="weekly-day-body" id="weekly-body-1"></div>
-                            </div>
-                            
-                            <div class="weekly-day-card" id="sched-2">
-                                <div class="weekly-day-header">火曜日</div>
-                                <div class="weekly-day-body" id="weekly-body-2"></div>
-                            </div>
-                            
-                            <div class="weekly-day-card" id="sched-3">
-                                <div class="weekly-day-header">水曜日</div>
-                                <div class="weekly-day-body" id="weekly-body-3"></div>
-                            </div>
-                            
-                            <div class="weekly-day-card" id="sched-4">
-                                <div class="weekly-day-header">木曜日</div>
-                                <div class="weekly-day-body" id="weekly-body-4"></div>
-                            </div>
-                            
-                            <div class="weekly-day-card" id="sched-5">
-                                <div class="weekly-day-header">金曜日</div>
-                                <div class="weekly-day-body" id="weekly-body-5"></div>
-                            </div>
-                            
-                            <div class="weekly-day-card" id="sched-6">
-                                <div class="weekly-day-header">土曜日</div>
-                                <div class="weekly-day-body" id="weekly-body-6"></div>
-                            </div>
-                            
-                            <div class="weekly-day-card" id="sched-0">
-                                <div class="weekly-day-header">日曜日</div>
-                                <div class="weekly-day-body" id="weekly-body-0"></div>
-                            </div>
-                        </div>
+                </div>
+            </div>
+
+            <!-- 2. 【新設】今週の受講スケジュール（全画面対応グリッドレイアウト） -->
+            <div id="section-weekly-schedule" class="content-section">
+                <div class="weekly-grid">
+                    <div class="weekly-day-card" id="sched-1">
+                        <div class="weekly-day-header" id="sched-head-1">月曜日</div>
+                        <div class="weekly-day-body" id="weekly-body-1"></div>
+                    </div>
+                    <div class="weekly-day-card" id="sched-2">
+                        <div class="weekly-day-header" id="sched-head-2">火曜日</div>
+                        <div class="weekly-day-body" id="weekly-body-2"></div>
+                    </div>
+                    <div class="weekly-day-card" id="sched-3">
+                        <div class="weekly-day-header" id="sched-head-3">水曜日</div>
+                        <div class="weekly-day-body" id="weekly-body-3"></div>
+                    </div>
+                    <div class="weekly-day-card" id="sched-4">
+                        <div class="weekly-day-header" id="sched-head-4">木曜日</div>
+                        <div class="weekly-day-body" id="weekly-body-4"></div>
+                    </div>
+                    <div class="weekly-day-card" id="sched-5">
+                        <div class="weekly-day-header" id="sched-head-5">金曜日</div>
+                        <div class="weekly-day-body" id="weekly-body-5"></div>
+                    </div>
+                    <div class="weekly-day-card" id="sched-6">
+                        <div class="weekly-day-header" id="sched-head-6">土曜日</div>
+                        <div class="weekly-day-body" id="weekly-body-6"></div>
+                    </div>
+                    <div class="weekly-day-card" id="sched-0">
+                        <div class="weekly-day-header" id="sched-head-0">日曜日</div>
+                        <div class="weekly-day-body" id="weekly-body-0"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- その他のセクションは既存通り保持 -->
+            <!-- 3. 所属クラス・生徒情報セクション -->
             <div id="section-student-profile" class="content-section">
                 <div class="card" style="max-width: 700px; margin: 0 auto;">
                     <h2>ご登録生徒情報</h2>
@@ -685,6 +693,7 @@
                 </div>
             </div>
 
+            <!-- 4. 欠席連絡セクション -->
             <div id="section-absence" class="content-section">
                 <div class="card" style="max-width: 600px; margin: 0 auto;">
                     <h2>欠席連絡・振替申請フォーム</h2>
@@ -719,6 +728,7 @@
                 </div>
             </div>
 
+            <!-- 5. カリキュラムセクション -->
             <div id="section-curriculum" class="content-section">
                 <div class="card">
                     <h2>高3 年間カリキュラム・進行表 (教科別横書きレイアウト)</h2>
@@ -746,6 +756,7 @@
                 </div>
             </div>
 
+            <!-- 6. 成績アーカイブセクション -->
             <div id="section-grades" class="content-section">
                 <div class="card">
                     <h2>過去の全成績アーカイブ</h2>
@@ -753,6 +764,7 @@
                 </div>
             </div>
 
+            <!-- 7. 教材ダウンロードセクション -->
             <div id="section-materials" class="content-section">
                 <div class="card">
                     <h2>解答・解説プリントダウンロード</h2>
@@ -762,6 +774,7 @@
                 </div>
             </div>
 
+            <!-- 8. 指導員相談予約セクション -->
             <div id="section-support" class="content-section">
                 <div class="card">
                     <h2>理Ⅲ・医学部現役指導員（OB/OG）相談予約</h2>
@@ -773,7 +786,7 @@
     </div>
 
     <script>
-        /* 1日あたり5講座（1週間35枠）の完全スケジュールデータ */
+        /* 1日あたり5講座の完全スケジュールデータ */
         const masterSchedule = {
             1: [ // 月曜日
                 { name: "月曜単語・熟語記述テスト", time: "16:45〜17:15", room: "本館202", class: "全クラス共通" },
@@ -804,7 +817,7 @@
                 { name: "化学テキスト復習セッション", time: "21:15〜21:45", room: "本館302", class: "自主補習枠" }
             ],
             5: [ // 金曜日
-                { name: "高3医進英語・英文法演習テスト", time: "16:30〜17:00", room: "2号館201", class: "A3クラス" },
+                { name: "高3医進英語・英文法演述テスト", time: "16:30〜17:00", room: "2号館201", class: "A3クラス" },
                 { name: "高3医進英語・長文読解精選演習", time: "17:10〜18:50", room: "2号館201", class: "A3クラス" },
                 { name: "高3医進英語・自由英作文・和訳", time: "19:00〜20:30", room: "2号館201", class: "A3クラス" },
                 { name: "医進英語リスニングディクテーション", time: "20:35〜21:10", room: "2号館201", class: "音声強化" },
@@ -845,35 +858,39 @@
             }
         }
 
-        // 週間スケジュールカードへの自動生成
+        // 週間スケジュールページへの自動生成・配置
         function generateWeeklySchedule() {
+            const today = new Date();
+            const currentDay = today.getDay();
+
             for (let day in masterSchedule) {
                 const bodyContainer = document.getElementById('weekly-body-' + day);
+                const headerContainer = document.getElementById('sched-head-' + day);
+                
                 if (bodyContainer) {
                     bodyContainer.innerHTML = '';
-                    masterSchedule[day].forEach((lec, idx) => {
+                    masterSchedule[day].forEach((lec) => {
                         const item = document.createElement('div');
                         item.className = 'weekly-sub-item';
-                        item.innerHTML = `<span>${lec.time}</span> ${lec.name}`;
+                        item.innerHTML = `<span>${lec.time} [${lec.room}]</span> ${lec.name}`;
                         bodyContainer.appendChild(item);
                     });
+                }
+
+                // 今日の曜日カードのヘッダーを目立たせる
+                if (parseInt(day) === currentDay && headerContainer) {
+                    headerContainer.classList.add('today-highlight');
+                    headerContainer.innerHTML += " (本日)";
                 }
             }
         }
 
-        // 本日の講義（5講座）を判定して最上部に差し込む関数
+        // 本日の講義（5講座）を判定してダッシュボード最上部に表示
         function checkTodayLecture() {
             const today = new Date();
-            const currentDay = today.getDay(); // 0:日, 1:月, ... 6:土
+            const currentDay = today.getDay(); 
             const container = document.getElementById('todayLectureArea');
             container.innerHTML = '';
-
-            // 週間スケジューラの該当曜日をハイライト
-            document.querySelectorAll('.weekly-day-card').forEach(el => el.style.border = '1px solid #e2e8f0');
-            const currentSchedItem = document.getElementById('sched-' + currentDay);
-            if (currentSchedItem) {
-                currentSchedItem.style.border = '2px solid #3182ce';
-            }
 
             if (masterSchedule[currentDay]) {
                 const lectures = masterSchedule[currentDay];
