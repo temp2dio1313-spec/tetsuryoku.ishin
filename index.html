@@ -53,29 +53,61 @@
 
         .form-group {
             text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
             font-size: 0.85rem;
             color: #4a5568;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: bold;
         }
 
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px 12px;
             border: 1px solid #cbd5e0;
             border-radius: 6px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
             transition: border 0.2s;
         }
 
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: #0d233a;
+        }
+
+        .checkbox-group-label {
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .subject-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 15px;
+        }
+
+        .subject-checkboxes label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .subject-checkboxes input {
+            width: auto;
         }
 
         .login-btn {
@@ -112,7 +144,6 @@
             position: relative;
         }
 
-        /* 上部固定のナビゲーションバー */
         .top-navbar {
             position: fixed;
             top: 0;
@@ -156,11 +187,6 @@
             transition: background 0.2s;
         }
 
-        .menu-toggle:hover {
-            background: #2b527a;
-        }
-
-        /* ドロワーサイドバー */
         aside {
             width: 280px;
             background-color: #0d233a;
@@ -233,14 +259,12 @@
             margin-top: auto;
         }
 
-        /* メインコンテンツ表示エリア */
         main {
             padding: 40px;
             padding-top: 100px;
             min-height: 100vh;
             background-color: #f4f6f9;
             width: 100%;
-            transition: padding-left 0.3s ease;
         }
 
         header {
@@ -267,7 +291,6 @@
             color: #0d233a;
         }
 
-        /* コンテンツセクション */
         .content-section {
             display: none;
         }
@@ -309,7 +332,6 @@
             border-radius: 2px;
         }
 
-        /* 本日の講義アラートカード専用スタイル */
         .today-lecture-card {
             background: linear-gradient(135deg, #fff 0%, #f7fafc 100%);
             border: 2px solid #0d233a;
@@ -324,14 +346,10 @@
             color: #c5a059;
             font-weight: bold;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
             border-bottom: 1px solid #e2e8f0;
             padding-bottom: 8px;
         }
 
-        /* タイムライン表示 */
         .timeline {
             display: flex;
             flex-direction: column;
@@ -342,7 +360,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
+            padding: 12px 15px;
             background: #fff;
             border: 1px solid #edf2f7;
             border-radius: 6px;
@@ -373,12 +391,16 @@
             margin-top: 2px;
         }
 
-        /* 出欠確認ボタン */
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
         .attendance-btn {
             background-color: #0d233a;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 7px 14px;
             border-radius: 4px;
             font-weight: bold;
             font-size: 0.8rem;
@@ -386,15 +408,26 @@
             transition: all 0.2s ease;
         }
 
-        .attendance-btn:hover {
-            background-color: #1a3a5c;
-        }
-
         .attendance-btn.checked {
             background-color: #38a169;
         }
 
-        /* テーブル・リストデザイン */
+        .detail-trigger-btn {
+            background-color: #fff;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+            padding: 7px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .detail-trigger-btn:hover {
+            background-color: #edf2f7;
+        }
+
         .status-table {
             width: 100%;
             border-collapse: collapse;
@@ -414,7 +447,6 @@
             color: #4a5568;
         }
 
-        /* 教科クラスバッジ */
         .class-badge {
             display: inline-block;
             padding: 3px 8px;
@@ -426,23 +458,10 @@
         .badge-a1 { background-color: #feebc8; color: #9c4221; }
         .badge-a3 { background-color: #e2e8f0; color: #4a5568; }
 
-        .news-list {
-            list-style: none;
-        }
+        .news-list { list-style: none; }
+        .news-list li { padding: 10px 0; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .news-date { color: #718096; margin-right: 10px; font-size: 0.8rem; }
 
-        .news-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 0.9rem;
-        }
-
-        .news-date {
-            color: #718096;
-            margin-right: 10px;
-            font-size: 0.8rem;
-        }
-
-        /* 週間スケジュールセクションのレイアウト */
         .weekly-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -454,7 +473,6 @@
             border-radius: 8px;
             background: #fff;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
 
         .weekly-day-header {
@@ -468,32 +486,10 @@
             align-items: center;
         }
 
-        .weekly-day-header.today-highlight {
-            background: #c5a059;
-            color: #0d233a;
-        }
-
-        .weekly-day-body {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .weekly-sub-item {
-            font-size: 0.9rem;
-            color: #2d3748;
-            border-left: 3px solid #cbd5e0;
-            padding-left: 10px;
-        }
-
-        .weekly-sub-item span {
-            color: #c5a059;
-            font-weight: bold;
-            display: block;
-            font-size: 0.8rem;
-            margin-bottom: 2px;
-        }
+        .weekly-day-header.today-highlight { background: #c5a059; color: #0d233a; }
+        .weekly-day-body { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .weekly-sub-item { font-size: 0.9rem; color: #2d3748; border-left: 3px solid #cbd5e0; padding-left: 10px; }
+        .weekly-sub-item span { color: #c5a059; font-weight: bold; display: block; font-size: 0.8rem; margin-bottom: 2px; }
 
         /* --------------------------------------
          * カレンダー表示用の共通スタイル
@@ -526,214 +522,130 @@
             transition: background 0.2s;
         }
 
-        .calendar-day-cell:hover {
-            background-color: #f0f4f8;
-        }
+        .calendar-day-cell:hover { background-color: #f0f4f8; }
+        .calendar-day-cell.selected { background-color: #ebf8ff; border-color: #3182ce; }
+        .calendar-day-cell.empty { background-color: #edf2f7; cursor: not-allowed; }
+        .day-number { font-weight: bold; font-size: 0.9rem; color: #4a5568; }
 
-        .calendar-day-cell.selected {
-            background-color: #ebf8ff;
-            border-color: #3182ce;
-        }
+        .calendar-info-box { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; font-size: 0.72rem; }
+        .info-badge-attendance { background-color: #c6f6d5; color: #22543d; padding: 2px; border-radius: 3px; font-weight: bold; text-align: center; }
+        .info-badge-meeting { background-color: #feebc8; color: #9c4221; padding: 2px; border-radius: 3px; font-weight: bold; text-align: center; }
+        .info-badge-hokou { background-color: #ebf8ff; color: #2b6cb0; padding: 2px; border-radius: 3px; font-weight: bold; text-align: center; }
 
-        .calendar-day-cell.empty {
-            background-color: #edf2f7;
-            cursor: not-allowed;
-        }
+        .day-detail-panel { margin-top: 25px; padding: 20px; background: #f7fafc; border: 1px dashed #cbd5e0; border-radius: 8px; }
+        .detail-row-item { padding: 8px 0; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .action-group { margin-top: 10px; display: flex; gap: 10px; }
+        .action-btn-secondary { background-color: #718096; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        .action-btn-danger { background-color: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
 
-        .day-number {
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #4a5568;
-        }
-
-        .calendar-info-box {
-            font-size: 0.75rem;
-            margin-top: 4px;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .info-badge-attendance {
-            background-color: #c6f6d5;
-            color: #22543d;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .info-badge-meeting {
-            background-color: #feebc8;
-            color: #9c4221;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .info-badge-hokou {
-            background-color: #ebf8ff;
-            color: #2b6cb0;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        /* 詳細表示エリア・操作パネル */
-        .day-detail-panel {
-            margin-top: 25px;
-            padding: 20px;
-            background: #f7fafc;
-            border: 1px dashed #cbd5e0;
-            border-radius: 8px;
-        }
-
-        .detail-row-item {
-            padding: 8px 0;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 0.9rem;
-        }
-
-        .action-group {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .action-btn-secondary {
-            background-color: #718096;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .time-slots-container { margin-top: 20px; display: none; border-top: 1px dashed #cbd5e0; padding-top: 20px; }
+        .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 10px; }
         
-        .action-btn-danger {
-            background-color: #e53e3e;
-            color: white;
-            border: none;
-            padding: 8px 12px;
+        .time-slot-btn {
+            background-color: #fff; border: 1px solid #cbd5e0; padding: 10px; border-radius: 6px;
+            font-weight: bold; font-size: 0.85rem; cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .time-slot-btn:hover { border-color: #0d233a; background-color: #f7fafc; }
+        .time-slot-btn.active { background-color: #0d233a; color: #fff; border-color: #0d233a; }
+
+        .confirm-container { margin-top: 25px; display: none; text-align: right; }
+        .success-banner { display: none; background-color: #c6f6d5; color: #22543d; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; border: 1px solid #98e6b1; font-size: 0.95rem; }
+
+        .hokou-btn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .hokou-selector-btn {
+            background-color: #fff; border: 2px solid #edf2f7; padding: 15px; border-radius: 6px;
+            font-weight: bold; font-size: 0.95rem; color: #0d233a; cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .hokou-selector-btn:hover { border-color: #c5a059; background-color: #fcf9f2; }
+        .hokou-selector-btn.active { background-color: #c5a059; color: #0d233a; border-color: #0d233a; }
+
+        /* --------------------------------------
+         * 成績管理（スコアテーブル・入力欄）
+         * -------------------------------------- */
+        .score-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 15px;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .score-input-row {
+            background: #fff;
+            padding: 10px;
             border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
+            border: 1px solid #edf2f7;
         }
+        .score-sub-label { font-size: 0.85rem; font-weight: bold; color: #2d3748; margin-bottom: 6px; display: block;}
+        .score-fields { display: flex; gap: 5px; align-items: center; }
+        .score-fields input { padding: 6px; font-size: 0.85rem; text-align: center; }
 
-        /* 相談予約専用の時間選択枠 */
-        .time-slots-container {
-            margin-top: 20px;
-            display: none;
-            border-top: 1px dashed #cbd5e0;
-            padding-top: 20px;
+        .mock-list-container {
+            margin-top: 25px;
         }
-
-        .slots-grid {
+        .mock-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .mock-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed #cbd5e0;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+        .mock-title { font-weight: bold; color: #0d233a; font-size: 1rem; }
+        .mock-date { font-size: 0.8rem; color: #718096; }
+        .mock-scores-summary {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .time-slot-btn {
-            background-color: #fff;
-            border: 1px solid #cbd5e0;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
+            gap: 8px;
             font-size: 0.85rem;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
+            margin-bottom: 10px;
         }
+        .mock-score-tag { background: #f7fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #edf2f7; }
 
-        .time-slot-btn:hover {
-            border-color: #0d233a;
-            background-color: #f7fafc;
-        }
-
-        .time-slot-btn.active {
-            background-color: #0d233a;
-            color: #fff;
-            border-color: #0d233a;
-        }
-
-        .confirm-container {
-            margin-top: 25px;
-            display: none;
-            text-align: right;
-        }
-
-        .success-banner {
-            display: none;
-            background-color: #c6f6d5;
-            color: #22543d;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            border: 1px solid #98e6b1;
-            font-size: 0.95rem;
-        }
-
-        /* 特進補講ボタンレイアウト */
-        .hokou-btn-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .hokou-selector-btn {
-            background-color: #fff;
-            border: 2px solid #edf2f7;
-            padding: 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.95rem;
-            color: #0d233a;
-            cursor: pointer;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: all 0.2s;
-        }
-
-        .hokou-selector-btn:hover {
-            border-color: #c5a059;
-            background-color: #fcf9f2;
-        }
-
-        .hokou-selector-btn.active {
-            background-color: #c5a059;
-            color: #0d233a;
-            border-color: #0d233a;
-        }
-
-        /* 背景マスク */
-        .sidebar-overlay {
+        /* --------------------------------------
+         * モーダル（ポップアップ窓）の共通スタイル
+         * -------------------------------------- */
+        .modal-overlay {
             display: none;
             position: fixed;
-            top: 60px;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 60px);
-            background: rgba(0,0,0,0.4);
-            z-index: 998;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
         }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #a0aec0;
+        }
+        .modal-close:hover { color: #4a5568; }
 
-        .sidebar-overlay.show {
-            display: block;
-        }
-
-        @media (max-width: 1024px) {
-            .timeline-row { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .attendance-btn { width: 100%; text-align: center; }
-            .calendar-day-cell { min-height: 75px; }
-        }
+        .sidebar-overlay { display: none; position: fixed; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); background: rgba(0,0,0,0.4); z-index: 998; }
+        .sidebar-overlay.show { display: block; }
+        @media (max-width: 1024px) { .timeline-row { flex-direction: column; align-items: flex-start; gap: 10px; } .btn-group { width: 100%; } .attendance-btn, .detail-trigger-btn { flex: 1; text-align: center; } .calendar-day-cell { min-height: 75px; } }
     </style>
 </head>
 <body>
@@ -741,28 +653,22 @@
     <div class="login-container" id="loginBox">
         <div class="login-logo">鉄緑会</div>
         <div class="login-subtitle">医進会 塾生ログイン</div>
-        
         <div class="form-group">
             <label for="studentId">生徒ID (塾生番号)</label>
             <input type="text" id="studentId" placeholder="ihsr2730 と入力">
         </div>
-        
         <div class="form-group">
             <label for="password">パスワード</label>
             <input type="password" id="password" placeholder="etf20064 と入力">
         </div>
-        
         <button class="login-btn" onclick="attemptLogin()">ログイン</button>
         <div class="error-message" id="errorMsg">生徒IDまたはパスワードが正しくありません。</div>
     </div>
 
-
     <div class="mypage-container" id="myPageBox">
         
         <div class="top-navbar">
-            <div class="fixed-logo">
-                鉄緑会<span>医進会 塾生ページ</span>
-            </div>
+            <div class="fixed-logo">鉄緑会<span>医進会 塾生ページ</span></div>
             <button class="menu-toggle" onclick="toggleSidebar()">メニュー</button>
         </div>
         
@@ -777,20 +683,17 @@
                     <li><a href="#" class="menu-link" onclick="switchSection('attendance-calendar', this)">出欠記録・面談予定</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('student-profile', this)">所属クラス・生徒情報</a></li>
                 </ul>
-
                 <div class="menu-category">学習・講義管理</div>
                 <ul>
                     <li><a href="#" class="menu-link" onclick="switchSection('absence', this)">欠席連絡・振替授業申請</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('curriculum', this)">カリキュラムスケジュール</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('medical-supplement', this)">医学部特進補講</a></li>
                 </ul>
-
                 <div class="menu-category">成績・演習</div>
                 <ul>
-                    <li><a href="#" class="menu-link" onclick="switchSection('grades', this)">校内模試・成績推移</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('grades', this)">模試成績</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('materials', this)">教材・解答プリントDL</a></li>
                 </ul>
-
                 <div class="menu-category">医学部受験サポート</div>
                 <ul>
                     <li><a href="#" class="menu-link" onclick="switchSection('support', this)">現役医大生指導員 相談予約</a></li>
@@ -808,35 +711,19 @@
                 </div>
             </header>
 
-            <!-- 1. ホーム（ダッシュボード）セクション -->
             <div id="section-home" class="content-section active">
                 <div id="todayLectureArea"></div>
-
                 <div class="grid-container">
-                    <div class="left-column">
-                        <div class="card">
-                            <h2>事務局からの最新情報</h2>
-                            <ul class="news-list">
-                                <li><span class="news-date">2026/06/21</span><strong style="color: #c53030;">[重要]</strong> 【医進会】第2回東大・国公立大医学部記述模試の申込受付開始</li>
-                                <li><span class="news-date">2026/06/18</span> ［夏期講習］医進数学・医進英語特論の推奨クラス分け発表</li>
-                            </ul>
-                        </div>
-                        <div class="card">
-                            <h2>直近の選抜・校内模試結果</h2>
-                            <table class="status-table">
-                                <thead>
-                                    <tr><th>実施時期</th><th>模試・テスト名称</th><th>総合評価</th><th>順位</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>5月度</td><td>第1回 医進会選抜校内模試</td><td><strong style="color: #2b6cb0;">A判定</strong></td><td>15位 / 220人</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="card">
+                        <h2>事務局からの最新情報</h2>
+                        <ul class="news-list">
+                            <li><span class="news-date">2026/06/21</span><strong style="color: #c53030;">[重要]</strong> 【医進会】第2回東大・国公立大医学部記述模試の申込受付開始</li>
+                            <li><span class="news-date">2026/06/18</span> ［夏期講習］医進数学・医進英語特論の推奨クラス分け発表</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. 今週の受講スケジュール -->
             <div id="section-weekly-schedule" class="content-section">
                 <div class="weekly-grid">
                     <div class="weekly-day-card" id="sched-1"><div class="weekly-day-header" id="sched-head-1">月曜日</div><div class="weekly-day-body" id="weekly-body-1"></div></div>
@@ -849,30 +736,26 @@
                 </div>
             </div>
 
-            <!-- 3. 出欠記録・面談予定（詳細表示・キャンセル・変更機能付き） -->
             <div id="section-attendance-calendar" class="content-section">
                 <div class="card">
-                    <h2>出欠および指導員面談予定（2026年6月）</h2>
+                    <h2>出欠および指導員面談・特進補講予定（2026年6月）</h2>
                     <p style="font-size: 0.85rem; color: #718096; margin-bottom: 15px;">
-                        カレンダーの日付をクリックすると、その日の出欠情報や予約された面談・補講の詳細確認、面談の変更・キャンセルが行えます。
+                        日付をクリックすると、詳細の確認や、面談・補講の変更およびキャンセル手続きが行えます。
                     </p>
                     <div class="calendar-container" id="attendanceCalendarGrid"></div>
 
-                    <!-- 日付詳細表示パネル -->
                     <div class="day-detail-panel" id="attendanceDayDetail" style="display: none;">
                         <h3 id="detailPanelTitle" style="color: #0d233a; margin-bottom: 15px; font-size: 1rem;">日付を選択してください</h3>
                         <div id="detailPanelContent"></div>
                         
-                        <!-- 面談変更用の隠しエリア -->
                         <div id="inlineModArea" style="display: none; margin-top: 15px; border-top: 1px dashed #cbd5e0; padding-top: 15px;">
-                            <h4 style="font-size: 0.9rem; color: #0d233a; margin-bottom: 10px;">新しい面談時間を選択してください</h4>
+                            <h4 id="inlineModTitle" style="font-size: 0.9rem; color: #0d233a; margin-bottom: 10px;">新しい時間枠を選択してください</h4>
                             <div class="slots-grid" id="inlineSlotsGrid"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. 所属クラス・生徒情報セクション -->
             <div id="section-student-profile" class="content-section">
                 <div class="card" style="max-width: 700px; margin: 0 auto;">
                     <h2>ご登録生徒情報</h2>
@@ -884,12 +767,9 @@
                             <tr><th>在籍コース</th><td>高3・医学部特進（東大理Ⅲ/国公立大医学部）</td></tr>
                         </tbody>
                     </table>
-
                     <h2 style="margin-top: 35px;">教科別所属クラス</h2>
                     <table class="status-table" style="margin-top: 15px;">
-                        <thead>
-                            <tr><th style="width: 40%;">教科</th><th>現在の所属クラス</th></tr>
-                        </thead>
+                        <thead><tr><th style="width: 40%;">教科</th><th>現在の所属クラス</th></tr></thead>
                         <tbody>
                             <tr><td><strong>数学</strong></td><td><span class="class-badge badge-sa">SAクラス</span> (最上位)</td></tr>
                             <tr><td><strong>化学</strong></td><td><span class="class-badge badge-a1">A1クラス</span></td></tr>
@@ -900,87 +780,52 @@
                 </div>
             </div>
 
-            <!-- 5. 欠席連絡セクション -->
             <div id="section-absence" class="content-section">
                 <div class="card" style="max-width: 600px; margin: 0 auto;">
                     <h2>欠席連絡・振替申請フォーム</h2>
-                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 20px;">
-                        必要事項を入力して「送信する」を押すと、指定アドレス（shenj0189@gmail.com）宛てのメールアプリが起動します。
-                    </p>
                     <div class="form-group">
                         <label>生徒氏名</label>
-                        <input type="text" id="absenceName" value="柿原 拓真" readonly style="background-color: #edf2f7; color: #4a5568;">
+                        <input type="text" id="absenceName" value="柿原 拓真" readonly style="background-color: #edf2f7;">
                     </div>
                     <div class="form-group">
                         <label for="absenceClass">欠席する講義枠</label>
                         <select id="absenceClass">
-                            <option value="月曜日 講義枠">月曜日のいずれかの講義・テスト</option>
-                            <option value="火曜日 講義枠">火曜日のいずれかの講義・テスト</option>
-                            <option value="水曜日 講義枠">水曜日のいずれかの講義・テスト</option>
-                            <option value="木曜日 講義枠">木曜日のいずれかの講義・テスト</option>
-                            <option value="金曜日 講義枠">金曜日のいずれかの講義・テスト</option>
-                            <option value="土曜日 講義枠">土曜日のいずれかの講義・テスト</option>
-                            <option value="日曜日 講義枠">日曜日のいずれかの講義・テスト</option>
+                            <option value="月曜日 講義枠">月曜日の講義枠</option>
+                            <option value="火曜日 講義枠">火曜日の講義枠</option>
+                            <option value="水曜日 講義枠">水曜日の講義枠</option>
+                            <option value="木曜日 講義枠">木曜日の講義枠</option>
+                            <option value="金曜日 講義枠">金曜日の講義枠</option>
+                            <option value="土曜日 講義枠">土曜日の講義枠</option>
+                            <option value="日曜日 講義枠">日曜日の講義枠</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="absenceReason">欠席理由・対象コマ詳細</label>
-                        <textarea id="absenceReason" rows="4" placeholder="例：体調不良のため、3コマ目の英語を欠席します、等"></textarea>
+                        <textarea id="absenceReason" rows="4" placeholder="理由を入力してください"></textarea>
                     </div>
                     <button class="login-btn" onclick="sendAbsenceEmail()">欠席連絡メールを送信する</button>
                 </div>
             </div>
 
-            <!-- 6. カリキュラムセクション -->
             <div id="section-curriculum" class="content-section">
                 <div class="card">
-                    <h2>高3 年間カリキュラム・進行表 (主要4教科完全網羅版)</h2>
+                    <h2>高3 年間カリキュラム・進行表</h2>
                     <table class="status-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 14%;">対象教科</th>
-                                <th style="width: 43%;">第1期 (春期〜1学期)</th>
-                                <th style="width: 43%;">第2期 (夏期〜2学期)</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>対象教科</th><th>第1期 (春期〜1学期)</th><th>第2期 (夏期〜2学期)</th></tr></thead>
                         <tbody>
-                            <tr>
-                                <td><strong>数学</strong></td>
-                                <td>・入試数学系統演習<br>・数Ⅲ/微積分徹底演習による計算力の強化</td>
-                                <td>・東大・国公立大医学部過去問を用いた実践演習<br>• 本番形式のテストゼミ主体による総合力錬成</td>
-                            </tr>
-                            <tr>
-                                <td><strong>物理</strong></td>
-                                <td>・力学・電磁気・波動の発展的体系化<br>・微積分背景の物理アプローチ基礎徹底</td>
-                                <td>・東大・京大・医学部形式の初見難問演習ゼミ<br>・原子物理の完全攻略と時間配分最適化</td>
-                            </tr>
-                            <tr>
-                                <td><strong>化学</strong></td>
-                                <td>・理論化学の厳密な定量的計算力の構築<br>・無機化学の徹底暗記と構造分析の紐付け</td>
-                                <td>・有機化学（構造決定）の最難関パターン網羅<br>・高分子化合物のスピード演習と過去問演習</td>
-                            </tr>
-                            <tr>
-                                <td><strong>英語</strong></td>
-                                <td>・医学部特有の超長文・精選読解演習<br>・リスニング基礎の確立</td>
-                                <td>・論理的英文和訳および精緻な要約の対策<br>・自由英作文の徹底的な個別添削</td>
-                            </tr>
+                            <tr><td><strong>数学</strong></td><td>入試数学系統演習／数Ⅲ微積分徹底演習</td><td>東大・医学部過去問実践演習／テストゼミ</td></tr>
+                            <tr><td><strong>物理</strong></td><td>力学・電磁気・波動の発展的体系化</td><td>初見難問演習ゼミ／原子物理完全攻略</td></tr>
+                            <tr><td><strong>化学</strong></td><td>理論化学定量的計算／無機構造分析</td><td>有機構造決定最難関パターン／高分子スピード演習</td></tr>
+                            <tr><td><strong>英語</strong></td><td>医学部超長文精選読解／リスニング基礎</td><td>論理的英文和訳・要約／自由英作文個別添削</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 7. 医学部特進補講セクション（新設） -->
             <div id="section-medical-supplement" class="content-section">
-                <div class="success-banner" id="hokouSuccess">
-                    補講の予約が完了しました。
-                </div>
-
+                <div class="success-banner" id="hokouSuccess">補講の予約が完了しました。</div>
                 <div class="card">
                     <h2>医学部特進特別補講 オンライン予約システム</h2>
-                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 20px;">
-                        受講したい講座を選択したのち、希望の日付と時間を選択して予約を確定させてください。
-                    </p>
-
                     <h3>ステップ1：講座を選択</h3>
                     <div class="hokou-btn-grid">
                         <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進数学SA', this)">医学部特進数学SA</button>
@@ -990,16 +835,13 @@
                         <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進小論文', this)">医学部特進小論文</button>
                         <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進対策講座', this)">医学部特進対策講座</button>
                     </div>
-
                     <div id="hokouDateTimeArea" style="display: none;">
                         <h3>ステップ2：希望日を選択</h3>
                         <div class="calendar-container" id="hokouCalendarGrid"></div>
-
                         <div class="time-slots-container" id="hokouTimeSlotsArea">
-                            <h3>ステップ3：希望時間を選択（30分）</h3>
+                            <h3>ステップ3：希望時間を選択</h3>
                             <div class="slots-grid" id="hokouSlotsGridContainer"></div>
                         </div>
-
                         <div class="confirm-container" id="hokouConfirmArea">
                             <button class="login-btn" style="max-width: 200px;" onclick="submitHokouReservation()">補講予約を確定</button>
                         </div>
@@ -1007,140 +849,234 @@
                 </div>
             </div>
 
-            <!-- 8. 成績アーカイブセクション -->
             <div id="section-grades" class="content-section">
+                <div class="success-banner" id="mockSuccessBanner">模試成績を登録・更新しました。</div>
+                
                 <div class="card">
-                    <h2>過去の全成績アーカイブ</h2>
-                    <p style="padding: 20px 0; color: #718096;">現在、第1回校内模試までのデータが反映されています。</p>
+                    <h2 id="mockFormTitle">校外模試成績の自主記録・追加</h2>
+                    <input type="hidden" id="editMockId" value="">
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="form-group">
+                            <label for="mockDate">受験日</label>
+                            <input type="date" id="mockDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="mockNameSelect">模試の名前</label>
+                            <select id="mockNameSelect" onchange="handleMockNameChange()">
+                                <option value="全統共テ模試">全統共テ模試</option>
+                                <option value="全統記述模試">全統記述模試</option>
+                                <option value="東大オープン模試">東大オープン模試</option>
+                                <option value="東大実戦模試">東大実戦模試</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="customMockNameGroup" style="display: none;">
+                            <label for="customMockName">模試名（自由入力）</label>
+                            <input type="text" id="customMockName" placeholder="独自の模試名を入力">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+                        <div class="form-group">
+                            <label for="mockGrade">学年</label>
+                            <select id="mockGrade">
+                                <option value="高３">高３</option>
+                                <option value="高１">高１</option>
+                                <option value="高２">高２</option>
+                                <option value="既卒生">既卒生</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="mockRoundGroup">
+                            <label for="mockRound" id="mockRoundLabel">回数・季節</label>
+                            <select id="mockRound">
+                                </select>
+                        </div>
+                    </div>
+
+                    <div id="customSubjectToggleArea" style="display: none; margin-top: 15px;">
+                        <span class="checkbox-group-label">受験した教科にチェックを入れてください：</span>
+                        <div class="subject-checkboxes" id="subjectCheckboxContainer">
+                            </div>
+                    </div>
+
+                    <h3 style="font-size: 0.95rem; margin-top: 20px; margin-bottom: 10px; color:#0d233a;">各教科・総合の成績入力</h3>
+                    <div class="score-input-grid" id="dynamicScoreInputContainer">
+                        </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: #f0f4f8; padding: 15px; border-radius: 6px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>総合得点</label>
+                            <input type="number" id="totalScore" placeholder="得点">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>総合配点</label>
+                            <input type="number" id="totalFull" placeholder="配点">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>総合偏差値</label>
+                            <input type="number" id="totalDev" step="0.1" placeholder="偏差値">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button class="action-btn-secondary" id="cancelEditBtn" style="display: none;" onclick="resetMockForm()">編集をキャンセル</button>
+                        <button class="login-btn" style="max-width: 180px;" onclick="saveMockResult()">成績を保存する</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>登録済みの模試成績一覧</h2>
+                    <div class="mock-list-container" id="savedMockListArea"></div>
                 </div>
             </div>
 
-            <!-- 9. 教材ダウンロードセクション -->
             <div id="section-materials" class="content-section">
                 <div class="card">
                     <h2>解答・解説プリントダウンロード</h2>
                     <ul class="news-list">
-                        <li><a href="#" style="color:#0d233a;">第11週 医進数学演習 解答・解説（PDF）</a></li>
+                        <li><a href="#" style="color:#0d233a; font-weight:bold;">第11週 医進数学演習 解答・解説（PDF）</a></li>
                     </ul>
                 </div>
             </div>
 
-            <!-- 10. 指導員面談相談予約 -->
             <div id="section-support" class="content-section">
-                <div class="success-banner" id="reserveSuccess">
-                    指導員相談の予約が完了しました。
-                </div>
-
+                <div class="success-banner" id="reserveSuccess"></div>
                 <div class="card">
-                    <h2>東大理Ⅲ・国公立大医学部現役指導員（OB/OG）相談予約</h2>
-                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 20px;">
-                        進路や学習計画について個別相談が可能です（1枠30分）。希望する「日付」をカレンダーから選択し、その後に表示される「時間」を選んでください。
-                    </p>
-
+                    <h2>指導員（OB/OG）相談予約</h2>
                     <h3>ステップ1：希望日を選択</h3>
                     <div class="calendar-container" id="reservationCalendarGrid"></div>
-
                     <div class="time-slots-container" id="timeSlotsArea">
-                        <h3>ステップ2：希望時間を選択（30分）</h3>
+                        <h3>ステップ2：希望時間を選択</h3>
                         <div class="slots-grid" id="slotsGridContainer"></div>
                     </div>
-
                     <div class="confirm-container" id="confirmArea">
                         <button class="login-btn" style="max-width: 200px;" onclick="submitFinalReservation()">予約を確定</button>
                     </div>
                 </div>
             </div>
-
         </main>
     </div>
 
+    <div class="modal-overlay" id="lectureDetailModal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeLectureModal()">&times;</span>
+            <h2 id="modalLectureName" style="color:#0d233a; font-size:1.1rem; margin-bottom:15px; padding-bottom:8px; border-bottom:2px solid #c5a059;">講義詳細情報</h2>
+            <div style="margin-bottom: 15px;">
+                <h4 style="font-size:0.9rem; color:#4a5568; margin-bottom:5px;">■ 必要となる教材・持参物</h4>
+                <p id="modalLectureMaterials" style="font-size:0.95rem; background:#f7fafc; padding:10px; border-radius:4px; line-height:1.4; border:1px solid #e2e8f0;"></p>
+            </div>
+            <div>
+                <h4 style="font-size:0.9rem; color:#4a5568; margin-bottom:5px;">■ 本日の学習予定範囲・テーマ</h4>
+                <p id="modalLectureRange" style="font-size:0.95rem; background:#f7fafc; padding:10px; border-radius:4px; line-height:1.4; border:1px solid #e2e8f0;"></p>
+            </div>
+        </div>
+    </div>
+
     <script>
-        /* 1日あたり5講座の完全スケジュールデータ */
+        /* 1日あたり5講座の完全スケジュール・教材・予定範囲マスターデータ */
         const masterSchedule = {
             1: [
-                { name: "月曜単語・熟語記述テスト", time: "16:45〜17:15", room: "本館202", class: "全クラス共通" },
-                { name: "高3重要事項確認テストゼミ", time: "17:20〜18:20", room: "本館202", class: "必須演習" },
-                { name: "月曜テストゼミ・採点講評", time: "18:30〜20:00", room: "本館202", class: "記述力強化" },
-                { name: "数Ⅲ計算力徹底スピード精査", time: "20:05〜20:45", room: "本館202", class: "フォローアップ" },
-                { name: "現役指導員による個別進捗面談", time: "20:50〜21:20", room: "面談室B", class: "月一指定枠" }
+                { name: "月曜単語・熟語記述テスト", time: "16:45〜17:15", room: "本館202", class: "共通", mat: "鉄壁英単語熟語帳、テスト用バインダー", range: "第21章〜第25章 派生語・語法記述チェック" },
+                { name: "高3重要事項確認テストゼミ", time: "17:20〜18:20", room: "本館202", class: "必須", mat: "記述解答用万年筆またはボールペン", range: "1学期定例重要公式・定理の証明、および記述論証精査" },
+                { name: "月曜テストゼミ・採点講評", time: "18:30〜20:00", room: "本館202", class: "記述", mat: "前週の添削済み答案、講評冊子", range: "文脈適合・条件英作文の減点基準解説、個別フィードバック" },
+                { name: "数Ⅲ計算力徹底スピード精査", time: "20:05〜20:45", room: "本館202", class: "補習", mat: "数Ⅲ極限・微積分計算ドリル", range: "置換積分・部分積分の高速処理、定積分と不等式の頻出パターン" },
+                { name: "現役指導員による個別進捗面談", time: "20:50〜21:20", room: "面談室B", class: "指定", mat: "週間学習計画表（ポートフォリオ）", range: "6月中旬の進捗セルフチェック、夏期講習の講座選定カウンセリング" }
             ],
             2: [
-                { name: "医学部2次記述小論文（基礎）", time: "16:30〜17:20", room: "3号館101", class: "特進選抜枠" },
-                { name: "医学部2次記述小論文（実戦）", time: "17:30〜19:00", room: "3号館101", class: "特進選抜枠" },
-                { name: "面接・口頭試問シミュレーション", time: "19:10〜19:50", room: "面談室A", class: "個別対策" },
-                { name: "東大国公立大英文和訳添削ゼミ", time: "20:00〜20:50", room: "3号館102", class: "任意選抜" },
-                { name: "デイリー質問・相談対応デスク", time: "21:00〜21:30", room: "自習館ラウンジ", class: "自由相談" }
+                { name: "医学部2次記述小論文（基礎）", time: "16:30〜17:20", room: "3号館101", class: "特進", mat: "医事小論文テキスト、原稿用紙", range: "医療倫理の基本原則（インフォームドコンセント、 paternalism）" },
+                { name: "医学部2次記述小論文（実戦）", time: "17:30〜19:00", room: "3号館101", class: "特進", mat: "時事医療トピックプリント、ノート", range: "「先端医療と遺伝子編集」をテーマとする600字論述および相互添削" },
+                { name: "面接・口頭試問シミュレーション", time: "19:10〜19:50", room: "面談室A", class: "個別", mat: "自己分析シート、志望理由書控", range: "大学志望理由のブラッシュアップ、頻出質問に対する論理的応答" },
+                { name: "東大国公立大英文和訳添削ゼミ", time: "20:00〜20:50", room: "3号館102", class: "選抜", mat: "英文解釈クラシックテキスト", range: "抽象度の高い論説文における倒置・挿入句の正確な構造分解" },
+                { name: "デイリー質問・相談対応デスク", time: "21:00〜21:30", room: "自習館", class: "自由", mat: "各自不明点の残るテキスト・問題集", range: "常駐指導員への自由質問（質問随時受付・個別解説）" }
             ],
             3: [
-                { name: "高3医進数学・実戦確認テスト", time: "16:30〜17:00", room: "本館401", class: "SAクラス" },
-                { name: "高3医進数学・第1部（数Ⅲ微積）", time: "17:10〜18:50", room: "本館401", class: "SAクラス" },
-                { name: "高3医進数学・第2部（整数・確率）", time: "19:00〜20:30", room: "本館401", class: "SAクラス" },
-                { name: "入試数学系統演習・居残り解説", time: "20:35〜21:00", room: "本館401", class: "質問推奨" },
-                { name: "SAクラス限定 過去問添削指導", time: "21:05〜21:35", room: "本館401", class: "個別フィードバック" }
+                { name: "高3医進数学・実戦確認テスト", time: "16:30〜17:00", room: "本館401", class: "SA", mat: "確認テスト解答用紙、計算用紙", range: "前週範囲（複素数平面と極方程式）の選抜初見問題演習" },
+                { name: "高3医進数学・第1部（数Ⅲ微積）", time: "17:10〜18:50", room: "本館401", class: "SA", mat: "特進数学テキストSA、演習ノート", range: "第12講「定積分で表された関数・微積分方程式の難問攻略」" },
+                { name: "高3医進数学・第2部（整数・確率）", time: "19:00〜20:30", room: "本館401", class: "SA", mat: "入試数学系統演習「整数・代数」冊子", range: "東大過去問にみる「n進法・ユークリッドの互除法を用いた高度な整数証明」" },
+                { name: "入試数学系統演習・居残り解説", time: "20:35〜21:00", room: "本館401", class: "任意", mat: "授業内配布の補助レジュメ", range: "第2部で扱った極限融合整数問題の別解・拡張アプローチの解説" },
+                { name: "SAクラス限定 過去問添削指導", time: "21:05〜21:35", room: "本館401", class: "個別", mat: "過去問答案（各自作成のもの）", range: "東京大学理科一〜三類・過去10年分の数学問題個別添削指導" }
             ],
             4: [
-                { name: "高3医進化学・無機有機小テスト", time: "16:30〜17:00", room: "本館302", class: "A1クラス" },
-                { name: "高3医進化学・理論化学構造分析", time: "17:10〜18:50", room: "本館302", class: "A1クラス" },
-                { name: "高3医進化学・有機構造決定演習", time: "19:00〜20:30", room: "本館302", class: "A1クラス" },
-                { name: "化学重要発展問題・質問解説", time: "20:35〜21:10", room: "本館302", class: "自由参加" },
-                { name: "化学テキスト復習セッション", time: "21:15〜21:45", room: "本館302", class: "自主補習枠" }
+                { name: "高3医進化学・無機有機小テスト", time: "16:30〜17:00", room: "本館302", class: "A1", mat: "化学重要定着確認テスト用紙", range: "遷移金属元素（鉄、銅、銀、クロム、マンガン）の沈殿・錯イオン反応" },
+                { name: "高3医進化学・理論化学構造分析", time: "17:10〜18:50", room: "本館302", class: "A1", mat: "医進化学テキスト（上巻）、ノート", range: "第14講「溶液の平衡・電離平衡・緩衝液と滴定曲線の定量的計算」" },
+                { name: "高3医進化学・有機構造決定演習", time: "19:00〜20:30", room: "本館302", class: "A1", mat: "有機化学構造決定パターン演習プリント", range: "エステル加水分解、オゾン分解を伴う高度な芳香族化合物の決定" },
+                { name: "化学重要発展問題・質問解説", time: "20:35〜21:10", room: "本館302", class: "自由", mat: "化学発展講座問題集", range: "難関国公立大医学部で頻出の気体の状態方程式と飽和蒸気圧の融合問題" },
+                { name: "化学テキスト復習セッション", time: "21:15〜21:45", room: "本館302", class: "補習", mat: "基本確認問題集（化学）", range: "結晶格子（配位数・充填率の計算）の再確認と個別フォロー" }
             ],
             5: [
-                { name: "高3医進英語・英文法演述テスト", time: "16:30〜17:00", room: "2号館201", class: "A3クラス" },
-                { name: "高3医進英語・長文読解精選演習", time: "17:10〜18:50", room: "2号館201", class: "A3クラス" },
-                { name: "高3医進英語・自由英作文・和訳", time: "19:00〜20:30", room: "2号館201", class: "A3クラス" },
-                { name: "医進英語リスニングディクテーション", time: "20:35〜21:10", room: "2号館201", class: "音声強化" },
-                { name: "英作文個別返却・表現指導", time: "21:15〜21:45", room: "2号館201", class: "個別対応" }
+                { name: "高3医進英語・英文法演述テスト", time: "16:30〜17:00", room: "2号館201", class: "A3", mat: "文法演述チェックシート", range: "時制・助動詞・仮定法におけるハイレベル正誤判定・語順整序" },
+                { name: "高3医進英語・長文読解精選演習", time: "17:10〜18:50", room: "2号館201", class: "A3", mat: "医進英語長文精選テキスト", range: "第11講「生命科学・バイオテクノロジーに関する医学部頻出超長文」" },
+                { name: "高3医進英語・自由英作文・和訳", time: "19:00〜20:30", room: "2号館201", class: "A3", mat: "英作文ワークシート、ノート", range: "「尊厳死の是非」に関する80-100語の論理的自由英作文のドラフティング" },
+                { name: "医進英語リスニングディクテーション", time: "20:35〜21:10", room: "2号館201", class: "音声", mat: "音声配信用端末（またはイヤホン）", range: "科学論説文をベースとしたシャドーイングおよびスクリプト空欄埋め" },
+                { name: "英作文個別返却・表現指導", time: "21:15〜21:45", room: "2号館201", class: "個別", mat: "返却添削答案、ミスノート", range: "冠詞の誤用、コロケーション不一致の個別指摘と改善指導" }
             ],
             6: [
-                { name: "高3医進物理・物理実戦基礎テスト", time: "13:30〜14:00", room: "本館503", class: "A3クラス" },
-                { name: "高3医進物理・力学電磁気発展", time: "14:10〜15:50", room: "本館503", class: "A3クラス" },
-                { name: "高3医進物理・波動原子集中徹底", time: "16:00〜17:35", room: "本館503", class: "A3クラス" },
-                { name: "物理発展講座冊子・難問解説会", time: "17:45〜18:30", room: "本館503", class: "応用選抜" },
-                { name: "土曜合同記述オープン添削会", time: "18:40〜19:30", room: "本館大教室", class: "合同イベント" }
+                { name: "高3医進物理・物理実戦基礎テスト", time: "13:30〜14:00", room: "本館503", class: "A3", mat: "実戦物理確認テスト用紙", range: "力学的エネルギー保存則と角運動量保存則の融合問題" },
+                { name: "高3医進物理・力学電磁気発展", time: "14:10〜15:50", room: "本館503", class: "A3", mat: "医進物理テキスト、演習ノート", range: "第13講「電磁誘導・ローレンツ力とコイルを含む複合格子回路」" },
+                { name: "高3医進物理・波動原子集中徹底", time: "16:00〜17:35", room: "本館503", class: "A3", mat: "物理発展講座（原子物理編）", range: "「光電効果とX線の回折・ブラッグの条件」の数理的アプローチ" },
+                { name: "物理発展講座冊子・難問解説会", time: "17:45〜18:30", room: "本館503", class: "応用", mat: "授業内配布・難問冊子", range: "京都大学過去問「二重スリットによる光の干渉と薄膜による変化」の深掘り" },
+                { name: "土曜合同記述オープン添削会", time: "18:40〜19:30", room: "大教室", class: "合同", mat: "自己答案、赤ペン", range: "他者の解答を採点基準表に則って採点し、記述の過不足を学ぶ演習" }
             ],
             0: [
-                { name: "理Ⅲ・国公立医選抜記述模試・午前の部", time: "09:30〜12:00", room: "本館大教室", class: "定期イベント" },
-                { name: "理Ⅲ・国公立医選抜記述模試・午後の部", time: "13:00〜16:30", room: "本館大教室", class: "定期イベント" },
-                { name: "記述模試 自己採点・解答速報講評", time: "16:45〜17:45", room: "本館大教室", class: "全体講義" },
-                { name: "日曜特選 最難関整数問題チャレンジ", time: "18:00〜19:30", room: "本館401", class: "最高難度枠" },
-                { name: "記述答案即日回収・個別学習カウンセリング", time: "19:40〜20:30", room: "面談室C", class: "予約制" }
+                { name: "理Ⅲ・選抜記述模試・午前の部", time: "09:30〜12:00", room: "大教室", class: "定期", mat: "受験票、筆記用具、時計", range: "第1限：数学（記述式 150分問）東大レベル選抜模試試験" },
+                { name: "理Ⅲ・選抜記述模試・午後の部", time: "13:00〜16:30", room: "大教室", class: "定期", mat: "受験票、筆記用具", range: "第2限：英語（120分）、第3限：理科（物理・化学 150分）" },
+                { name: "記述模試 自己採点・解答速報講評", time: "16:45〜17:45", room: "大教室", class: "全体", mat: "解答解説冊子、自己採点用シート", range: "各教科の配点基準、部分点獲得のための記述境界線の速報講評" },
+                { name: "日曜特選 最難関整数問題チャレンジ", time: "18:00〜19:30", room: "本館401", class: "特選", mat: "チャレンジ問題レジュメ", range: "難関国公立大医学部・単科医大の過去問から抽出した「超難発想の整数論」" },
+                { name: "答案即日回収・学習カウンセリング", time: "19:40〜20:30", room: "面談室C", class: "予約", mat: "本日実施の模試問題・自己採点結果", range: "模試の手応えに基づく弱点分野の即時判定と、次週自習計画の修正" }
             ]
         };
 
-        /* 30分ごとの面談・補講時間枠リスト */
-        const masterTimeSlots = [
-            "17:00〜17:30", "17:30〜18:00", "18:00〜18:30", 
-            "19:00〜19:30", "19:30〜20:00", "20:00〜20:30", 
-            "21:00〜21:30"
+        const masterTimeSlots = ["17:00〜17:30", "17:30〜18:00", "18:00〜18:30", "19:00〜19:30", "19:30〜20:00", "20:00〜20:30", "21:00〜21:30"];
+        
+        // 全科目の定義マスタ
+        const allSubjectsMaster = [
+            { id: "math1", label: "数学①" }, { id: "math2", label: "数学②" }, { id: "englishL", label: "英語L" },
+            { id: "englishR", label: "英語R" }, { id: "math", label: "数学" }, { id: "english", label: "英語" },
+            { id: "japanese", label: "国語" }, { id: "physics", label: "物理" }, { id: "chemistry", label: "化学" },
+            { id: "politics", label: "政経" }, { id: "info", label: "情報" }
         ];
 
-        /* 永続化ステートの初期化（localStorage） */
+        /* アプリケーション永続化データステート */
         let appState = {
-            attendance: {}, // キー: 'YYYY-MM-DD-index', 値: boolean
-            meetings: {},    // キー: 'YYYY-MM-DD', 値: '時間枠'
-            supplements: {}  // キー: 'YYYY-MM-DD', 値: { course: '講座名', time: '時間枠' }
+            attendance: {}, 
+            meetings: {},    
+            supplements: {}, 
+            mockResults: []  // 校外模試成績を配列で保持
         };
 
         function loadState() {
-            const saved = localStorage.getItem('tetsuryoku_state');
+            const saved = localStorage.getItem('tetsuryoku_v2_state');
             if (saved) {
                 appState = JSON.parse(saved);
-                // 補講のマイグレーション対応
                 if (!appState.supplements) appState.supplements = {};
+                if (!appState.mockResults) appState.mockResults = [];
+            } else {
+                // 初回ログイン時のデモデータ挿入
+                appState.mockResults = [
+                    {
+                        id: "demo-1", date: "2026-05-10", name: "全統記述模試", grade: "高３", round: "第１回",
+                        subjects: {
+                            "数学": { score: 165, full: 200, dev: 72.4 },
+                            "英語": { score: 142, full: 200, dev: 68.1 },
+                            "国語": { score: 110, full: 200, dev: 58.5 },
+                            "物理": { score: 88, full: 100, dev: 74.0 },
+                            "化学": { score: 82, full: 100, dev: 70.2 }
+                        },
+                        total: { score: 487, full: 800, dev: 71.2 }
+                    }
+                ];
+                saveState();
             }
         }
 
         function saveState() {
-            localStorage.setItem('tetsuryoku_state', JSON.stringify(appState));
+            localStorage.setItem('tetsuryoku_v2_state', JSON.stringify(appState));
         }
 
-        // 1. ログイン処理
         function attemptLogin() {
             const idInput = document.getElementById('studentId').value.trim();
             const passInput = document.getElementById('password').value.trim();
-            const errorMsg = document.getElementById('errorMsg');
-
             if (idInput === 'ihsr2730' && passInput === 'etf20064') {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('myPageBox').style.display = 'block';
@@ -1153,20 +1089,18 @@
                 buildAttendanceCalendar();
                 buildReservationCalendar();
                 buildHokouCalendar();
+                handleMockNameChange(); 
+                renderMockList();
             } else {
-                errorMsg.style.display = 'block';
+                document.getElementById('errorMsg').style.display = 'block';
             }
         }
 
-        // 週間スケジュールページの構築
         function generateWeeklySchedule() {
-            const today = new Date();
-            const currentDay = today.getDay();
-
+            const currentDay = new Date().getDay();
             for (let day in masterSchedule) {
                 const bodyContainer = document.getElementById('weekly-body-' + day);
                 const headerContainer = document.getElementById('sched-head-' + day);
-                
                 if (bodyContainer) {
                     bodyContainer.innerHTML = '';
                     masterSchedule[day].forEach((lec) => {
@@ -1176,7 +1110,6 @@
                         bodyContainer.appendChild(item);
                     });
                 }
-
                 if (parseInt(day) === currentDay && headerContainer) {
                     headerContainer.classList.add('today-highlight');
                     headerContainer.innerHTML += " (本日)";
@@ -1184,10 +1117,8 @@
             }
         }
 
-        // 本日の講義のダッシュボード表示
         function checkTodayLecture() {
-            const today = new Date();
-            const currentDay = today.getDay(); 
+            const currentDay = new Date().getDay(); 
             const container = document.getElementById('todayLectureArea');
             container.innerHTML = '';
 
@@ -1196,9 +1127,7 @@
                 const alertCard = document.createElement('div');
                 alertCard.className = 'today-lecture-card';
                 
-                let timelineHTML = `<div class="today-header">本日の受講予定（全5講座・イベント）</div>`;
-                timelineHTML += `<div class="timeline">`;
-                
+                let timelineHTML = `<div class="today-header">本日の受講予定（全5講座・イベント）</div><div class="timeline">`;
                 const dateKeyStr = getTodayKeyString();
 
                 lectures.forEach((lecture, index) => {
@@ -1211,15 +1140,15 @@
                             <div class="timeline-time">${lecture.time}</div>
                             <div class="timeline-details">
                                 <div class="timeline-name">${lecture.name}</div>
-                                <div class="timeline-meta">教室: <strong>${lecture.room}</strong> ｜ 対象: <strong>${lecture.class}</strong></div>
+                                <div class="timeline-meta">教室: <strong>${lecture.room}</strong> ｜ クラス: <strong>${lecture.class}</strong></div>
                             </div>
-                            <div>
+                            <div class="btn-group">
+                                <button class="detail-trigger-btn" onclick="openLectureModal(${currentDay}, ${index})">詳細</button>
                                 <button class="${btnClass}" id="attBtn-${index}" onclick="toggleAttendance(${index})">${btnText}</button>
                             </div>
                         </div>
                     `;
                 });
-                
                 timelineHTML += `</div>`;
                 alertCard.innerHTML = timelineHTML;
                 container.appendChild(alertCard);
@@ -1228,10 +1157,7 @@
 
         function getTodayKeyString() {
             const today = new Date();
-            const y = today.getFullYear();
-            const m = String(today.getMonth() + 1).padStart(2, '0');
-            const d = String(today.getDate()).padStart(2, '0');
-            return `${y}-${m}-${d}`;
+            return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
         }
 
         function toggleAttendance(index) {
@@ -1252,23 +1178,28 @@
             buildAttendanceCalendar(); 
         }
 
-        /* --------------------------------------
-         * カレンダー生成共通処理 (2026年6月固定)
-         * -------------------------------------- */
-        function getJune2026Grid() {
-            const startPadding = 1; // 月曜始まりのため日曜枠に1マスの空き
-            const totalDays = 30;
-            return { padding: startPadding, days: totalDays };
+        /* モーダルポップアップ表示関数 */
+        function openLectureModal(day, index) {
+            const lecture = masterSchedule[day][index];
+            document.getElementById('modalLectureName').innerText = `${lecture.name}（${lecture.time}）`;
+            document.getElementById('modalLectureMaterials').innerText = lecture.mat;
+            document.getElementById('modalLectureRange').innerText = lecture.range;
+            document.getElementById('lectureDetailModal').classList.add('show');
         }
 
-        // 3. 出欠記録・面談予定カレンダーの作成
+        function closeLectureModal() {
+            document.getElementById('lectureDetailModal').classList.remove('show');
+        }
+
+        function getJune2026Grid() { return { padding: 1, days: 30 }; }
+
+        /* 出欠記録・面談予定・補講カレンダー生成 */
         function buildAttendanceCalendar() {
             const grid = document.getElementById('attendanceCalendarGrid');
             if (!grid) return;
             grid.innerHTML = '';
 
-            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-            weekdays.forEach(w => {
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => {
                 const cell = document.createElement('div');
                 cell.className = 'calendar-header-cell';
                 cell.innerText = w;
@@ -1285,67 +1216,44 @@
             for (let d = 1; d <= conf.days; d++) {
                 const cell = document.createElement('div');
                 cell.className = 'calendar-day-cell';
-                
-                const dayStr = String(d).padStart(2, '0');
-                const dateKey = `2026-06-${dayStr}`;
+                const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
 
-                let innerHTML = `<div class="day-number">${d}</div>`;
-                innerHTML += `<div class="calendar-info-box">`;
+                let innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">`;
 
-                // 出席バッジの判定
                 let hasAttendance = false;
-                for (let index = 0; index < 5; index++) {
-                    if (appState.attendance[`${dateKey}-${index}`]) {
-                        hasAttendance = true;
-                        break;
-                    }
+                for (let idx = 0; idx < 5; idx++) {
+                    if (appState.attendance[`${dateKey}-${idx}`]) { hasAttendance = true; break; }
                 }
-                if (hasAttendance) {
-                    innerHTML += `<span class="info-badge-attendance">出席あり</span>`;
-                }
-
-                // 面談予定バッジの判定
-                if (appState.meetings[dateKey]) {
-                    innerHTML += `<span class="info-badge-meeting">面談:${appState.meetings[dateKey].split('〜')[0]}</span>`;
-                }
-
-                // 補講予定バッジの判定
-                if (appState.supplements && appState.supplements[dateKey]) {
-                    innerHTML += `<span class="info-badge-hokou">補講あり</span>`;
-                }
+                if (hasAttendance) innerHTML += `<span class="info-badge-attendance">出席あり</span>`;
+                if (appState.meetings[dateKey]) innerHTML += `<span class="info-badge-meeting">面談:${appState.meetings[dateKey].split('〜')[0]}</span>`;
+                if (appState.supplements && appState.supplements[dateKey]) innerHTML += `<span class="info-badge-hokou">補講:${appState.supplements[dateKey].time.split('〜')[0]}</span>`;
 
                 innerHTML += `</div>`;
                 cell.innerHTML = innerHTML;
 
-                // 日付選択時のイベント
                 cell.onclick = () => {
-                    const allCells = document.querySelectorAll('#attendanceCalendarGrid .calendar-day-cell');
-                    allCells.forEach(c => c.classList.remove('selected'));
+                    document.querySelectorAll('#attendanceCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
                     cell.classList.add('selected');
                     showDayDetails(d, dateKey);
                 };
-
                 grid.appendChild(cell);
             }
         }
 
-        // 日付ごとの詳細情報の表示、および面談キャンセル・変更処理
+        /* カレンダー日付詳細パネルの更新表示 */
         function showDayDetails(dayNum, dateKey) {
             const panel = document.getElementById('attendanceDayDetail');
             const title = document.getElementById('detailPanelTitle');
             const content = document.getElementById('detailPanelContent');
-            const modArea = document.getElementById('inlineModArea');
+            document.getElementById('inlineModArea').style.display = 'none';
             
-            modArea.style.display = 'none';
             panel.style.display = 'block';
             title.innerText = `2026年6月${dayNum}日の詳細情報`;
 
-            // 1. 講義の出欠状況の算出
-            // 2026年6月1日は月曜日
-            const dayOfWeek = (dayNumIndex = (dayNum + 0) % 7); 
+            const dayOfWeek = (dayNum + 0) % 7; 
             const lectures = masterSchedule[dayOfWeek];
             
-            let html = `<h4 style="font-size:0.9rem; margin-bottom:5px; color:#4a5568;">講義受講・出欠記録：</h4>`;
+            let html = `<h4 style="font-size:0.9rem; margin-bottom:5px; color:#4a5568;">レギュラー講義・イベントの出欠：</h4>`;
             if (lectures) {
                 html += `<ul style="list-style:none; padding-left:10px; margin-bottom:15px;">`;
                 lectures.forEach((lec, idx) => {
@@ -1355,157 +1263,143 @@
                 });
                 html += `</ul>`;
             } else {
-                html += `<p class="detail-row-item" style="color:#718096;">この日のレギュラー講義設定はありません。</p>`;
+                html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">設定はありません。</p>`;
             }
 
-            // 2. 特進補講の予約状況
-            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">医学部特進補講の予定：</h4>`;
+            // 特進補講の予定表示と変更・キャンセル処理
+            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">医学部特進補講の予定・管理：</h4>`;
             if (appState.supplements && appState.supplements[dateKey]) {
                 const sup = appState.supplements[dateKey];
                 html += `<div class="detail-row-item" style="margin-bottom:15px;">`;
-                html += `講座名：<strong>${sup.course}</strong><br>時間帯：<strong>${sup.time}</strong>`;
-                html += `</div>`;
+                html += `講座：<strong>${sup.course}</strong> ｜ 時間：<strong>${sup.time}</strong>`;
+                html += `<div class="action-group">`;
+                html += `<button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'hokou')">補講時間を変更する</button>`;
+                html += `<button class="action-btn-danger" onclick="cancelHokou('${dateKey}')">補講をキャンセルする</button>`;
+                html += `</div></div>`;
             } else {
                 html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">補講の予約はありません。</p>`;
             }
 
-            // 3. 面談予約の状況と操作ボタン
+            // 指導員面談の管理
             html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">指導員面談の予定・管理：</h4>`;
             if (appState.meetings[dateKey]) {
-                const meetingTime = appState.meetings[dateKey];
                 html += `<div class="detail-row-item">`;
-                html += `現在の予約時間：<strong>${meetingTime}</strong>`;
+                html += `時間：<strong>${appState.meetings[dateKey]}</strong>`;
                 html += `<div class="action-group">`;
-                html += `<button class="action-btn-secondary" onclick="prepareModifyMeeting('${dateKey}')">面談時間を変更する</button>`;
+                html += `<button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'meeting')">面談時間を変更する</button>`;
                 html += `<button class="action-btn-danger" onclick="cancelMeeting('${dateKey}')">面談をキャンセルする</button>`;
-                html += `</div>`;
-                html += `</div>`;
+                html += `</div></div>`;
             } else {
-                html += `<p class="detail-row-item" style="color:#718096;">指導員面談の予約はありません。</p>`;
+                html += `<p class="detail-row-item" style="color:#718096;">面談の予約はありません。</p>`;
             }
 
             content.innerHTML = html;
         }
 
-        // 面談のキャンセル機能
+        // 補講のキャンセル
+        function cancelHokou(dateKey) {
+            if (confirm('この特進補講の予約をキャンセルしますか？')) {
+                delete appState.supplements[dateKey];
+                saveState();
+                buildAttendanceCalendar();
+                buildHokouCalendar();
+                showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
+            }
+        }
+
+        // 面談のキャンセル
         function cancelMeeting(dateKey) {
-            if (confirm('この日枠の指導員面談予約をキャンセルしますか？')) {
+            if (confirm('この指導員面談の予約をキャンセルしますか？')) {
                 delete appState.meetings[dateKey];
                 saveState();
                 buildAttendanceCalendar();
                 buildReservationCalendar();
-                
-                // 詳細画面を再リフレッシュ
-                const dayNum = parseInt(dateKey.split('-')[2]);
-                showDayDetails(dayNum, dateKey);
+                showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
             }
         }
 
-        // 面談変更のための時間枠展開
-        function prepareModifyMeeting(dateKey) {
+        // 時間変更用スロットの展開
+        function prepareModifyItem(dateKey, type) {
             const modArea = document.getElementById('inlineModArea');
             const grid = document.getElementById('inlineSlotsGrid');
+            const title = document.getElementById('inlineModTitle');
             grid.innerHTML = '';
             modArea.style.display = 'block';
 
-            masterTimeSlots.forEach(slot => {
-                const btn = document.createElement('button');
-                btn.className = 'time-slot-btn';
-                btn.innerText = slot;
-                if (appState.meetings[dateKey] === slot) {
-                    btn.classList.add('active');
-                }
-
-                btn.onclick = () => {
-                    if (confirm(`面談時間を ${slot} に変更しますか？`)) {
-                        appState.meetings[dateKey] = slot;
-                        saveState();
-                        buildAttendanceCalendar();
-                        buildReservationCalendar();
-                        
-                        const dayNum = parseInt(dateKey.split('-')[2]);
-                        showDayDetails(dayNum, dateKey);
-                    }
-                };
-                grid.appendChild(btn);
-            });
+            if (type === 'hokou') {
+                title.innerText = `補講の新しい時間枠を選択してください`;
+                masterTimeSlots.forEach(slot => {
+                    const btn = document.createElement('button');
+                    btn.className = 'time-slot-btn';
+                    btn.innerText = slot;
+                    if (appState.supplements[dateKey].time === slot) btn.classList.add('active');
+                    btn.onclick = () => {
+                        if (confirm(`補講時間を ${slot} に変更しますか？`)) {
+                            appState.supplements[dateKey].time = slot;
+                            saveState();
+                            buildAttendanceCalendar();
+                            showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
+                        }
+                    };
+                    grid.appendChild(btn);
+                });
+            } else {
+                title.innerText = `面談の新しい時間枠を選択してください`;
+                masterTimeSlots.forEach(slot => {
+                    const btn = document.createElement('button');
+                    btn.className = 'time-slot-btn';
+                    btn.innerText = slot;
+                    if (appState.meetings[dateKey] === slot) btn.classList.add('active');
+                    btn.onclick = () => {
+                        if (confirm(`面談時間を ${slot} に変更しますか？`)) {
+                            appState.meetings[dateKey] = slot;
+                            saveState();
+                            buildAttendanceCalendar();
+                            showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
+                        }
+                    };
+                    grid.appendChild(btn);
+                });
+            }
         }
 
         /* --------------------------------------
-         * 面談予約用カレンダー処理
+         * 指導員相談予約・特進補講カレンダー生成
          * -------------------------------------- */
         let selectedDateKey = null;
         let selectedTimeSlot = null;
 
         function buildReservationCalendar() {
             const grid = document.getElementById('reservationCalendarGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-            weekdays.forEach(w => {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-header-cell';
-                cell.innerText = w;
-                grid.appendChild(cell);
+            if (!grid) return; grid.innerHTML = '';
+            
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => {
+                const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell);
             });
-
             const conf = getJune2026Grid();
-            for (let i = 0; i < conf.padding; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-day-cell empty';
-                grid.appendChild(cell);
-            }
-
+            for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
             for (let d = 1; d <= conf.days; d++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-day-cell';
-                
-                const dayStr = String(d).padStart(2, '0');
-                const dateKey = `2026-06-${dayStr}`;
-
-                let innerHTML = `<div class="day-number">${d}</div>`;
-                innerHTML += `<div class="calendar-info-box">`;
-                if (appState.meetings[dateKey]) {
-                    innerHTML += `<span class="info-badge-meeting">予約あり</span>`;
-                }
-                innerHTML += `</div>`;
-                
-                cell.innerHTML = innerHTML;
-                
+                const cell = document.createElement('div'); cell.className = 'calendar-day-cell';
+                const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
+                cell.innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">${appState.meetings[dateKey] ? '<span class="info-badge-meeting">予約あり</span>':''}</div>`;
                 cell.onclick = () => {
-                    const allCells = document.querySelectorAll('#reservationCalendarGrid .calendar-day-cell');
-                    allCells.forEach(c => c.classList.remove('selected'));
-                    cell.classList.add('selected');
-                    selectedDateKey = dateKey;
-                    showTimeSlots();
+                    document.querySelectorAll('#reservationCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
+                    cell.classList.add('selected'); selectedDateKey = dateKey; showTimeSlots();
                 };
-
                 grid.appendChild(cell);
             }
         }
 
         function showTimeSlots() {
-            selectedTimeSlot = null;
-            document.getElementById('confirmArea').style.display = 'none';
-
+            selectedTimeSlot = null; document.getElementById('confirmArea').style.display = 'none';
             const container = document.getElementById('timeSlotsArea');
             const grid = document.getElementById('slotsGridContainer');
-            grid.innerHTML = '';
-            container.style.display = 'block';
-
+            grid.innerHTML = ''; container.style.display = 'block';
             masterTimeSlots.forEach(slot => {
-                const btn = document.createElement('button');
-                btn.className = 'time-slot-btn';
-                btn.innerText = slot;
-                
+                const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot;
                 btn.onclick = () => {
-                    const allBtns = document.querySelectorAll('#slotsGridContainer .time-slot-btn');
-                    allBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    selectedTimeSlot = slot;
-                    document.getElementById('confirmArea').style.display = 'block';
+                    document.querySelectorAll('#slotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active'); selectedTimeSlot = slot; document.getElementById('confirmArea').style.display = 'block';
                 };
                 grid.appendChild(btn);
             });
@@ -1513,118 +1407,62 @@
 
         function submitFinalReservation() {
             if (!selectedDateKey || !selectedTimeSlot) return;
-
-            const dateDisplay = selectedDateKey.replace('2026-06-', '6月');
-            if (confirm(`${dateDisplay}日 ${selectedTimeSlot} の枠で指導員面談を確定しますか？`)) {
-                appState.meetings[selectedDateKey] = selectedTimeSlot;
-                saveState();
-
+            if (confirm(`6月${selectedDateKey.split('-')[2]}日 ${selectedTimeSlot} で相談を確定しますか？`)) {
+                appState.meetings[selectedDateKey] = selectedTimeSlot; saveState();
                 const banner = document.getElementById('reserveSuccess');
-                banner.innerText = `指導員相談の予約が完了しました。【日時：${dateDisplay}日 ${selectedTimeSlot}】`;
+                banner.innerText = `相談予約が完了しました。【6月${selectedDateKey.split('-')[2]}日 ${selectedTimeSlot}】`;
                 banner.style.display = 'block';
-
-                buildReservationCalendar();
-                buildAttendanceCalendar();
-                
+                buildReservationCalendar(); buildAttendanceCalendar();
                 document.getElementById('timeSlotsArea').style.display = 'none';
                 document.getElementById('confirmArea').style.display = 'none';
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
-        /* --------------------------------------
-         * 医学部特進補講の予約処理群
-         * -------------------------------------- */
         let selectedHokouCourse = null;
         let selectedHokouDateKey = null;
         let selectedHokouTimeSlot = null;
 
         function selectHokouCourse(courseName, btnElement) {
-            const allBtns = document.querySelectorAll('.hokou-selector-btn');
-            allBtns.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.hokou-selector-btn').forEach(b => b.classList.remove('active'));
             btnElement.classList.add('active');
-
-            selectedHokouCourse = courseName;
-            selectedHokouDateKey = null;
-            selectedHokouTimeSlot = null;
-
+            selectedHokouCourse = courseName; selectedHokouDateKey = null; selectedHokouTimeSlot = null;
             document.getElementById('hokouTimeSlotsArea').style.display = 'none';
             document.getElementById('hokouConfirmArea').style.display = 'none';
             document.getElementById('hokouDateTimeArea').style.display = 'block';
-            
             buildHokouCalendar();
         }
 
         function buildHokouCalendar() {
             const grid = document.getElementById('hokouCalendarGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-            weekdays.forEach(w => {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-header-cell';
-                cell.innerText = w;
-                grid.appendChild(cell);
+            if (!grid) return; grid.innerHTML = '';
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => {
+                const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell);
             });
-
             const conf = getJune2026Grid();
-            for (let i = 0; i < conf.padding; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-day-cell empty';
-                grid.appendChild(cell);
-            }
-
+            for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
             for (let d = 1; d <= conf.days; d++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-day-cell';
-                
-                const dayStr = String(d).padStart(2, '0');
-                const dateKey = `2026-06-${dayStr}`;
-
-                let innerHTML = `<div class="day-number">${d}</div>`;
-                innerHTML += `<div class="calendar-info-box">`;
-                if (appState.supplements && appState.supplements[dateKey]) {
-                    innerHTML += `<span class="info-badge-hokou">予約あり</span>`;
-                }
-                innerHTML += `</div>`;
-                
-                cell.innerHTML = innerHTML;
-                
+                const cell = document.createElement('div'); cell.className = 'calendar-day-cell';
+                const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
+                cell.innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">${(appState.supplements && appState.supplements[dateKey]) ? '<span class="info-badge-hokou">予約あり</span>':''}</div>`;
                 cell.onclick = () => {
-                    const allCells = document.querySelectorAll('#hokouCalendarGrid .calendar-day-cell');
-                    allCells.forEach(c => c.classList.remove('selected'));
-                    cell.classList.add('selected');
-                    selectedHokouDateKey = dateKey;
-                    showHokouTimeSlots();
+                    document.querySelectorAll('#hokouCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
+                    cell.classList.add('selected'); selectedHokouDateKey = dateKey; showHokouTimeSlots();
                 };
-
                 grid.appendChild(cell);
             }
         }
 
         function showHokouTimeSlots() {
-            selectedHokouTimeSlot = null;
-            document.getElementById('hokouConfirmArea').style.display = 'none';
-
+            selectedHokouTimeSlot = null; document.getElementById('hokouConfirmArea').style.display = 'none';
             const container = document.getElementById('hokouTimeSlotsArea');
             const grid = document.getElementById('hokouSlotsGridContainer');
-            grid.innerHTML = '';
-            container.style.display = 'block';
-
+            grid.innerHTML = ''; container.style.display = 'block';
             masterTimeSlots.forEach(slot => {
-                const btn = document.createElement('button');
-                btn.className = 'time-slot-btn';
-                btn.innerText = slot;
-                
+                const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot;
                 btn.onclick = () => {
-                    const allBtns = document.querySelectorAll('#hokouSlotsGridContainer .time-slot-btn');
-                    allBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    selectedHokouTimeSlot = slot;
-                    document.getElementById('hokouConfirmArea').style.display = 'block';
+                    document.querySelectorAll('#hokouSlotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active'); selectedHokouTimeSlot = slot; document.getElementById('hokouConfirmArea').style.display = 'block';
                 };
                 grid.appendChild(btn);
             });
@@ -1632,37 +1470,289 @@
 
         function submitHokouReservation() {
             if (!selectedHokouCourse || !selectedHokouDateKey || !selectedHokouTimeSlot) return;
-
-            const dateDisplay = selectedHokouDateKey.replace('2026-06-', '6月');
-            if (confirm(`以下の内容で補講予約を確定しますか？\n\n講座：${selectedHokouCourse}\n日時：${dateDisplay}日 ${selectedHokouTimeSlot}`)) {
-                
+            if (confirm(`補講予約を確定しますか？\n講座：${selectedHokouCourse}\n日時：6月${selectedHokouDateKey.split('-')[2]}日 ${selectedHokouTimeSlot}`)) {
                 if (!appState.supplements) appState.supplements = {};
-                appState.supplements[selectedHokouDateKey] = {
-                    course: selectedHokouCourse,
-                    time: selectedHokouTimeSlot
-                };
+                appState.supplements[selectedHokouDateKey] = { course: selectedHokouCourse, time: selectedHokouTimeSlot };
                 saveState();
-
-                const banner = document.getElementById('hokouSuccess');
-                banner.innerText = `補講の予約が完了しました。【${selectedHokouCourse} ｜ ${dateDisplay}日 ${selectedHokouTimeSlot}】`;
-                banner.style.display = 'block';
-
-                buildHokouCalendar();
-                buildAttendanceCalendar();
-                
+                document.getElementById('hokouSuccess').style.display = 'block';
+                buildHokouCalendar(); buildAttendanceCalendar();
                 document.getElementById('hokouTimeSlotsArea').style.display = 'none';
                 document.getElementById('hokouConfirmArea').style.display = 'none';
                 document.getElementById('hokouDateTimeArea').style.display = 'none';
-                
-                const allCourseBtns = document.querySelectorAll('.hokou-selector-btn');
-                allCourseBtns.forEach(b => b.classList.remove('active'));
-
+                document.querySelectorAll('.hokou-selector-btn').forEach(b => b.classList.remove('active'));
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
         /* --------------------------------------
-         * その他共通ユーティリティ
+         * 模試成績の動的フォームロジック
+         * -------------------------------------- */
+        function handleMockNameChange() {
+            const name = document.getElementById('mockNameSelect').value;
+            const roundSelect = document.getElementById('mockRound');
+            const roundGroup = document.getElementById('mockRoundGroup');
+            const customNameGroup = document.getElementById('customMockNameGroup');
+            const customSubjectArea = document.getElementById('customSubjectToggleArea');
+            
+            roundSelect.innerHTML = '';
+            customNameGroup.style.display = 'none';
+            customSubjectArea.style.display = 'none';
+            roundGroup.style.display = 'block';
+
+            let targetSubjects = [];
+
+            if (name === '全統共テ模試') {
+                ['第１回', '第２回', '第３回', 'プレ'].forEach(r => roundSelect.add(new Option(r, r)));
+                targetSubjects = ["数学①", "数学②", "英語L", "英語R", "国語", "物理", "化学", "政経", "情報"];
+            } else if (name === '全統記述模試') {
+                ['第１回', '第２回', '第３回'].forEach(r => roundSelect.add(new Option(r, r)));
+                targetSubjects = ["数学", "英語", "国語", "物理", "化学"];
+            } else if (name === '東大オープン模試' || name === '東大実戦模試') {
+                ['夏季', '秋季'].forEach(r => roundSelect.add(new Option(r, r)));
+                targetSubjects = ["数学", "英語", "国語", "物理", "化学"];
+            } else if (name === 'その他') {
+                roundGroup.style.display = 'none';
+                customNameGroup.style.display = 'block';
+                customSubjectArea.style.display = 'block';
+                buildCustomSubjectCheckboxes();
+                return; // 「その他」の場合はチェックボックスの選択に応じて生成するためここで抜ける
+            }
+
+            buildDynamicScoreFields(targetSubjects);
+        }
+
+        // 「その他」用チェックボックスの配置
+        function buildCustomSubjectCheckboxes() {
+            const container = document.getElementById('subjectCheckboxContainer');
+            container.innerHTML = '';
+            allSubjectsMaster.forEach(sub => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" value="${sub.label}" onchange="updateCustomSubjectsForm()"> ${sub.label}`;
+                container.appendChild(label);
+            });
+            buildDynamicScoreFields([]); // 初期状態は空
+        }
+
+        // チェック状態を監視してフォーム再生成
+        function updateCustomSubjectsForm() {
+            const checkedBoxes = document.querySelectorAll('#subjectCheckboxContainer input:checked');
+            const selectedSubjects = Array.from(checkedBoxes).map(cb => cb.value);
+            buildDynamicScoreFields(selectedSubjects);
+        }
+
+        // 教科入力フォーム（得点・配点・偏差値）を生成
+        function buildDynamicScoreFields(subjectsList) {
+            const container = document.getElementById('dynamicScoreInputContainer');
+            container.innerHTML = '';
+
+            if(subjectsList.length === 0) {
+                container.innerHTML = '<p style="color:#718096; font-size:0.85rem; padding:10px;">表示する教科がありません。</p>';
+                return;
+            }
+
+            subjectsList.forEach(sub => {
+                const row = document.createElement('div');
+                row.className = 'score-input-row';
+                row.innerHTML = `
+                    <span class="score-sub-label">${sub}</span>
+                    <div class="score-fields">
+                        <input type="number" class="mock-sub-score" data-sub="${sub}" placeholder="得点" style="width:70px;">
+                        <span style="font-size:0.8rem; color:#718096;">/</span>
+                        <input type="number" class="mock-sub-full" data-sub="${sub}" placeholder="配点" style="width:70px;">
+                        <input type="number" class="mock-sub-dev" data-sub="${sub}" step="0.1" placeholder="偏差値" style="width:70px; margin-left:auto;">
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        /* 模試成績の新規登録・編集保存処理 */
+        function saveMockResult() {
+            const date = document.getElementById('mockDate').value;
+            const nameSelect = document.getElementById('mockNameSelect').value;
+            const grade = document.getElementById('mockGrade').value;
+            const editId = document.getElementById('editMockId').value;
+
+            if(!date) { alert('受験日を入力してください。'); return; }
+
+            let finalName = nameSelect;
+            let finalRound = "";
+
+            if(nameSelect === 'その他') {
+                finalName = document.getElementById('customMockName').value.trim() || "その他自由模試";
+                finalRound = "独自枠";
+            } else {
+                finalRound = document.getElementById('mockRound').value;
+            }
+
+            // 教科成績データのスクレイピング
+            const subjectData = {};
+            const scoreRows = document.querySelectorAll('.score-input-row');
+            
+            scoreRows.forEach(row => {
+                const subLabel = row.querySelector('.score-sub-label').innerText;
+                const scoreVal = parseInt(row.querySelector('.mock-sub-score').value);
+                const fullVal = parseInt(row.querySelector('.mock-sub-full').value);
+                const devVal = parseFloat(row.querySelector('.mock-sub-dev').value);
+
+                if(!isNaN(scoreVal) || !isNaN(fullVal) || !isNaN(devVal)) {
+                    subjectData[subLabel] = {
+                        score: isNaN(scoreVal) ? 0 : scoreVal,
+                        full: isNaN(fullVal) ? 0 : fullVal,
+                        dev: isNaN(devVal) ? 0.0 : devVal
+                    };
+                }
+            });
+
+            const totalScore = parseInt(document.getElementById('totalScore').value) || 0;
+            const totalFull = parseInt(document.getElementById('totalFull').value) || 0;
+            const totalDev = parseFloat(document.getElementById('totalDev').value) || 0.0;
+
+            const mockRecord = {
+                id: editId ? editId : 'mock-' + Date.now(),
+                date: date,
+                name: finalName,
+                grade: grade,
+                round: finalRound,
+                subjects: subjectData,
+                total: { score: totalScore, full: totalFull, dev: totalDev }
+            };
+
+            if(editId) {
+                // 編集更新
+                const idx = appState.mockResults.findIndex(m => m.id === editId);
+                if(idx !== -1) appState.mockResults[idx] = mockRecord;
+            } else {
+                // 新規追加
+                appState.mockResults.push(mockRecord);
+            }
+
+            saveState();
+            resetMockForm();
+            renderMockList();
+
+            const banner = document.getElementById('mockSuccessBanner');
+            banner.style.display = 'block';
+            setTimeout(() => banner.style.display = 'none', 4000);
+        }
+
+        /* 登録済み模試カードリストのレンダリング */
+        function renderMockList() {
+            const container = document.getElementById('savedMockListArea');
+            container.innerHTML = '';
+
+            if(appState.mockResults.length === 0) {
+                container.innerHTML = '<p style="color:#718096; font-size:0.9rem; text-align:center; padding:20px;">登録された校外模試データはありません。</p>';
+                return;
+            }
+
+            // 日付順ソート
+            const sorted = [...appState.mockResults].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+            sorted.forEach(mock => {
+                const card = document.createElement('div');
+                card.className = 'mock-card';
+
+                let subHTML = '';
+                for(let subName in mock.subjects) {
+                    const s = mock.subjects[subName];
+                    subHTML += `<div class="mock-score-tag"><strong>${subName}</strong>: ${s.score}/${s.full} (偏:${s.dev})</div>`;
+                }
+
+                card.innerHTML = `
+                    <div class="mock-card-header">
+                        <div>
+                            <span class="mock-title">${mock.name} (${mock.round})</span>
+                            <span style="font-size:0.8rem; background:#edf2f7; padding:2px 6px; border-radius:3px; margin-left:8px; color:#4a5568;">${mock.grade}</span>
+                        </div>
+                        <span class="mock-date">受験日: ${mock.date}</span>
+                    </div>
+                    <div class="mock-scores-summary">${subHTML}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f7fafc; padding:8px 12px; border-radius:4px; margin-top:10px;">
+                        <div style="font-size:0.9rem; color:#0d233a;">
+                            総合点: <strong>${mock.total.score} / ${mock.total.full}</strong> ｜ 総合偏差値: <strong style="color:#c53030; font-size:1rem;">${mock.total.dev}</strong>
+                        </div>
+                        <div class="btn-group">
+                            <button class="action-btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="editMockItem('${mock.id}')">編集</button>
+                            <button class="action-btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteMockItem('${mock.id}')">削除</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        /* 模試データの編集モード移行 */
+        function editMockItem(id) {
+            const mock = appState.mockResults.find(m => m.id === id);
+            if(!mock) return;
+
+            window.scrollTo({ top: document.getElementById('mockFormTitle').offsetTop - 80, behavior: 'smooth' });
+
+            document.getElementById('editMockId').value = mock.id;
+            document.getElementById('mockDate').value = mock.date;
+            document.getElementById('mockGrade').value = mock.grade;
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+            document.getElementById('mockFormTitle').innerText = `校外模試成績の編集：${mock.name}`;
+
+            const knownNames = ['全統共テ模試', '全統記述模試', '東大オープン模試', '東大実戦模試'];
+            if(knownNames.includes(mock.name)) {
+                document.getElementById('mockNameSelect').value = mock.name;
+                handleMockNameChange();
+                document.getElementById('mockRound').value = mock.round;
+            } else {
+                document.getElementById('mockNameSelect').value = 'その他';
+                handleMockNameChange();
+                document.getElementById('customMockName').value = mock.name;
+                
+                // チェックボックスの復元
+                const checkBoxes = document.querySelectorAll('#subjectCheckboxContainer input');
+                checkBoxes.forEach(cb => {
+                    if(mock.subjects[cb.value]) cb.checked = true;
+                });
+                updateCustomSubjectsForm();
+            }
+
+            // 得点値のフォーム流し込み
+            for(let subName in mock.subjects) {
+                const data = mock.subjects[subName];
+                const scoreInput = document.querySelector(`.mock-sub-score[data-sub="${subName}"]`);
+                const fullInput = document.querySelector(`.mock-sub-full[data-sub="${subName}"]`);
+                const devInput = document.querySelector(`.mock-sub-dev[data-sub="${subName}"]`);
+
+                if(scoreInput) scoreInput.value = data.score;
+                if(fullInput) fullInput.value = data.full;
+                if(devInput) devInput.value = data.dev;
+            }
+
+            document.getElementById('totalScore').value = mock.total.score;
+            document.getElementById('totalFull').value = mock.total.full;
+            document.getElementById('totalDev').value = mock.total.dev;
+        }
+
+        function deleteMockItem(id) {
+            if(confirm('この模試成績レコードを削除しますか？')) {
+                appState.mockResults = appState.mockResults.filter(m => m.id !== id);
+                saveState();
+                renderMockList();
+            }
+        }
+
+        function resetMockForm() {
+            document.getElementById('editMockId').value = "";
+            document.getElementById('mockDate').value = "";
+            document.getElementById('customMockName').value = "";
+            document.getElementById('totalScore').value = "";
+            document.getElementById('totalFull').value = "";
+            document.getElementById('totalDev').value = "";
+            document.getElementById('mockNameSelect').value = "全統共テ模試";
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('mockFormTitle').innerText = "校外模試成績の自主記録・追加";
+            handleMockNameChange();
+        }
+
+        /* --------------------------------------
+         * その他共通処理
          * -------------------------------------- */
         function logout() {
             document.getElementById('myPageBox').style.display = 'none';
@@ -1670,61 +1760,32 @@
             document.body.style.display = 'flex';
             document.body.style.justifyContent = 'center';
             document.body.style.alignItems = 'center';
-            
             document.getElementById('studentId').value = '';
             document.getElementById('password').value = '';
-            document.getElementById('errorMsg').style.display = 'none';
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('show');
-            document.getElementById('reserveSuccess').style.display = 'none';
-            document.getElementById('hokouSuccess').style.display = 'none';
             document.getElementById('attendanceDayDetail').style.display = 'none';
-            
-            if(document.getElementById('timeSlotsArea')) {
-                document.getElementById('timeSlotsArea').style.display = 'none';
-                document.getElementById('confirmArea').style.display = 'none';
-            }
         }
 
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('show');
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('show');
         }
 
         function switchSection(sectionId, element) {
-            const sections = document.querySelectorAll('.content-section');
-            sections.forEach(sec => sec.classList.remove('active'));
-
-            const links = document.querySelectorAll('.menu-link');
-            links.forEach(lnk => lnk.classList.remove('active'));
-
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.menu-link').forEach(lnk => lnk.classList.remove('active'));
             document.getElementById('section-' + sectionId).classList.add('active');
             element.classList.add('active');
-
-            const pageTitle = document.getElementById('pageTitle');
-            pageTitle.innerText = element.innerText;
-
+            document.getElementById('pageTitle').innerText = element.innerText;
             toggleSidebar();
         }
 
         function sendAbsenceEmail() {
-            const name = document.getElementById('absenceName').value;
-            const targetClass = document.getElementById('absenceClass').value;
             const reason = document.getElementById('absenceReason').value.trim();
-
-            if (!reason) {
-                alert('詳細を入力してください。');
-                return;
-            }
-
-            const emailTarget = "shenj0189@gmail.com";
-            const subject = encodeURIComponent(`【欠席連絡】鉄緑会 医進会（柿原 拓真）`);
-            const bodyTemplate = `鉄緑会 医進会 事務局 御中\n\nお世話になっております。塾生の柿原 拓真です。\n以下の通り連絡いたします。\n\n■欠席枠：${targetClass}\n■詳細理由：\n${reason}`;
-            
-            const body = encodeURIComponent(bodyTemplate);
-            window.location.href = `mailto:${emailTarget}?subject=${subject}&body=${body}`;
+            if (!reason) { alert('詳細を入力してください。'); return; }
+            const bodyTemplate = `鉄緑会 医進会 事務局 御中\n\n塾生の柿原 拓真です。\n\n■欠席枠：${document.getElementById('absenceClass').value}\n■詳細理由：\n${reason}`;
+            window.location.href = `mailto:shenj0189@gmail.com?subject=${encodeURIComponent('【欠席連絡】鉄緑会 医進会（柿原 拓真）')}&body=${encodeURIComponent(bodyTemplate)}`;
         }
     </script>
 </body>
