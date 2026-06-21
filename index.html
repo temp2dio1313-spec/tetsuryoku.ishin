@@ -112,7 +112,7 @@
             position: relative;
         }
 
-        /* 【修正】上部固定のナビゲーションバー（ロゴとメニューボタン用） */
+        /* 上部固定のナビゲーションバー（ロゴとメニューボタン用） */
         .top-navbar {
             position: fixed;
             top: 0;
@@ -128,7 +128,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* 【追加】左上の固定ロゴスタイル */
+        /* 左上の固定ロゴスタイル */
         .fixed-logo {
             color: #fff;
             font-size: 1.2rem;
@@ -143,7 +143,7 @@
             font-weight: normal;
         }
 
-        /* 【修正】メニューボタンを右上寄りに変更してスマートに */
+        /* メニューボタン */
         .menu-toggle {
             background: #1a3a5c;
             color: white;
@@ -171,9 +171,9 @@
             display: flex;
             flex-direction: column;
             position: fixed;
-            top: 60px; /* 【修正】上部バーの高さ分下げる */
+            top: 60px;
             left: -280px; /* 通常時は隠す */
-            height: calc(100% - 60px); /* 【修正】全体の高さからバーの分を引く */
+            height: calc(100% - 60px);
             z-index: 999;
             transition: left 0.3s ease;
             box-shadow: 5px 0 15px rgba(0,0,0,0.2);
@@ -239,7 +239,7 @@
         /* メインコンテンツ表示エリア */
         main {
             padding: 40px;
-            padding-top: 100px; /* 【修正】上部バーとの余白を確保 */
+            padding-top: 100px;
             min-height: 100vh;
             background-color: #f4f6f9;
             width: 100%;
@@ -331,6 +331,18 @@
             color: #4a5568;
         }
 
+        /* 教科クラスバッジのスタイル */
+        .class-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .badge-sa { background-color: #fed7d7; color: #9b2c2c; }
+        .badge-a1 { background-color: #feebc8; color: #9c4221; }
+        .badge-a3 { background-color: #e2e8f0; color: #4a5568; }
+
         .news-list {
             list-style: none;
         }
@@ -372,11 +384,11 @@
             font-weight: bold;
         }
 
-        /* 背景マスク（メニュー展開時に画面を暗くする） */
+        /* 背景マスク */
         .sidebar-overlay {
             display: none;
             position: fixed;
-            top: 60px; /* 【修正】上部バーの下から覆うように変更 */
+            top: 60px;
             left: 0;
             width: 100%;
             height: calc(100% - 60px);
@@ -402,12 +414,12 @@
         
         <div class="form-group">
             <label for="studentId">生徒ID (塾生番号)</label>
-            <input type="text" id="studentId" placeholder="塾生番号を入力">
+            <input type="text" id="studentId" placeholder="ihsr2730 と入力">
         </div>
         
         <div class="form-group">
             <label for="password">パスワード</label>
-            <input type="password" id="password" placeholder="パスワードを入力">
+            <input type="password" id="password" placeholder="etf20064 と入力">
         </div>
         
         <button class="login-btn" onclick="attemptLogin()">ログイン</button>
@@ -431,6 +443,8 @@
                 <div class="menu-category">メインメニュー</div>
                 <ul>
                     <li><a href="#" class="menu-link active" onclick="switchSection('home', this)">ホーム（ダッシュボード）</a></li>
+                    <!-- 【追加】生徒情報メニュー -->
+                    <li><a href="#" class="menu-link" onclick="switchSection('student-profile', this)">所属クラス・生徒情報</a></li>
                 </ul>
 
                 <div class="menu-category">学習・講義管理</div>
@@ -496,6 +510,34 @@
                 </div>
             </div>
 
+            <!-- 【追加】生徒情報セクション -->
+            <div id="section-student-profile" class="content-section">
+                <div class="card" style="max-width: 700px; margin: 0 auto;">
+                    <h2>ご登録生徒情報</h2>
+                    <table class="status-table" style="margin-top: 15px;">
+                        <tbody>
+                            <tr><th style="width: 30%;">塾生番号</th><td><strong>ihsr2730</strong></td></tr>
+                            <tr><th>氏名</th><td>柿原 拓真 様</td></tr>
+                            <tr><th>出身高校</th><td>開成高校</td></tr>
+                            <tr><th>在籍コース</th><td>高3・医学部特進（東大理Ⅲ/国公立大医学部）</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h2 style="margin-top: 35px;">教科別所属クラス</h2>
+                    <table class="status-table" style="margin-top: 15px;">
+                        <thead>
+                            <tr><th style="width: 40%;">教科</th><th>現在の所属クラス</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>数学</strong></td><td><span class="class-badge badge-sa">SAクラス</span> (最上位)</td></tr>
+                            <tr><td><strong>化学</strong></td><td><span class="class-badge badge-a1">A1クラス</span></td></tr>
+                            <tr><td><strong>物理</strong></td><td><span class="class-badge badge-a3">A3クラス</span></td></tr>
+                            <tr><td><strong>英語</strong></td><td><span class="class-badge badge-a3">A3クラス</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div id="section-absence" class="content-section">
                 <div class="card" style="max-width: 600px; margin: 0 auto;">
                     <h2>欠席連絡・振替申請フォーム</h2>
@@ -526,14 +568,68 @@
                 </div>
             </div>
 
+            <!-- 【修正】物理・化学を統合した鉄緑会準拠のカリキュラム表 -->
             <div id="section-curriculum" class="content-section">
                 <div class="card">
-                    <h2>年間カリキュラム・進行表</h2>
+                    <h2>高3 年間カリキュラム・進行表</h2>
+                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 15px;">※ 鉄緑会高3カリキュラムに準拠した、東大理Ⅲ・国公立大医学部突破のための実戦演習スケジュールです。</p>
                     <table class="status-table">
-                        <thead><tr><th>期</th><th>数学</th><th>英語</th></tr></thead>
+                        <thead>
+                            <tr>
+                                <th style="width: 15%;">期</th>
+                                <th style="width: 21%;">数学 (高3数学実戦講座/演習)</th>
+                                <th style="width: 21%;">英語 (高3英語実戦講座)</th>
+                                <th style="width: 21%;">物理 (高3物理発展講座)</th>
+                                <th style="width: 21%;">化学 (高3化学発展講座)</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            <tr><td>第1期（春季）</td><td>数Ⅲ・微積分徹底演習</td><td>医学部特有長文・語彙精選</td></tr>
-                            <tr><td>第2期（夏季）</td><td>東大・医大過去問実践（演習主体）</td><td>論理的英作文・要約対策</td></tr>
+                            <tr>
+                                <td><strong>第1期<br>(春期〜1学期)</strong></td>
+                                <td>
+                                    ・入試数学系統演習<br>
+                                    ・数Ⅲ・微積分徹底演習<br>
+                                    ・鉄緑会オリジナル記述対策
+                                </td>
+                                <td>
+                                    ・医学部特有長文・精選読解<br>
+                                    ・リスニング基礎・実戦演習<br>
+                                    ・テーマ別英作文・表現精選
+                                </td>
+                                <td>
+                                    ・力学/熱力学の体系化演習<br>
+                                    ・電磁気学の本質理解と応用<br>
+                                    ・発展講座冊子を用いた徹底演習
+                                </td>
+                                <td>
+                                    ・物質の構造と状態方程式<br>
+                                    ・化学平衡/理論化学の全期演習<br>
+                                    ・有機化学の構造決定パターン網羅
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>第2期<br>(夏期〜2学期)</strong></td>
+                                <td>
+                                    ・東大・国公立医過去問実践演習<br>
+                                    ・テストゼミ主体の総合演習<br>
+                                    ・存在条件・通過領域の完全攻略
+                                </td>
+                                <td>
+                                    ・論理的英文和訳・要約対策<br>
+                                    ・自由英作文 徹底添削指導<br>
+                                    ・超長文速読訓練・時間配分
+                                </td>
+                                <td>
+                                    ・波動/原子物理の集中攻略<br>
+                                    ・東大・医学部入試実戦演習<br>
+                                    ・難系・過去問レベルのテストゼミ
+                                </td>
+                                <td>
+                                    ・無機化学の総合整理と各論<br>
+                                    ・高分子化合物/天然物質の決定対策<br>
+                                    ・実戦演習主体の総合テストゼミ
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -611,27 +707,22 @@
 
         // 4. メインコンテンツセクションの切り替え
         function switchSection(sectionId, element) {
-            // すべてのコンテンツセクションを非表示にする
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(sec => sec.classList.remove('active'));
 
-            // すべてのメニューリンクのactiveクラスを外す
             const links = document.querySelectorAll('.menu-link');
             links.forEach(lnk => lnk.classList.remove('active'));
 
-            // 対象のセクションを表示し、クリックされたメニューをハイライト
             document.getElementById('section-' + sectionId).classList.add('active');
             element.classList.add('active');
 
-            // ページタイトルを動的に変更
             const pageTitle = document.getElementById('pageTitle');
             pageTitle.innerText = element.innerText;
 
-            // スマホなどでの利便性のため、クリックしたら自動でメニューを閉じる
             toggleSidebar();
         }
 
-        // 5. 欠席連絡メール送信機能（shenj0189@gmail.com 宛て）
+        // 5. 欠席連絡メール送信機能
         function sendAbsenceEmail() {
             const name = document.getElementById('absenceName').value;
             const targetClass = document.getElementById('absenceClass').value;
@@ -645,7 +736,6 @@
             const emailTarget = "shenj0189@gmail.com";
             const subject = encodeURIComponent(`【欠席連絡】鉄緑会 医進会（柿原 拓真）`);
             
-            // メール本文の組み立て
             const bodyTemplate = `鉄緑会 医進会 事務局 御中
 
 いつもお世話になっております。塾生の柿原 拓真です。
@@ -661,8 +751,6 @@ ${reason}
 お手数をおかけしますが、振替授業やプリントの配付についてご手配のほどよろしくお願いいたします。`;
 
             const body = encodeURIComponent(bodyTemplate);
-
-            // mailto リンクを生成して実行（標準のメールアプリが起動します）
             window.location.href = `mailto:${emailTarget}?subject=${subject}&body=${body}`;
         }
     </script>
