@@ -20,6 +20,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow-x: hidden;
         }
 
         /* --------------------------------------
@@ -63,7 +64,7 @@
             font-weight: bold;
         }
 
-        .form-group input {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #cbd5e0;
@@ -73,7 +74,7 @@
             transition: border 0.2s;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: #0d233a;
         }
 
@@ -102,16 +103,35 @@
         }
 
         /* --------------------------------------
-         * マイページ（ログイン後）のスタイル
+         * マイページ（ログイン後）のレイアウト
          * -------------------------------------- */
         .mypage-container {
             display: none; /* 初期状態は非表示 */
             width: 100%;
             min-height: 100vh;
-            flex-direction: row;
+            position: relative;
         }
 
-        /* サイドバー */
+        /* ハンバーガーボタン */
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            left: 20px;
+            z-index: 1000;
+            background: #0d233a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ドロワーサイドバー */
         aside {
             width: 280px;
             background-color: #0d233a;
@@ -119,7 +139,18 @@
             padding: 25px 15px;
             display: flex;
             flex-direction: column;
-            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            left: -280px; /* 通常時は隠す */
+            height: 100%;
+            z-index: 999;
+            transition: left 0.3s ease;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+        }
+
+        /* サイドバーが開いている状態 */
+        aside.open {
+            left: 0;
         }
 
         aside .logo {
@@ -130,6 +161,7 @@
             border-bottom: 1px solid #1a3a5c;
             margin-bottom: 25px;
             text-align: center;
+            margin-top: 40px; /* ボタンを避けるためのマージン */
         }
 
         aside .logo span {
@@ -165,12 +197,18 @@
             padding: 10px 15px;
             border-radius: 6px;
             font-size: 0.9rem;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         aside nav ul li a:hover, Lauren aside nav ul li a.active {
             background-color: #1a3a5c;
             color: #fff;
+        }
+
+        aside nav ul li a.active {
+            background-color: #c5a059;
+            color: #0d233a;
+            font-weight: bold;
         }
 
         .logout-btn {
@@ -184,12 +222,14 @@
             margin-top: auto;
         }
 
-        /* メインコンテンツ */
+        /* メインコンテンツ表示エリア */
         main {
-            flex: 1;
             padding: 40px;
-            overflow-y: auto;
+            padding-top: 80px; /* 上部ボタンの余白 */
+            min-height: 100vh;
             background-color: #f4f6f9;
+            width: 100%;
+            transition: padding-left 0.3s ease;
         }
 
         header {
@@ -216,7 +256,16 @@
             color: #0d233a;
         }
 
-        /* レイアウト */
+        /* コンテンツセクション（切り替え用） */
+        .content-section {
+            display: none; /* 基本は非表示 */
+        }
+
+        .content-section.active {
+            display: block; /* activeクラスがついたものだけ表示 */
+        }
+
+        /* ダッシュボードグリッド */
         .grid-container {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -250,7 +299,7 @@
             border-radius: 2px;
         }
 
-        /* テーブル・リスト各種 */
+        /* テーブル・リストデザイン */
         .status-table {
             width: 100%;
             border-collapse: collapse;
@@ -293,6 +342,8 @@
             text-decoration: none;
             font-size: 0.85rem;
             text-align: center;
+            border: none;
+            cursor: pointer;
         }
 
         .schedule-item {
@@ -307,20 +358,30 @@
             font-weight: bold;
         }
 
+        /* 背景マスク（メニュー展開時に画面を暗くする） */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 998;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
         /* レスポンシブ */
         @media (max-width: 1024px) {
             .grid-container { grid-template-columns: 1fr; }
-            body { flex-direction: column; }
-            .mypage-container { flex-direction: column; }
-            aside { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ======================================
-         1. ログイン画面エリア
-         ====================================== -->
     <div class="login-container" id="loginBox">
         <div class="login-logo">鉄緑会</div>
         <div class="login-subtitle">医進会 塾生ログイン</div>
@@ -340,13 +401,13 @@
     </div>
 
 
-    <!-- ======================================
-         2. マイページエリア（ログイン後に表示）
-         ====================================== -->
     <div class="mypage-container" id="myPageBox">
         
-        <!-- 拡張されたサイドバーメニュー -->
-        <aside>
+        <button class="menu-toggle" onclick="toggleSidebar()">☰ メニュー</button>
+        
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+        <aside id="sidebar">
             <div class="logo">
                 鉄緑会
                 <span>医進会 塾生ページ</span>
@@ -354,194 +415,240 @@
             <nav>
                 <div class="menu-category">メインメニュー</div>
                 <ul>
-                    <li><a href="#" class="active">ホーム（ダッシュボード）</a></li>
-                    <li><a href="#">重要なお知らせ・通達</a></li>
+                    <li><a href="#" class="menu-link active" onclick="switchSection('home', this)">ホーム（ダッシュボード）</a></li>
                 </ul>
 
                 <div class="menu-category">学習・講義管理</div>
                 <ul>
-                    <li><a href="#">カリキュラム・授業スケジュール</a></li>
-                    <li><a href="#">欠席連絡・振替授業申請</a></li>
-                    <li><a href="#">オンデマンド講義 視聴</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('absence', this)">欠席連絡・振替授業申請</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('curriculum', this)">カリキュラムスケジュール</a></li>
                 </ul>
 
                 <div class="menu-category">成績・演習</div>
                 <ul>
-                    <li><a href="#">校内模試・直前模試成績推移</a></li>
-                    <li><a href="#">復習テスト・総復習テスト記録</a></li>
-                    <li><a href="#">記述答案提出・添削指導</a></li>
-                    <li><a href="#">教材・解答プリントDL</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('grades', this)">校内模試・成績推移</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('materials', this)">教材・解答プリントDL</a></li>
                 </ul>
 
                 <div class="menu-category">医学部受験サポート</div>
                 <ul>
-                    <li><a href="#">面接・小論文対策講座予約</a></li>
-                    <li><a href="#">過去問研究データベース</a></li>
-                    <li><a href="#">現役医大生クラス指導員（OB/OG）相談</a></li>
-                    <li><a href="#">教務面談・進路指導予約</a></li>
-                </ul>
-
-                <div class="menu-category">設定</div>
-                <ul>
-                    <li><a href="#">登録情報・志望校変更</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('support', this)">現役医大生指導員 相談予約</a></li>
                 </ul>
             </nav>
             <button class="logout-btn" onclick="logout()">ログアウト</button>
         </aside>
 
-        <!-- メインコンテンツ -->
         <main>
             <header>
-                <h1>塾生ダッシュボード</h1>
+                <h1 id="pageTitle">塾生ダッシュボード</h1>
                 <div class="student-info">
                     塾生番号: <strong>ihsr2730</strong><br>
                     <strong>柿原 拓真</strong> 様（高3・東大理Ⅲ/医学部コース）
                 </div>
             </header>
 
-            <div class="grid-container">
-                <!-- 左側エリア -->
-                <div class="left-column">
-                    
-                    <!-- お知らせ -->
-                    <div class="card">
-                        <h2>事務局からの最新情報</h2>
-                        <ul class="news-list">
-                            <li><span class="news-date">2026/06/21</span><strong style="color: #c53030;">[重要]</strong> 【医進会】第2回東大・国公立大医学部記述模試の申込受付開始</li>
-                            <li><span class="news-date">2026/06/18</span> ［夏期講習］医進数学・医進英語特論の推奨クラス分け発表</li>
-                            <li><span class="news-date">2026/06/15</span> プレミアム小論文・面接対策ワークショップの開催案内</li>
-                        </ul>
-                    </div>
-
-                    <!-- 成績状況 -->
-                    <div class="card">
-                        <h2>直近の選抜・校内模試結果</h2>
-                        <table class="status-table">
-                            <thead>
-                                <tr>
-                                    <th>実施時期</th>
-                                    <th>模試・テスト名称</th>
-                                    <th>総合評価</th>
-                                    <th>医進会内順位</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>5月度</td>
-                                    <td>第1回 医進会選抜校内模試</td>
-                                    <td><strong style="color: #2b6cb0;">A判定</strong></td>
-                                    <td>15位 / 220人</td>
-                                </tr>
-                                <tr>
-                                    <td>6月上旬</td>
-                                    <td>東大理Ⅲ記述演習（第4回）</td>
-                                    <td><strong style="color: #2b6cb0;">優秀</strong></td>
-                                    <td>8位 / 180人</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- 課題・添削 -->
-                    <div class="card">
-                        <h2>未提出・添削中の課題</h2>
-                        <table class="status-table">
-                            <thead>
-                                <tr>
-                                    <th>科目</th>
-                                    <th>課題名</th>
-                                    <th>提出期限</th>
-                                    <th>ステータス</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>医進数学</td>
-                                    <td>第12週：過去問徹底演習（数Ⅲ・微積分）</td>
-                                    <td>6月24日(水)</td>
-                                    <td><span style="color: #dd6b20; font-weight: bold;">未提出</span></td>
-                                </tr>
-                                <tr>
-                                    <td>医進英語</td>
-                                    <td>第11週：医学部特有長文読解・英作文</td>
-                                    <td>提出済</td>
-                                    <td><span style="color: #4a5568;">添削中</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 右側エリア -->
-                <div class="right-column">
-                    <!-- 今週の通塾スケジュール -->
-                    <div class="card">
-                        <h2>今週の受講スケジュール</h2>
-                        <div class="schedule-item">
-                            <div class="schedule-time">6月24日(水) 17:00〜21:00</div>
-                            <div class="schedule-text">高3医進数学（担当：藤田講師）<br><small style="color: #718096;">教室：本館401</small></div>
+            <div id="section-home" class="content-section active">
+                <div class="grid-container">
+                    <div class="left-column">
+                        <div class="card">
+                            <h2>事務局からの最新情報</h2>
+                            <ul class="news-list">
+                                <li><span class="news-date">2026/06/21</span><strong style="color: #c53030;">[重要]</strong> 【医進会】第2回東大・国公立大医学部記述模試の申込受付開始</li>
+                                <li><span class="news-date">2026/06/18</span> ［夏期講習］医進数学・医進英語特論の推奨クラス分け発表</li>
+                            </ul>
                         </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">6月26日(金) 17:00〜21:00</div>
-                            <div class="schedule-text">高3医進英語（担当：佐藤講師）<br><small style="color: #718096;">教室：本館403</small></div>
-                        </div>
-                        <div class="schedule-item">
-                            <div class="schedule-time">6月27日(土) 15:30〜16:30</div>
-                            <div class="schedule-text" style="font-weight: bold; color: #2b6cb0;">理Ⅲ現役指導員（OB）個別面談<br><small style="color: #718096;">場所：面談室B</small></div>
+                        <div class="card">
+                            <h2>直近の選抜・校内模試結果</h2>
+                            <table class="status-table">
+                                <thead>
+                                    <tr><th>実施時期</th><th>模試・テスト名称</th><th>総合評価</th><th>順位</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>5月度</td><td>第1回 医進会選抜校内模試</td><td><strong style="color: #2b6cb0;">A判定</strong></td><td>15位 / 220人</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-
-                    <!-- クイックアクション -->
-                    <div class="card">
-                        <h2>クイックリンク</h2>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <a href="#" class="btn">本日の欠席・振替申請</a>
-                            <a href="#" class="btn" style="background-color: #fff; color: #0d233a; border: 1px solid #0d233a;">質問・相談シート作成</a>
+                    <div class="right-column">
+                        <div class="card">
+                            <h2>今週の受講スケジュール</h2>
+                            <div class="schedule-item">
+                                <div class="schedule-time">6月24日(水) 17:00〜21:00</div>
+                                <div class="schedule-text">高3医進数学（本館401）</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div id="section-absence" class="content-section">
+                <div class="card" style="max-width: 600px; margin: 0 auto;">
+                    <h2>欠席連絡・振替申請フォーム</h2>
+                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 20px;">
+                        必要事項を入力して「送信する」を押すと、指定アドレス（shenj0189@gmail.com）宛てのメールアプリが起動します。
+                    </p>
+                    
+                    <div class="form-group">
+                        <label>生徒氏名</label>
+                        <input type="text" id="absenceName" value="柿原 拓真" readonly style="background-color: #edf2f7; color: #4a5568;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="absenceClass">欠席する講義・日時</label>
+                        <select id="absenceClass">
+                            <option value="6月24日(水) 高3医進数学">6月24日(水) 17:00〜21:00 高3医進数学</option>
+                            <option value="6月26日(金) 高3医進英語">6月26日(金) 17:00〜21:00 高3医進英語</option>
+                            <option value="その他講義・模試">その他（自由記述欄に入力してください）</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="absenceReason">欠席理由</label>
+                        <textarea id="absenceReason" rows="4" placeholder="例：体調不良のため、学校行事のため、等"></textarea>
+                    </div>
+                    
+                    <button class="login-btn" onclick="sendAbsenceEmail()">欠席連絡メールを送信する</button>
+                </div>
+            </div>
+
+            <div id="section-curriculum" class="content-section">
+                <div class="card">
+                    <h2>年間カリキュラム・進行表</h2>
+                    <table class="status-table">
+                        <thead><tr><th>期</th><th>数学</th><th>英語</th></tr></thead>
+                        <tbody>
+                            <tr><td>第1期（春季）</td><td>数Ⅲ・微積分徹底演習</td><td>医学部特有長文・語彙精選</td></tr>
+                            <tr><td>第2期（夏季）</td><td>東大・医大過去問実践（演習主体）</td><td>論理的英作文・要約対策</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-grades" class="content-section">
+                <div class="card">
+                    <h2>過去の全成績アーカイブ</h2>
+                    <p style="padding: 20px 0; color: #718096;">現在、第1回校内模試までのデータが反映されています。</p>
+                </div>
+            </div>
+
+            <div id="section-materials" class="content-section">
+                <div class="card">
+                    <h2>解答・解説プリントダウンロード</h2>
+                    <ul class="news-list">
+                        <li><a href="#" style="color:#0d233a;">第11週 医進数学演習 解答・解説（PDF）</a></li>
+                        <li><a href="#" style="color:#0d233a;">第11週 医進英語 英文法・英作文添削基準（PDF）</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="section-support" class="content-section">
+                <div class="card">
+                    <h2>理Ⅲ・医学部現役指導員（OB/OG）相談予約</h2>
+                    <p style="color: #4a5568; margin-bottom: 15px;">東大理Ⅲをはじめとする、最難関国公立大医学部に現役合格した先輩たちに勉強法やメンタル面を直接相談できます。</p>
+                    <button class="btn">空きコマを確認して予約する</button>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <!-- ======================================
-         3. ログイン制御用のJavaScript
-         ====================================== -->
     <script>
+        // 1. ログイン処理
         function attemptLogin() {
-            // 入力値の取得
             const idInput = document.getElementById('studentId').value.trim();
             const passInput = document.getElementById('password').value.trim();
             const errorMsg = document.getElementById('errorMsg');
 
-            // 指定されたアカウント情報で認証
             if (idInput === 'ihsr2730' && passInput === 'etf20064') {
-                // ログイン成功：ログイン箱を隠し、マイページを表示
                 document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('myPageBox').style.display = 'flex';
-                // ボディのスタイルをマイページ用に最適化
+                document.getElementById('myPageBox').style.display = 'block';
                 document.body.style.display = 'block';
                 document.body.style.backgroundColor = '#f4f6f9';
             } else {
-                // ログイン失敗：エラーメッセージを表示
                 errorMsg.style.display = 'block';
             }
         }
 
+        // 2. ログアウト処理
         function logout() {
-            // ログアウト処理：状態を元に戻す
             document.getElementById('myPageBox').style.display = 'none';
             document.getElementById('loginBox').style.display = 'block';
-            
-            // ボディのスタイルをログイン画面用に中央寄せに戻す
             document.body.style.display = 'flex';
             document.body.style.justifyContent = 'center';
             document.body.style.alignItems = 'center';
             
-            // 入力フォームをクリア
+            // フォームリセット
             document.getElementById('studentId').value = '';
             document.getElementById('password').value = '';
             document.getElementById('errorMsg').style.display = 'none';
+            // サイドバーを閉じる
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('show');
+        }
+
+        // 3. ハンバーガーメニューの開閉
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // 4. メインコンテンツセクションの切り替え
+        function switchSection(sectionId, element) {
+            // すべてのコンテンツセクションを非表示にする
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // すべてのメニューリンクのactiveクラスを外す
+            const links = document.querySelectorAll('.menu-link');
+            links.forEach(lnk => lnk.classList.remove('active'));
+
+            // 対象のセクションを表示し、クリックされたメニューをハイライト
+            document.getElementById('section-' + sectionId).classList.add('active');
+            element.classList.add('active');
+
+            // ページタイトルを動的に変更
+            const pageTitle = document.getElementById('pageTitle');
+            pageTitle.innerText = element.innerText;
+
+            // スマホなどでの利便性のため、クリックしたら自動でメニューを閉じる
+            toggleSidebar();
+        }
+
+        // 5. 欠席連絡メール送信機能（shenj0189@gmail.com 宛て）
+        function sendAbsenceEmail() {
+            const name = document.getElementById('absenceName').value;
+            const targetClass = document.getElementById('absenceClass').value;
+            const reason = document.getElementById('absenceReason').value.trim();
+
+            if (!reason) {
+                alert('欠席理由を入力してください。');
+                return;
+            }
+
+            const emailTarget = "shenj0189@gmail.com";
+            const subject = encodeURIComponent(`【欠席連絡】鉄緑会 医進会（柿原 拓真）`);
+            
+            // メール本文の組み立て
+            const bodyTemplate = `鉄緑会 医進会 事務局 御中
+
+いつもお世話になっております。塾生の柿原 拓真です。
+講義の欠席および振替について、以下の通りご連絡いたします。
+
+-----------------------------------------
+■生徒氏名：${name} (塾生番号: ihsr2730)
+■欠席講義：${targetClass}
+■欠席理由：
+${reason}
+-----------------------------------------
+
+お手数をおかけしますが、振替授業やプリントの配付についてご手配のほどよろしくお願いいたします。`;
+
+            const body = encodeURIComponent(bodyTemplate);
+
+            // mailto リンクを生成して実行（標準のメールアプリが起動します）
+            window.location.href = `mailto:${emailTarget}?subject=${subject}&body=${body}`;
         }
     </script>
 </body>
