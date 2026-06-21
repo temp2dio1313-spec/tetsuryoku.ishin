@@ -112,51 +112,23 @@
             position: relative;
         }
 
-        /* トップバー固定 */
-        .top-navbar {
+        /* ハンバーガーボタン */
+        .menu-toggle {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: #0d233a;
+            top: 15px;
+            left: 20px;
+            z-index: 1000;
+            background: #0d233a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
-            padding: 0 20px;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .brand-logo {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 0.05em;
-            margin-right: 20px;
-            line-height: 1.2;
-        }
-
-        .brand-logo span {
-            color: #c5a059;
-            font-size: 0.75rem;
-            display: block;
-            font-weight: normal;
-        }
-
-        /* 三本線ハンバーガーボタン */
-        .menu-toggle {
-            background: #1a3a5c;
-            color: white;
-            border: 1px solid #2d4f7c;
-            border-radius: 4px;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.2s;
-        }
-
-        .menu-toggle:hover {
-            background: #2d4f7c;
+            justify-content: center;
         }
 
         /* ドロワーサイドバー */
@@ -168,16 +140,35 @@
             display: flex;
             flex-direction: column;
             position: fixed;
-            top: 60px;
-            left: -280px;
-            height: calc(100% - 60px);
+            top: 0;
+            left: -280px; /* 通常時は隠す */
+            height: 100%;
             z-index: 999;
             transition: left 0.3s ease;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.15);
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
         }
 
+        /* サイドバーが開いている状態 */
         aside.open {
             left: 0;
+        }
+
+        aside .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #1a3a5c;
+            margin-bottom: 25px;
+            text-align: center;
+            margin-top: 40px; /* ボタンを避けるためのマージン */
+        }
+
+        aside .logo span {
+            color: #c5a059;
+            display: block;
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
 
         aside nav {
@@ -209,7 +200,7 @@
             transition: all 0.2s;
         }
 
-        aside nav ul li a:hover {
+        aside nav ul li a:hover, Lauren aside nav ul li a.active {
             background-color: #1a3a5c;
             color: #fff;
         }
@@ -234,10 +225,11 @@
         /* メインコンテンツ表示エリア */
         main {
             padding: 40px;
-            padding-top: 100px;
+            padding-top: 80px; /* 上部ボタンの余白 */
             min-height: 100vh;
             background-color: #f4f6f9;
             width: 100%;
+            transition: padding-left 0.3s ease;
         }
 
         header {
@@ -264,12 +256,13 @@
             color: #0d233a;
         }
 
+        /* コンテンツセクション（切り替え用） */
         .content-section {
-            display: none;
+            display: none; /* 基本は非表示 */
         }
 
         .content-section.active {
-            display: block;
+            display: block; /* activeクラスがついたものだけ表示 */
         }
 
         /* ダッシュボードグリッド */
@@ -365,14 +358,14 @@
             font-weight: bold;
         }
 
-        /* 背景マスク */
+        /* 背景マスク（メニュー展開時に画面を暗くする） */
         .sidebar-overlay {
             display: none;
             position: fixed;
-            top: 60px;
+            top: 0;
             left: 0;
             width: 100%;
-            height: calc(100% - 60px);
+            height: 100%;
             background: rgba(0,0,0,0.4);
             z-index: 998;
         }
@@ -381,6 +374,7 @@
             display: block;
         }
 
+        /* レスポンシブ */
         @media (max-width: 1024px) {
             .grid-container { grid-template-columns: 1fr; }
         }
@@ -409,16 +403,15 @@
 
     <div class="mypage-container" id="myPageBox">
         
-        <div class="top-navbar">
-            <div class="brand-logo">
-                鉄緑会 <span>医進会 塾生マイページ</span>
-            </div>
-            <button class="menu-toggle" onclick="toggleSidebar()">☰ メニュー</button>
-        </div>
+        <button class="menu-toggle" onclick="toggleSidebar()">☰ メニュー</button>
         
         <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
         <aside id="sidebar">
+            <div class="logo">
+                鉄緑会
+                <span>医進会 塾生ページ</span>
+            </div>
             <nav>
                 <div class="menu-category">メインメニュー</div>
                 <ul>
@@ -560,22 +553,13 @@
     </div>
 
     <script>
-        // 環境を選ばないBase64暗号方式を採用（これならローカルファイルでも100%確実に動きます）
-        // ソースを覗いても元のIDやパスワードは直接見えません。
-        const ENCODED_ID = "YWhzcjI3MzA="; 
-        const ENCODED_PASS = "WVRSMk1EWTBOQT09";
-
         // 1. ログイン処理
         function attemptLogin() {
             const idInput = document.getElementById('studentId').value.trim();
             const passInput = document.getElementById('password').value.trim();
             const errorMsg = document.getElementById('errorMsg');
 
-            // 入力値を難読化処理して判定
-            const checkId = btoa(idInput.toLowerCase());
-            const checkPass = btoa(btoa(passInput.toLowerCase()));
-
-            if (checkId === ENCODED_ID && checkPass === ENCODED_PASS) {
+            if (idInput === 'ihsr2730' && passInput === 'etf20064') {
                 document.getElementById('loginBox').style.display = 'none';
                 document.getElementById('myPageBox').style.display = 'block';
                 document.body.style.display = 'block';
@@ -593,9 +577,11 @@
             document.body.style.justifyContent = 'center';
             document.body.style.alignItems = 'center';
             
+            // フォームリセット
             document.getElementById('studentId').value = '';
             document.getElementById('password').value = '';
             document.getElementById('errorMsg').style.display = 'none';
+            // サイドバーを閉じる
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('show');
         }
@@ -610,22 +596,27 @@
 
         // 4. メインコンテンツセクションの切り替え
         function switchSection(sectionId, element) {
+            // すべてのコンテンツセクションを非表示にする
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(sec => sec.classList.remove('active'));
 
+            // すべてのメニューリンクのactiveクラスを外す
             const links = document.querySelectorAll('.menu-link');
             links.forEach(lnk => lnk.classList.remove('active'));
 
+            // 対象のセクションを表示し、クリックされたメニューをハイライト
             document.getElementById('section-' + sectionId).classList.add('active');
             element.classList.add('active');
 
+            // ページタイトルを動的に変更
             const pageTitle = document.getElementById('pageTitle');
             pageTitle.innerText = element.innerText;
 
+            // スマホなどでの利便性のため、クリックしたら自動でメニューを閉じる
             toggleSidebar();
         }
 
-        // 5. 欠席連絡メール送信機能
+        // 5. 欠席連絡メール送信機能（shenj0189@gmail.com 宛て）
         function sendAbsenceEmail() {
             const name = document.getElementById('absenceName').value;
             const targetClass = document.getElementById('absenceClass').value;
@@ -639,6 +630,7 @@
             const emailTarget = "shenj0189@gmail.com";
             const subject = encodeURIComponent(`【欠席連絡】鉄緑会 医進会（柿原 拓真）`);
             
+            // メール本文の組み立て
             const bodyTemplate = `鉄緑会 医進会 事務局 御中
 
 いつもお世話になっております。塾生の柿原 拓真です。
@@ -654,6 +646,8 @@ ${reason}
 お手数をおかけしますが、振替授業やプリントの配付についてご手配のほどよろしくお願いいたします。`;
 
             const body = encodeURIComponent(bodyTemplate);
+
+            // mailto リンクを生成して実行（標準のメールアプリが起動します）
             window.location.href = `mailto:${emailTarget}?subject=${subject}&body=${body}`;
         }
     </script>
