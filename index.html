@@ -106,10 +106,6 @@
             font-weight: normal;
         }
 
-        .subject-checkboxes input {
-            width: auto;
-        }
-
         .login-btn {
             width: 100%;
             background-color: #0d233a;
@@ -582,34 +578,32 @@
         .score-fields { display: flex; gap: 5px; align-items: center; }
         .score-fields input { padding: 6px; font-size: 0.85rem; text-align: center; }
 
-        .mock-list-container {
-            margin-top: 25px;
-        }
-        .mock-card {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .mock-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px dashed #cbd5e0;
-            padding-bottom: 8px;
-            margin-bottom: 10px;
-        }
+        /* 志望校判定フォームエリア */
+        .judgment-input-title { font-size: 0.95rem; margin-top: 25px; margin-bottom: 10px; color:#0d233a; font-weight: bold; }
+        .judgment-input-box { background: #fdfaf4; border: 1px solid #f3e6cb; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .judgment-row { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .judgment-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-align: center; }
+        .badge-a { background-color: #fed7d7; color: #9b2c2c; }
+        .badge-b { background-color: #feebc8; color: #9c4221; }
+        .badge-c { background-color: #e2e8f0; color: #4a5568; }
+        .badge-d { background-color: #edf2f7; color: #4a5568; }
+        .badge-e { background-color: #cbd5e0; color: #1a202c; }
+
+        /* グラフエリアのコンテナ */
+        .graph-container { background: #fff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+        .graph-wrapper { position: relative; width: 100%; height: 220px; border-left: 2px solid #cbd5e0; border-bottom: 2px solid #cbd5e0; margin-top: 15px; display: flex; align-items: flex-end; justify-content: space-around; padding: 0 20px; }
+        .graph-bar-col { display: flex; flex-direction: column; align-items: center; position: relative; width: 45px; height: 100%; justify-content: flex-end; }
+        .graph-dot { width: 12px; height: 12px; background-color: #c5a059; border: 2px solid #0d233a; border-radius: 50%; position: absolute; z-index: 5; transition: bottom 0.3s ease; }
+        .graph-line-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+        .graph-label { font-size: 0.72rem; color: #718096; position: absolute; bottom: -25px; text-align: center; white-space: nowrap; width: 70px; }
+        .graph-value { font-size: 0.8rem; font-weight: bold; color: #0d233a; position: absolute; top: -20px; }
+
+        .mock-list-container { margin-top: 25px; }
+        .mock-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .mock-card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #cbd5e0; padding-bottom: 8px; margin-bottom: 10px; }
         .mock-title { font-weight: bold; color: #0d233a; font-size: 1rem; }
         .mock-date { font-size: 0.8rem; color: #718096; }
-        .mock-scores-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
-        }
+        .mock-scores-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; font-size: 0.85rem; margin-bottom: 10px; }
         .mock-score-tag { background: #f7fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #edf2f7; }
 
         /* --------------------------------------
@@ -692,6 +686,7 @@
                 <div class="menu-category">成績・演習</div>
                 <ul>
                     <li><a href="#" class="menu-link" onclick="switchSection('grades', this)">模試成績</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('judgment-history', this)">志望校判定推移</a></li>
                     <li><a href="#" class="menu-link" onclick="switchSection('materials', this)">教材・解答プリントDL</a></li>
                 </ul>
                 <div class="menu-category">医学部受験サポート</div>
@@ -853,7 +848,7 @@
                 <div class="success-banner" id="mockSuccessBanner">模試成績を登録・更新しました。</div>
                 
                 <div class="card">
-                    <h2 id="mockFormTitle">校外模試成績の自主記録・追加</h2>
+                    <h2 id="mockFormTitle">校外模試成績および判定の自主記録</h2>
                     <input type="hidden" id="editMockId" value="">
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
@@ -862,7 +857,7 @@
                             <input type="date" id="mockDate">
                         </div>
                         <div class="form-group">
-                            <label for="mockNameSelect">模試の名前</label>
+                            <label for="mockNameSelect">模試の種類</label>
                             <select id="mockNameSelect" onchange="handleMockNameChange()">
                                 <option value="全統共テ模試">全統共テ模試</option>
                                 <option value="全統記述模試">全統記述模試</option>
@@ -889,20 +884,17 @@
                         </div>
                         <div class="form-group" id="mockRoundGroup">
                             <label for="mockRound" id="mockRoundLabel">回数・季節</label>
-                            <select id="mockRound">
-                                </select>
+                            <select id="mockRound"></select>
                         </div>
                     </div>
 
                     <div id="customSubjectToggleArea" style="display: none; margin-top: 15px;">
                         <span class="checkbox-group-label">受験した教科にチェックを入れてください：</span>
-                        <div class="subject-checkboxes" id="subjectCheckboxContainer">
-                            </div>
+                        <div class="subject-checkboxes" id="subjectCheckboxContainer"></div>
                     </div>
 
                     <h3 style="font-size: 0.95rem; margin-top: 20px; margin-bottom: 10px; color:#0d233a;">各教科・総合の成績入力</h3>
-                    <div class="score-input-grid" id="dynamicScoreInputContainer">
-                        </div>
+                    <div class="score-input-grid" id="dynamicScoreInputContainer"></div>
 
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: #f0f4f8; padding: 15px; border-radius: 6px;">
                         <div class="form-group" style="margin-bottom:0;">
@@ -919,15 +911,70 @@
                         </div>
                     </div>
 
+                    <div class="judgment-input-title">■ 志望校判定の記録（最大3枚まで）</div>
+                    <div class="judgment-input-box">
+                        <div class="judgment-row">
+                            <label style="font-size:0.8rem; font-weight:bold; color:#4a5568;">第一志望大学・学部名</label>
+                            <label style="font-size:0.8rem; font-weight:bold; color:#4a5568;">学科・方式等</label>
+                            <label style="font-size:0.8rem; font-weight:bold; color:#4a5568;">判定</label>
+                        </div>
+                        <div class="judgment-row">
+                            <input type="text" id="judgeUniv1" placeholder="例: 東京大学" value="東京大学">
+                            <input type="text" id="judgeDept1" placeholder="例: 理科三類" value="理科三類">
+                            <select id="judgeRank1">
+                                <option value="">選択</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+                            </select>
+                        </div>
+                        <div class="judgment-row">
+                            <input type="text" id="judgeUniv2" placeholder="例: 京都大学">
+                            <input type="text" id="judgeDept2" placeholder="例: 医学部医学科">
+                            <select id="judgeRank2">
+                                <option value="">選択</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+                            </select>
+                        </div>
+                        <div class="judgment-row">
+                            <input type="text" id="judgeUniv3" placeholder="例: 大阪大学">
+                            <input type="text" id="judgeDept3" placeholder="例: 医学部">
+                            <select id="judgeRank3">
+                                <option value="">選択</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div style="margin-top: 20px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
                         <button class="action-btn-secondary" id="cancelEditBtn" style="display: none;" onclick="resetMockForm()">編集をキャンセル</button>
-                        <button class="login-btn" style="max-width: 180px;" onclick="saveMockResult()">成績を保存する</button>
+                        <button class="login-btn" style="max-width: 180px;" onclick="saveMockResult()">成績・判定を保存する</button>
                     </div>
+                </div>
+
+                <div class="graph-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h2 style="margin-bottom:0;">模試別 総合偏差値推移グラフ</h2>
+                        <select id="graphMockSelector" onchange="renderScoreGraph()" style="width:200px; padding:6px; border-radius:4px; font-size:0.9rem;">
+                            <option value="全統共テ模試">全統共テ模試</option>
+                            <option value="全統記述模試" selected>全統記述模試</option>
+                            <option value="東大オープン模試">東大オープン模試</option>
+                            <option value="東大実戦模試">東大実戦模試</option>
+                        </select>
+                    </div>
+                    <div class="graph-wrapper" id="graphWrapperArea">
+                        </div>
+                    <div style="height: 25px;"></div>
                 </div>
 
                 <div class="card">
                     <h2>登録済みの模試成績一覧</h2>
                     <div class="mock-list-container" id="savedMockListArea"></div>
+                </div>
+            </div>
+
+            <div id="section-judgment-history" class="content-section">
+                <div class="card">
+                    <h2>志望校別 判定推移履歴</h2>
+                    <p style="font-size:0.85rem; color:#718096; margin-bottom:20px;">
+                        これまでに模試成績とともに登録・記録された各志望校の判定の推移一覧です。
+                    </p>
+                    <div id="judgmentTimelineContainer"></div>
                 </div>
             </div>
 
@@ -981,10 +1028,10 @@
                 { name: "高3重要事項確認テストゼミ", time: "17:20〜18:20", room: "本館202", class: "必須", mat: "記述解答用万年筆またはボールペン", range: "1学期定例重要公式・定理の証明、および記述論証精査" },
                 { name: "月曜テストゼミ・採点講評", time: "18:30〜20:00", room: "本館202", class: "記述", mat: "前週の添削済み答案、講評冊子", range: "文脈適合・条件英作文の減点基準解説、個別フィードバック" },
                 { name: "数Ⅲ計算力徹底スピード精査", time: "20:05〜20:45", room: "本館202", class: "補習", mat: "数Ⅲ極限・微積分計算ドリル", range: "置換積分・部分積分の高速処理、定積分と不等式の頻出パターン" },
-                { name: "現役指導員による個別進捗面談", time: "20:50〜21:20", room: "面談室B", class: "指定", mat: "週間学習計画表（ポートフォリオ）", range: "6月中旬の進捗セルフチェック、夏期講習の講座選定カウンセリング" }
+                { name: "現役指導員による個別進捗面談", time: "20:50〜21:20", room: "面談室B", class: "指定", mat: "週間学習計画表（ポートフォリオ）", range: "6月中旬の進捗セルフチェック、夏期講習の講座選定講座" }
             ],
             2: [
-                { name: "医学部2次記述小論文（基礎）", time: "16:30〜17:20", room: "3号館101", class: "特進", mat: "医事小論文テキスト、原稿用紙", range: "医療倫理の基本原則（インフォームドコンセント、 paternalism）" },
+                { name: "医学部2次記述小論文（基礎）", time: "16:30〜17:20", room: "3号館101", class: "特進", mat: "医事小論文テキスト、原稿用紙", range: "医療倫理の基本原則（インフォームドコンセント）" },
                 { name: "医学部2次記述小論文（実戦）", time: "17:30〜19:00", room: "3号館101", class: "特進", mat: "時事医療トピックプリント、ノート", range: "「先端医療と遺伝子編集」をテーマとする600字論述および相互添削" },
                 { name: "面接・口頭試問シミュレーション", time: "19:10〜19:50", room: "面談室A", class: "個別", mat: "自己分析シート、志望理由書控", range: "大学志望理由のブラッシュアップ、頻出質問に対する論理的応答" },
                 { name: "東大国公立大英文和訳添削ゼミ", time: "20:00〜20:50", room: "3号館102", class: "選抜", mat: "英文解釈クラシックテキスト", range: "抽象度の高い論説文における倒置・挿入句の正確な構造分解" },
@@ -1029,7 +1076,6 @@
 
         const masterTimeSlots = ["17:00〜17:30", "17:30〜18:00", "18:00〜18:30", "19:00〜19:30", "19:30〜20:00", "20:00〜20:30", "21:00〜21:30"];
         
-        // 全科目の定義マスタ
         const allSubjectsMaster = [
             { id: "math1", label: "数学①" }, { id: "math2", label: "数学②" }, { id: "englishL", label: "英語L" },
             { id: "englishR", label: "英語R" }, { id: "math", label: "数学" }, { id: "english", label: "英語" },
@@ -1042,28 +1088,29 @@
             attendance: {}, 
             meetings: {},    
             supplements: {}, 
-            mockResults: []  // 校外模試成績を配列で保持
+            mockResults: []  
         };
 
         function loadState() {
-            const saved = localStorage.getItem('tetsuryoku_v2_state');
+            const saved = localStorage.getItem('tetsuryoku_v3_state');
             if (saved) {
                 appState = JSON.parse(saved);
                 if (!appState.supplements) appState.supplements = {};
                 if (!appState.mockResults) appState.mockResults = [];
             } else {
-                // 初回ログイン時のデモデータ挿入
+                // 初期ダッシュボード用のサンプル過去データ
                 appState.mockResults = [
                     {
+                        id: "demo-pre-1", date: "2026-02-15", name: "全統記述模試", grade: "高２", round: "第３回",
+                        subjects: { "数学": { score: 152, full: 200, dev: 68.4 }, "英語": { score: 135, full: 200, dev: 64.2 }, "国語": { score: 112, full: 200, dev: 56.1 } },
+                        total: { score: 399, full: 600, dev: 63.8 },
+                        judgments: [{univ:"東京大学", dept:"理科三類", rank:"D"}, {univ:"京都大学", dept:"医学部", rank:"C"}]
+                    },
+                    {
                         id: "demo-1", date: "2026-05-10", name: "全統記述模試", grade: "高３", round: "第１回",
-                        subjects: {
-                            "数学": { score: 165, full: 200, dev: 72.4 },
-                            "英語": { score: 142, full: 200, dev: 68.1 },
-                            "国語": { score: 110, full: 200, dev: 58.5 },
-                            "物理": { score: 88, full: 100, dev: 74.0 },
-                            "化学": { score: 82, full: 100, dev: 70.2 }
-                        },
-                        total: { score: 487, full: 800, dev: 71.2 }
+                        subjects: { "数学": { score: 172, full: 200, dev: 73.1 }, "英語": { score: 148, full: 200, dev: 69.5 }, "国語": { score: 120, full: 200, dev: 59.8 }, "物理": { score: 85, full: 100, dev: 71.4 }, "化学": { score: 88, full: 100, dev: 72.0 } },
+                        total: { score: 513, full: 800, dev: 71.8 },
+                        judgments: [{univ:"東京大学", dept:"理科三類", rank:"B"}, {univ:"京都大学", dept:"医学部", rank:"A"}]
                     }
                 ];
                 saveState();
@@ -1071,7 +1118,7 @@
         }
 
         function saveState() {
-            localStorage.setItem('tetsuryoku_v2_state', JSON.stringify(appState));
+            localStorage.setItem('tetsuryoku_v3_state', JSON.stringify(appState));
         }
 
         function attemptLogin() {
@@ -1091,6 +1138,8 @@
                 buildHokouCalendar();
                 handleMockNameChange(); 
                 renderMockList();
+                renderScoreGraph();
+                renderJudgmentTimeline();
             } else {
                 document.getElementById('errorMsg').style.display = 'block';
             }
@@ -1178,7 +1227,6 @@
             buildAttendanceCalendar(); 
         }
 
-        /* モーダルポップアップ表示関数 */
         function openLectureModal(day, index) {
             const lecture = masterSchedule[day][index];
             document.getElementById('modalLectureName').innerText = `${lecture.name}（${lecture.time}）`;
@@ -1193,214 +1241,113 @@
 
         function getJune2026Grid() { return { padding: 1, days: 30 }; }
 
-        /* 出欠記録・面談予定・補講カレンダー生成 */
         function buildAttendanceCalendar() {
             const grid = document.getElementById('attendanceCalendarGrid');
-            if (!grid) return;
-            grid.innerHTML = '';
-
-            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-header-cell';
-                cell.innerText = w;
-                grid.appendChild(cell);
-            });
-
-            const conf = getJune2026Grid();
-            for (let i = 0; i < conf.padding; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-day-cell empty';
-                grid.appendChild(cell);
-            }
-
-            for (let d = 1; d <= conf.days; d++) {
-                const cell = document.createElement('div');
-                cell.className = 'calendar-day-cell';
-                const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
-
-                let innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">`;
-
-                let hasAttendance = false;
-                for (let idx = 0; idx < 5; idx++) {
-                    if (appState.attendance[`${dateKey}-${idx}`]) { hasAttendance = true; break; }
-                }
-                if (hasAttendance) innerHTML += `<span class="info-badge-attendance">出席あり</span>`;
-                if (appState.meetings[dateKey]) innerHTML += `<span class="info-badge-meeting">面談:${appState.meetings[dateKey].split('〜')[0]}</span>`;
-                if (appState.supplements && appState.supplements[dateKey]) innerHTML += `<span class="info-badge-hokou">補講:${appState.supplements[dateKey].time.split('〜')[0]}</span>`;
-
-                innerHTML += `</div>`;
-                cell.innerHTML = innerHTML;
-
-                cell.onclick = () => {
-                    document.querySelectorAll('#attendanceCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
-                    cell.classList.add('selected');
-                    showDayDetails(d, dateKey);
-                };
-                grid.appendChild(cell);
-            }
-        }
-
-        /* カレンダー日付詳細パネルの更新表示 */
-        function showDayDetails(dayNum, dateKey) {
-            const panel = document.getElementById('attendanceDayDetail');
-            const title = document.getElementById('detailPanelTitle');
-            const content = document.getElementById('detailPanelContent');
-            document.getElementById('inlineModArea').style.display = 'none';
-            
-            panel.style.display = 'block';
-            title.innerText = `2026年6月${dayNum}日の詳細情報`;
-
-            const dayOfWeek = (dayNum + 0) % 7; 
-            const lectures = masterSchedule[dayOfWeek];
-            
-            let html = `<h4 style="font-size:0.9rem; margin-bottom:5px; color:#4a5568;">レギュラー講義・イベントの出欠：</h4>`;
-            if (lectures) {
-                html += `<ul style="list-style:none; padding-left:10px; margin-bottom:15px;">`;
-                lectures.forEach((lec, idx) => {
-                    const isAttended = appState.attendance[`${dateKey}-${idx}`];
-                    const statusText = isAttended ? `<span style="color:#38a169; font-weight:bold;">出席済み</span>` : `<span style="color:#718096;">未マーク</span>`;
-                    html += `<li class="detail-row-item">${lec.time} ${lec.name} ｜ ${statusText}</li>`;
-                });
-                html += `</ul>`;
-            } else {
-                html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">設定はありません。</p>`;
-            }
-
-            // 特進補講の予定表示と変更・キャンセル処理
-            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">医学部特進補講の予定・管理：</h4>`;
-            if (appState.supplements && appState.supplements[dateKey]) {
-                const sup = appState.supplements[dateKey];
-                html += `<div class="detail-row-item" style="margin-bottom:15px;">`;
-                html += `講座：<strong>${sup.course}</strong> ｜ 時間：<strong>${sup.time}</strong>`;
-                html += `<div class="action-group">`;
-                html += `<button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'hokou')">補講時間を変更する</button>`;
-                html += `<button class="action-btn-danger" onclick="cancelHokou('${dateKey}')">補講をキャンセルする</button>`;
-                html += `</div></div>`;
-            } else {
-                html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">補講の予約はありません。</p>`;
-            }
-
-            // 指導員面談の管理
-            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">指導員面談の予定・管理：</h4>`;
-            if (appState.meetings[dateKey]) {
-                html += `<div class="detail-row-item">`;
-                html += `時間：<strong>${appState.meetings[dateKey]}</strong>`;
-                html += `<div class="action-group">`;
-                html += `<button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'meeting')">面談時間を変更する</button>`;
-                html += `<button class="action-btn-danger" onclick="cancelMeeting('${dateKey}')">面談をキャンセルする</button>`;
-                html += `</div></div>`;
-            } else {
-                html += `<p class="detail-row-item" style="color:#718096;">面談の予約はありません。</p>`;
-            }
-
-            content.innerHTML = html;
-        }
-
-        // 補講のキャンセル
-        function cancelHokou(dateKey) {
-            if (confirm('この特進補講の予約をキャンセルしますか？')) {
-                delete appState.supplements[dateKey];
-                saveState();
-                buildAttendanceCalendar();
-                buildHokouCalendar();
-                showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
-            }
-        }
-
-        // 面談のキャンセル
-        function cancelMeeting(dateKey) {
-            if (confirm('この指導員面談の予約をキャンセルしますか？')) {
-                delete appState.meetings[dateKey];
-                saveState();
-                buildAttendanceCalendar();
-                buildReservationCalendar();
-                showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
-            }
-        }
-
-        // 時間変更用スロットの展開
-        function prepareModifyItem(dateKey, type) {
-            const modArea = document.getElementById('inlineModArea');
-            const grid = document.getElementById('inlineSlotsGrid');
-            const title = document.getElementById('inlineModTitle');
-            grid.innerHTML = '';
-            modArea.style.display = 'block';
-
-            if (type === 'hokou') {
-                title.innerText = `補講の新しい時間枠を選択してください`;
-                masterTimeSlots.forEach(slot => {
-                    const btn = document.createElement('button');
-                    btn.className = 'time-slot-btn';
-                    btn.innerText = slot;
-                    if (appState.supplements[dateKey].time === slot) btn.classList.add('active');
-                    btn.onclick = () => {
-                        if (confirm(`補講時間を ${slot} に変更しますか？`)) {
-                            appState.supplements[dateKey].time = slot;
-                            saveState();
-                            buildAttendanceCalendar();
-                            showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
-                        }
-                    };
-                    grid.appendChild(btn);
-                });
-            } else {
-                title.innerText = `面談の新しい時間枠を選択してください`;
-                masterTimeSlots.forEach(slot => {
-                    const btn = document.createElement('button');
-                    btn.className = 'time-slot-btn';
-                    btn.innerText = slot;
-                    if (appState.meetings[dateKey] === slot) btn.classList.add('active');
-                    btn.onclick = () => {
-                        if (confirm(`面談時間を ${slot} に変更しますか？`)) {
-                            appState.meetings[dateKey] = slot;
-                            saveState();
-                            buildAttendanceCalendar();
-                            showDayDetails(parseInt(dateKey.split('-')[2]), dateKey);
-                        }
-                    };
-                    grid.appendChild(btn);
-                });
-            }
-        }
-
-        /* --------------------------------------
-         * 指導員相談予約・特進補講カレンダー生成
-         * -------------------------------------- */
-        let selectedDateKey = null;
-        let selectedTimeSlot = null;
-
-        function buildReservationCalendar() {
-            const grid = document.getElementById('reservationCalendarGrid');
             if (!grid) return; grid.innerHTML = '';
-            
+
             ['日', '月', '火', '水', '木', '金', '土'].forEach(w => {
                 const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell);
             });
             const conf = getJune2026Grid();
             for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
+
             for (let d = 1; d <= conf.days; d++) {
                 const cell = document.createElement('div'); cell.className = 'calendar-day-cell';
                 const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
-                cell.innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">${appState.meetings[dateKey] ? '<span class="info-badge-meeting">予約あり</span>':''}</div>`;
+                let innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">`;
+
+                let hasAttendance = false;
+                for (let idx = 0; idx < 5; idx++) { if (appState.attendance[`${dateKey}-${idx}`]) { hasAttendance = true; break; } }
+                if (hasAttendance) innerHTML += `<span class="info-badge-attendance">出席あり</span>`;
+                if (appState.meetings[dateKey]) innerHTML += `<span class="info-badge-meeting">面談:${appState.meetings[dateKey].split('〜')[0]}</span>`;
+                if (appState.supplements && appState.supplements[dateKey]) innerHTML += `<span class="info-badge-hokou">補講:${appState.supplements[dateKey].time.split('〜')[0]}</span>`;
+
+                innerHTML += `</div>`; cell.innerHTML = innerHTML;
                 cell.onclick = () => {
-                    document.querySelectorAll('#reservationCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
-                    cell.classList.add('selected'); selectedDateKey = dateKey; showTimeSlots();
+                    document.querySelectorAll('#attendanceCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
+                    cell.classList.add('selected'); showDayDetails(d, dateKey);
                 };
+                grid.appendChild(cell);
+            }
+        }
+
+        function showDayDetails(dayNum, dateKey) {
+            const panel = document.getElementById('attendanceDayDetail');
+            const title = document.getElementById('detailPanelTitle');
+            const content = document.getElementById('detailPanelContent');
+            document.getElementById('inlineModArea').style.display = 'none';
+            panel.style.display = 'block'; title.innerText = `2026年6月${dayNum}日の詳細情報`;
+
+            const dayOfWeek = dayNum % 7; 
+            const lectures = masterSchedule[dayOfWeek];
+            let html = `<h4 style="font-size:0.9rem; margin-bottom:5px; color:#4a5568;">レギュラー講義・イベントの出欠：</h4>`;
+            if (lectures) {
+                html += `<ul style="list-style:none; padding-left:10px; margin-bottom:15px;">`;
+                lectures.forEach((lec, idx) => {
+                    const isAttended = appState.attendance[`${dateKey}-${idx}`];
+                    html += `<li class="detail-row-item">${lec.time} ${lec.name} ｜ ${isAttended ? '<span style="color:#38a169; font-weight:bold;">出席済み</span>':'<span style="color:#718096;">未マーク</span>'}</li>`;
+                });
+                html += `</ul>`;
+            } else { html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">設定はありません。</p>`; }
+
+            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">医学部特進補講の予定・管理：</h4>`;
+            if (appState.supplements && appState.supplements[dateKey]) {
+                html += `<div class="detail-row-item" style="margin-bottom:15px;">講座：<strong>${appState.supplements[dateKey].course}</strong> ｜ 時間：<strong>${appState.supplements[dateKey].time}</strong><div class="action-group"><button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'hokou')">補講時間を変更する</button><button class="action-btn-danger" onclick="cancelHokou('${dateKey}')">補講をキャンセルする</button></div></div>`;
+            } else { html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">補講の予約はありません。</p>`; }
+
+            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">指導員面談の予定・管理：</h4>`;
+            if (appState.meetings[dateKey]) {
+                html += `<div class="detail-row-item">時間：<strong>${appState.meetings[dateKey]}</strong><div class="action-group"><button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'meeting')">面談時間を変更する</button><button class="action-btn-danger" onclick="cancelMeeting('${dateKey}')">面談をキャンセルする</button></div></div>`;
+            } else { html += `<p class="detail-row-item" style="color:#718096;">面談の予約はありません。</p>`; }
+            content.innerHTML = html;
+        }
+
+        function cancelHokou(dateKey) {
+            if (confirm('この特進補講の予約をキャンセルしますか？')) { delete appState.supplements[dateKey]; saveState(); buildAttendanceCalendar(); buildHokouCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); }
+        }
+        function cancelMeeting(dateKey) {
+            if (confirm('この指導員面談の予約をキャンセルしますか？')) { delete appState.meetings[dateKey]; saveState(); buildAttendanceCalendar(); buildReservationCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); }
+        }
+
+        function prepareModifyItem(dateKey, type) {
+            const modArea = document.getElementById('inlineModArea'); const grid = document.getElementById('inlineSlotsGrid'); const title = document.getElementById('inlineModTitle');
+            grid.innerHTML = ''; modArea.style.display = 'block';
+            if (type === 'hokou') {
+                title.innerText = `補講の新しい時間枠を選択してください`;
+                masterTimeSlots.forEach(slot => {
+                    const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot; if (appState.supplements[dateKey].time === slot) btn.classList.add('active');
+                    btn.onclick = () => { if (confirm(`補講時間を ${slot} に変更しますか？`)) { appState.supplements[dateKey].time = slot; saveState(); buildAttendanceCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); } };
+                    grid.appendChild(btn);
+                });
+            } else {
+                title.innerText = `面談の新しい時間枠を選択してください`;
+                masterTimeSlots.forEach(slot => {
+                    const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot; if (appState.meetings[dateKey] === slot) btn.classList.add('active');
+                    btn.onclick = () => { if (confirm(`面談時間を ${slot} に変更しますか？`)) { appState.meetings[dateKey] = slot; saveState(); buildAttendanceCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); } };
+                    grid.appendChild(btn);
+                });
+            }
+        }
+
+        let selectedDateKey = null; let selectedTimeSlot = null;
+        function buildReservationCalendar() {
+            const grid = document.getElementById('reservationCalendarGrid'); if (!grid) return; grid.innerHTML = '';
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => { const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell); });
+            const conf = getJune2026Grid(); for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
+            for (let d = 1; d <= conf.days; d++) {
+                const cell = document.createElement('div'); cell.className = 'calendar-day-cell'; const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
+                cell.innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">${appState.meetings[dateKey] ? '<span class="info-badge-meeting">予約あり</span>':''}</div>`;
+                cell.onclick = () => { document.querySelectorAll('#reservationCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected')); cell.classList.add('selected'); selectedDateKey = dateKey; showTimeSlots(); };
                 grid.appendChild(cell);
             }
         }
 
         function showTimeSlots() {
             selectedTimeSlot = null; document.getElementById('confirmArea').style.display = 'none';
-            const container = document.getElementById('timeSlotsArea');
-            const grid = document.getElementById('slotsGridContainer');
-            grid.innerHTML = ''; container.style.display = 'block';
+            const container = document.getElementById('timeSlotsArea'); const grid = document.getElementById('slotsGridContainer'); grid.innerHTML = ''; container.style.display = 'block';
             masterTimeSlots.forEach(slot => {
                 const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot;
-                btn.onclick = () => {
-                    document.querySelectorAll('#slotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active'); selectedTimeSlot = slot; document.getElementById('confirmArea').style.display = 'block';
-                };
+                btn.onclick = () => { document.querySelectorAll('#slotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedTimeSlot = slot; document.getElementById('confirmArea').style.display = 'block'; };
                 grid.appendChild(btn);
             });
         }
@@ -1409,78 +1356,48 @@
             if (!selectedDateKey || !selectedTimeSlot) return;
             if (confirm(`6月${selectedDateKey.split('-')[2]}日 ${selectedTimeSlot} で相談を確定しますか？`)) {
                 appState.meetings[selectedDateKey] = selectedTimeSlot; saveState();
-                const banner = document.getElementById('reserveSuccess');
-                banner.innerText = `相談予約が完了しました。【6月${selectedDateKey.split('-')[2]}日 ${selectedTimeSlot}】`;
-                banner.style.display = 'block';
-                buildReservationCalendar(); buildAttendanceCalendar();
-                document.getElementById('timeSlotsArea').style.display = 'none';
-                document.getElementById('confirmArea').style.display = 'none';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.getElementById('reserveSuccess').innerText = `相談予約が完了しました。【6月${selectedDateKey.split('-')[2]}日 ${selectedTimeSlot}】`;
+                document.getElementById('reserveSuccess').style.display = 'block';
+                buildReservationCalendar(); buildAttendanceCalendar(); container.style.display = 'none';
             }
         }
 
-        let selectedHokouCourse = null;
-        let selectedHokouDateKey = null;
-        let selectedHokouTimeSlot = null;
-
+        let selectedHokouCourse = null; let selectedHokouDateKey = null; let selectedHokouTimeSlot = null;
         function selectHokouCourse(courseName, btnElement) {
-            document.querySelectorAll('.hokou-selector-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
+            document.querySelectorAll('.hokou-selector-btn').forEach(b => b.classList.remove('active')); btnElement.classList.add('active');
             selectedHokouCourse = courseName; selectedHokouDateKey = null; selectedHokouTimeSlot = null;
-            document.getElementById('hokouTimeSlotsArea').style.display = 'none';
-            document.getElementById('hokouConfirmArea').style.display = 'none';
-            document.getElementById('hokouDateTimeArea').style.display = 'block';
+            document.getElementById('hokouTimeSlotsArea').style.display = 'none'; document.getElementById('hokouConfirmArea').style.display = 'none'; document.getElementById('hokouDateTimeArea').style.display = 'block';
             buildHokouCalendar();
         }
 
         function buildHokouCalendar() {
-            const grid = document.getElementById('hokouCalendarGrid');
-            if (!grid) return; grid.innerHTML = '';
-            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => {
-                const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell);
-            });
-            const conf = getJune2026Grid();
-            for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
+            const grid = document.getElementById('hokouCalendarGrid'); if (!grid) return; grid.innerHTML = '';
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => { const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell); });
+            const conf = getJune2026Grid(); for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
             for (let d = 1; d <= conf.days; d++) {
-                const cell = document.createElement('div'); cell.className = 'calendar-day-cell';
-                const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
+                const cell = document.createElement('div'); cell.className = 'calendar-day-cell'; const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
                 cell.innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">${(appState.supplements && appState.supplements[dateKey]) ? '<span class="info-badge-hokou">予約あり</span>':''}</div>`;
-                cell.onclick = () => {
-                    document.querySelectorAll('#hokouCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
-                    cell.classList.add('selected'); selectedHokouDateKey = dateKey; showHokouTimeSlots();
-                };
+                cell.onclick = () => { document.querySelectorAll('#hokouCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected')); cell.classList.add('selected'); selectedHokouDateKey = dateKey; showHokouTimeSlots(); };
                 grid.appendChild(cell);
             }
         }
 
         function showHokouTimeSlots() {
             selectedHokouTimeSlot = null; document.getElementById('hokouConfirmArea').style.display = 'none';
-            const container = document.getElementById('hokouTimeSlotsArea');
-            const grid = document.getElementById('hokouSlotsGridContainer');
-            grid.innerHTML = ''; container.style.display = 'block';
+            const container = document.getElementById('hokouTimeSlotsArea'); const grid = document.getElementById('hokouSlotsGridContainer'); grid.innerHTML = ''; container.style.display = 'block';
             masterTimeSlots.forEach(slot => {
                 const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot;
-                btn.onclick = () => {
-                    document.querySelectorAll('#hokouSlotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active'); selectedHokouTimeSlot = slot; document.getElementById('hokouConfirmArea').style.display = 'block';
-                };
+                btn.onclick = () => { document.querySelectorAll('#hokouSlotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedHokouTimeSlot = slot; document.getElementById('hokouConfirmArea').style.display = 'block'; };
                 grid.appendChild(btn);
             });
         }
 
         function submitHokouReservation() {
             if (!selectedHokouCourse || !selectedHokouDateKey || !selectedHokouTimeSlot) return;
-            if (confirm(`補講予約を確定しますか？\n講座：${selectedHokouCourse}\n日時：6月${selectedHokouDateKey.split('-')[2]}日 ${selectedHokouTimeSlot}`)) {
+            if (confirm(`補講予約を確定しますか？`)) {
                 if (!appState.supplements) appState.supplements = {};
-                appState.supplements[selectedHokouDateKey] = { course: selectedHokouCourse, time: selectedHokouTimeSlot };
-                saveState();
-                document.getElementById('hokouSuccess').style.display = 'block';
-                buildHokouCalendar(); buildAttendanceCalendar();
-                document.getElementById('hokouTimeSlotsArea').style.display = 'none';
-                document.getElementById('hokouConfirmArea').style.display = 'none';
-                document.getElementById('hokouDateTimeArea').style.display = 'none';
-                document.querySelectorAll('.hokou-selector-btn').forEach(b => b.classList.remove('active'));
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                appState.supplements[selectedHokouDateKey] = { course: selectedHokouCourse, time: selectedHokouTimeSlot }; saveState();
+                document.getElementById('hokouSuccess').style.display = 'block'; buildHokouCalendar(); buildAttendanceCalendar();
             }
         }
 
@@ -1489,16 +1406,10 @@
          * -------------------------------------- */
         function handleMockNameChange() {
             const name = document.getElementById('mockNameSelect').value;
-            const roundSelect = document.getElementById('mockRound');
-            const roundGroup = document.getElementById('mockRoundGroup');
-            const customNameGroup = document.getElementById('customMockNameGroup');
-            const customSubjectArea = document.getElementById('customSubjectToggleArea');
+            const roundSelect = document.getElementById('mockRound'); const roundGroup = document.getElementById('mockRoundGroup');
+            const customNameGroup = document.getElementById('customMockNameGroup'); const customSubjectArea = document.getElementById('customSubjectToggleArea');
             
-            roundSelect.innerHTML = '';
-            customNameGroup.style.display = 'none';
-            customSubjectArea.style.display = 'none';
-            roundGroup.style.display = 'block';
-
+            roundSelect.innerHTML = ''; customNameGroup.style.display = 'none'; customSubjectArea.style.display = 'none'; roundGroup.style.display = 'block';
             let targetSubjects = [];
 
             if (name === '全統共テ模試') {
@@ -1511,48 +1422,31 @@
                 ['夏季', '秋季'].forEach(r => roundSelect.add(new Option(r, r)));
                 targetSubjects = ["数学", "英語", "国語", "物理", "化学"];
             } else if (name === 'その他') {
-                roundGroup.style.display = 'none';
-                customNameGroup.style.display = 'block';
-                customSubjectArea.style.display = 'block';
-                buildCustomSubjectCheckboxes();
-                return; // 「その他」の場合はチェックボックスの選択に応じて生成するためここで抜ける
+                roundGroup.style.display = 'none'; customNameGroup.style.display = 'block'; customSubjectArea.style.display = 'block';
+                buildCustomSubjectCheckboxes(); return;
             }
-
             buildDynamicScoreFields(targetSubjects);
         }
 
-        // 「その他」用チェックボックスの配置
         function buildCustomSubjectCheckboxes() {
-            const container = document.getElementById('subjectCheckboxContainer');
-            container.innerHTML = '';
+            const container = document.getElementById('subjectCheckboxContainer'); container.innerHTML = '';
             allSubjectsMaster.forEach(sub => {
-                const label = document.createElement('label');
-                label.innerHTML = `<input type="checkbox" value="${sub.label}" onchange="updateCustomSubjectsForm()"> ${sub.label}`;
+                const label = document.createElement('label'); label.innerHTML = `<input type="checkbox" value="${sub.label}" onchange="updateCustomSubjectsForm()"> ${sub.label}`;
                 container.appendChild(label);
             });
-            buildDynamicScoreFields([]); // 初期状態は空
+            buildDynamicScoreFields([]);
         }
 
-        // チェック状態を監視してフォーム再生成
         function updateCustomSubjectsForm() {
             const checkedBoxes = document.querySelectorAll('#subjectCheckboxContainer input:checked');
-            const selectedSubjects = Array.from(checkedBoxes).map(cb => cb.value);
-            buildDynamicScoreFields(selectedSubjects);
+            buildDynamicScoreFields(Array.from(checkedBoxes).map(cb => cb.value));
         }
 
-        // 教科入力フォーム（得点・配点・偏差値）を生成
         function buildDynamicScoreFields(subjectsList) {
-            const container = document.getElementById('dynamicScoreInputContainer');
-            container.innerHTML = '';
-
-            if(subjectsList.length === 0) {
-                container.innerHTML = '<p style="color:#718096; font-size:0.85rem; padding:10px;">表示する教科がありません。</p>';
-                return;
-            }
-
+            const container = document.getElementById('dynamicScoreInputContainer'); container.innerHTML = '';
+            if(subjectsList.length === 0) { container.innerHTML = '<p style="color:#718096; font-size:0.85rem; padding:10px;">表示する教科がありません。</p>'; return; }
             subjectsList.forEach(sub => {
-                const row = document.createElement('div');
-                row.className = 'score-input-row';
+                const row = document.createElement('div'); row.className = 'score-input-row';
                 row.innerHTML = `
                     <span class="score-sub-label">${sub}</span>
                     <div class="score-fields">
@@ -1560,133 +1454,195 @@
                         <span style="font-size:0.8rem; color:#718096;">/</span>
                         <input type="number" class="mock-sub-full" data-sub="${sub}" placeholder="配点" style="width:70px;">
                         <input type="number" class="mock-sub-dev" data-sub="${sub}" step="0.1" placeholder="偏差値" style="width:70px; margin-left:auto;">
-                    </div>
-                `;
+                    </div>`;
                 container.appendChild(row);
             });
         }
 
-        /* 模試成績の新規登録・編集保存処理 */
+        /* 模試成績および志望校判定の保存 */
         function saveMockResult() {
             const date = document.getElementById('mockDate').value;
             const nameSelect = document.getElementById('mockNameSelect').value;
             const grade = document.getElementById('mockGrade').value;
             const editId = document.getElementById('editMockId').value;
-
             if(!date) { alert('受験日を入力してください。'); return; }
 
-            let finalName = nameSelect;
-            let finalRound = "";
+            let finalName = nameSelect === 'その他' ? (document.getElementById('customMockName').value.trim() || "その他自由模試") : nameSelect;
+            let finalRound = nameSelect === 'その他' ? "独自枠" : document.getElementById('mockRound').value;
 
-            if(nameSelect === 'その他') {
-                finalName = document.getElementById('customMockName').value.trim() || "その他自由模試";
-                finalRound = "独自枠";
-            } else {
-                finalRound = document.getElementById('mockRound').value;
-            }
-
-            // 教科成績データのスクレイピング
             const subjectData = {};
-            const scoreRows = document.querySelectorAll('.score-input-row');
-            
-            scoreRows.forEach(row => {
+            document.querySelectorAll('.score-input-row').forEach(row => {
                 const subLabel = row.querySelector('.score-sub-label').innerText;
                 const scoreVal = parseInt(row.querySelector('.mock-sub-score').value);
                 const fullVal = parseInt(row.querySelector('.mock-sub-full').value);
                 const devVal = parseFloat(row.querySelector('.mock-sub-dev').value);
-
                 if(!isNaN(scoreVal) || !isNaN(fullVal) || !isNaN(devVal)) {
-                    subjectData[subLabel] = {
-                        score: isNaN(scoreVal) ? 0 : scoreVal,
-                        full: isNaN(fullVal) ? 0 : fullVal,
-                        dev: isNaN(devVal) ? 0.0 : devVal
-                    };
+                    subjectData[subLabel] = { score: isNaN(scoreVal)?0:scoreVal, full: isNaN(fullVal)?0:fullVal, dev: isNaN(devVal)?0:devVal };
                 }
             });
 
-            const totalScore = parseInt(document.getElementById('totalScore').value) || 0;
-            const totalFull = parseInt(document.getElementById('totalFull').value) || 0;
-            const totalDev = parseFloat(document.getElementById('totalDev').value) || 0.0;
+            // 志望校判定データの集約
+            const judgments = [];
+            for (let i = 1; i <= 3; i++) {
+                const u = document.getElementById('judgeUniv' + i).value.trim();
+                const d = document.getElementById('judgeDept' + i).value.trim();
+                const r = document.getElementById('judgeRank' + i).value;
+                if(u && r) { judgments.push({ univ: u, dept: d, rank: r }); }
+            }
 
             const mockRecord = {
-                id: editId ? editId : 'mock-' + Date.now(),
-                date: date,
-                name: finalName,
-                grade: grade,
-                round: finalRound,
-                subjects: subjectData,
-                total: { score: totalScore, full: totalFull, dev: totalDev }
+                id: editId ? editId : 'mock-' + Date.now(), date: date, name: finalName, grade: grade, round: finalRound,
+                subjects: subjectData, total: { score: parseInt(document.getElementById('totalScore').value)||0, full: parseInt(document.getElementById('totalFull').value)||0, dev: parseFloat(document.getElementById('totalDev').value)||0 },
+                judgments: judgments
             };
 
             if(editId) {
-                // 編集更新
-                const idx = appState.mockResults.findIndex(m => m.id === editId);
-                if(idx !== -1) appState.mockResults[idx] = mockRecord;
-            } else {
-                // 新規追加
-                appState.mockResults.push(mockRecord);
-            }
+                const idx = appState.mockResults.findIndex(m => m.id === editId); if(idx !== -1) appState.mockResults[idx] = mockRecord;
+            } else { appState.mockResults.push(mockRecord); }
 
-            saveState();
-            resetMockForm();
-            renderMockList();
-
-            const banner = document.getElementById('mockSuccessBanner');
-            banner.style.display = 'block';
-            setTimeout(() => banner.style.display = 'none', 4000);
+            saveState(); resetMockForm(); renderMockList(); renderScoreGraph(); renderJudgmentTimeline();
+            document.getElementById('mockSuccessBanner').style.display = 'block';
+            setTimeout(() => document.getElementById('mockSuccessBanner').style.display = 'none', 4000);
         }
 
-        /* 登録済み模試カードリストのレンダリング */
-        function renderMockList() {
-            const container = document.getElementById('savedMockListArea');
-            container.innerHTML = '';
+        /* 【新規】成績推移グラフの動的描画（SVG折れ線自動生成） */
+        function renderScoreGraph() {
+            const targetType = document.getElementById('graphMockSelector').value;
+            const wrapper = document.getElementById('graphWrapperArea');
+            wrapper.innerHTML = '';
 
-            if(appState.mockResults.length === 0) {
-                container.innerHTML = '<p style="color:#718096; font-size:0.9rem; text-align:center; padding:20px;">登録された校外模試データはありません。</p>';
+            // 対象模試データを過去から順にソート
+            const filtered = appState.mockResults.filter(m => m.name === targetType).sort((a,b) => new Date(a.date) - new Date(b.date));
+
+            if(filtered.length === 0) {
+                wrapper.innerHTML = `<p style="color:#718096; font-size:0.9rem; align-self:center;">${targetType} の蓄積データがまだありません。</p>`;
                 return;
             }
 
-            // 日付順ソート
-            const sorted = [...appState.mockResults].sort((a,b) => new Date(b.date) - new Date(a.date));
+            const minDev = 40; const maxDev = 80; const heightRange = 220;
+            let pointsCoords = []; let colHTML = '';
 
-            sorted.forEach(mock => {
-                const card = document.createElement('div');
-                card.className = 'mock-card';
+            filtered.forEach((mock, idx) => {
+                const dev = mock.total.dev || 50;
+                // 偏差値40〜80を高さ0〜220pxに正規化マッピング
+                let pct = (dev - minDev) / (maxDev - minDev);
+                if(pct > 1) pct = 1; if(pct < 0) pct = 0;
+                const bottomPx = pct * heightRange;
 
-                let subHTML = '';
-                for(let subName in mock.subjects) {
-                    const s = mock.subjects[subName];
-                    subHTML += `<div class="mock-score-tag"><strong>${subName}</strong>: ${s.score}/${s.full} (偏:${s.dev})</div>`;
+                colHTML += `
+                    <div class="graph-bar-col">
+                        <span class="graph-value">${dev.toFixed(1)}</span>
+                        <div class="graph-dot" style="bottom: ${bottomPx - 6}px;"></div>
+                        <span class="graph-label">${mock.date.substring(5)}<br>${mock.round}</span>
+                    </div>`;
+                pointsCoords.push({ bottom: bottomPx });
+            });
+
+            wrapper.innerHTML = colHTML;
+
+            // 各点を結ぶSVGポリラインをインライン動的計算
+            setTimeout(() => {
+                const cols = wrapper.querySelectorAll('.graph-bar-col');
+                if(cols.length < 2) return;
+                let pathPoints = '';
+                cols.forEach((col, idx) => {
+                    const dot = col.querySelector('.graph-dot');
+                    const x = dot.offsetLeft + 6; 
+                    const y = heightRange - pointsCoords[idx].bottom;
+                    pathPoints += `${x},${y} `;
+                });
+
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("class", "graph-line-svg");
+                svg.innerHTML = `<polyline points="${pathPoints}" style="fill:none; stroke:#0d233a; stroke-width:3;" />`;
+                wrapper.appendChild(svg);
+            }, 50);
+        }
+
+        /* 【新規】志望校判定推移のタイムライン生成 */
+        function renderJudgmentTimeline() {
+            const container = document.getElementById('judgmentTimelineContainer');
+            if(!container) return; container.innerHTML = '';
+
+            // 大学・学部ごとにデータを再集約
+            const map = {};
+            const sortedMock = [...appState.mockResults].sort((a,b) => new Date(a.date) - new Date(b.date));
+
+            sortedMock.forEach(mock => {
+                if(mock.judgments && mock.judgments.length > 0) {
+                    mock.judgments.forEach(j => {
+                        const key = `${j.univ} ${j.dept}`;
+                        if(!map[key]) map[key] = [];
+                        map[key].push({ date: mock.date, mockName: mock.name, round: mock.round, rank: j.rank });
+                    });
+                }
+            });
+
+            if(Object.keys(map).length === 0) {
+                container.innerHTML = '<p style="color:#718096; font-size:0.9rem; text-align:center; padding:20px;">登録された志望校判定データはありません。</p>';
+                return;
+            }
+
+            for(let targetSchool in map) {
+                const block = document.createElement('div');
+                block.className = 'card';
+                block.style.boxShadow = 'none'; block.style.border = '1px solid #e2e8f0'; block.style.background = '#fafbfc';
+                
+                let timelineItemsHTML = `<h3 style="color:#0d233a; font-size:1rem; margin-bottom:15px; border-bottom:2px solid #0d233a; padding-bottom:5px;">${targetSchool}</h3>`;
+                
+                map[targetSchool].forEach(item => {
+                    const rClass = item.rank.toLowerCase();
+                    timelineItemsHTML += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:4px; margin-bottom:8px; border:1px solid #edf2f7;">
+                            <div style="font-size:0.9rem;">
+                                <span style="color:#718096; margin-right:10px; font-weight:bold;">${item.date}</span>
+                                <span style="color:#2d3748;">${item.mockName} (${item.round})</span>
+                            </div>
+                            <span class="judgment-badge badge-${rClass}" style="width:40px; font-size:0.9rem; padding:4px 0;">${item.rank}</span>
+                        </div>`;
+                });
+                block.innerHTML = timelineItemsHTML;
+                container.appendChild(block);
+            }
+        }
+
+        /* 登録済み模試一覧カードのレンダリング */
+        function renderMockList() {
+            const container = document.getElementById('savedMockListArea'); container.innerHTML = '';
+            if(appState.mockResults.length === 0) { container.innerHTML = '<p style="color:#718096; font-size:0.9rem; text-align:center; padding:20px;">登録された校外模試データはありません。</p>'; return; }
+
+            [...appState.mockResults].sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(mock => {
+                const card = document.createElement('div'); card.className = 'mock-card';
+                let subHTML = ''; for(let subName in mock.subjects) { const s = mock.subjects[subName]; subHTML += `<div class="mock-score-tag"><strong>${subName}</strong>: ${s.score}/${s.full} (偏:${s.dev})</div>`; }
+
+                let judgeHTML = '';
+                if(mock.judgments && mock.judgments.length > 0) {
+                    judgeHTML = '<div style="margin-top:10px; font-size:0.85rem; border-top:1px dashed #e2e8f0; padding-top:8px; display:flex; gap:15px; flex-wrap:wrap;">';
+                    mock.judgments.forEach(j => { judgeHTML += `<span>${j.univ}${j.dept ? ' '+j.dept : ''}: <strong class="judgment-badge badge-${j.rank.toLowerCase()}">${j.rank}判定</strong></span>`; });
+                    judgeHTML += '</div>';
                 }
 
                 card.innerHTML = `
                     <div class="mock-card-header">
-                        <div>
-                            <span class="mock-title">${mock.name} (${mock.round})</span>
-                            <span style="font-size:0.8rem; background:#edf2f7; padding:2px 6px; border-radius:3px; margin-left:8px; color:#4a5568;">${mock.grade}</span>
-                        </div>
+                        <div><span class="mock-title">${mock.name} (${mock.round})</span><span style="font-size:0.8rem; background:#edf2f7; padding:2px 6px; border-radius:3px; margin-left:8px; color:#4a5568;">${mock.grade}</span></div>
                         <span class="mock-date">受験日: ${mock.date}</span>
                     </div>
                     <div class="mock-scores-summary">${subHTML}</div>
+                    ${judgeHTML}
                     <div style="display:flex; justify-content:space-between; align-items:center; background:#f7fafc; padding:8px 12px; border-radius:4px; margin-top:10px;">
-                        <div style="font-size:0.9rem; color:#0d233a;">
-                            総合点: <strong>${mock.total.score} / ${mock.total.full}</strong> ｜ 総合偏差値: <strong style="color:#c53030; font-size:1rem;">${mock.total.dev}</strong>
-                        </div>
+                        <div style="font-size:0.9rem; color:#0d233a;">総合点: <strong>${mock.total.score} / ${mock.total.full}</strong> ｜ 総合偏差値: <strong style="color:#c53030; font-size:1rem;">${mock.total.dev}</strong></div>
                         <div class="btn-group">
                             <button class="action-btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="editMockItem('${mock.id}')">編集</button>
                             <button class="action-btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteMockItem('${mock.id}')">削除</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 container.appendChild(card);
             });
         }
 
         /* 模試データの編集モード移行 */
         function editMockItem(id) {
-            const mock = appState.mockResults.find(m => m.id === id);
-            if(!mock) return;
-
+            const mock = appState.mockResults.find(m => m.id === id); if(!mock) return;
             window.scrollTo({ top: document.getElementById('mockFormTitle').offsetTop - 80, behavior: 'smooth' });
 
             document.getElementById('editMockId').value = mock.id;
@@ -1697,95 +1653,77 @@
 
             const knownNames = ['全統共テ模試', '全統記述模試', '東大オープン模試', '東大実戦模試'];
             if(knownNames.includes(mock.name)) {
-                document.getElementById('mockNameSelect').value = mock.name;
-                handleMockNameChange();
+                document.getElementById('mockNameSelect').value = mock.name; handleMockNameChange();
                 document.getElementById('mockRound').value = mock.round;
             } else {
-                document.getElementById('mockNameSelect').value = 'その他';
-                handleMockNameChange();
+                document.getElementById('mockNameSelect').value = 'その他'; handleMockNameChange();
                 document.getElementById('customMockName').value = mock.name;
-                
-                // チェックボックスの復元
-                const checkBoxes = document.querySelectorAll('#subjectCheckboxContainer input');
-                checkBoxes.forEach(cb => {
-                    if(mock.subjects[cb.value]) cb.checked = true;
-                });
+                document.querySelectorAll('#subjectCheckboxContainer input').forEach(cb => { if(mock.subjects[cb.value]) cb.checked = true; });
                 updateCustomSubjectsForm();
             }
 
-            // 得点値のフォーム流し込み
             for(let subName in mock.subjects) {
                 const data = mock.subjects[subName];
                 const scoreInput = document.querySelector(`.mock-sub-score[data-sub="${subName}"]`);
                 const fullInput = document.querySelector(`.mock-sub-full[data-sub="${subName}"]`);
                 const devInput = document.querySelector(`.mock-sub-dev[data-sub="${subName}"]`);
-
-                if(scoreInput) scoreInput.value = data.score;
-                if(fullInput) fullInput.value = data.full;
-                if(devInput) devInput.value = data.dev;
+                if(scoreInput) scoreInput.value = data.score; if(fullInput) fullInput.value = data.full; if(devInput) devInput.value = data.dev;
             }
 
             document.getElementById('totalScore').value = mock.total.score;
             document.getElementById('totalFull').value = mock.total.full;
             document.getElementById('totalDev').value = mock.total.dev;
-        }
 
-        function deleteMockItem(id) {
-            if(confirm('この模試成績レコードを削除しますか？')) {
-                appState.mockResults = appState.mockResults.filter(m => m.id !== id);
-                saveState();
-                renderMockList();
+            // 判定欄の復元
+            for (let i = 1; i <= 3; i++) {
+                if(mock.judgments && mock.judgments[i-1]) {
+                    document.getElementById('judgeUniv' + i).value = mock.judgments[i-1].univ;
+                    document.getElementById('judgeDept' + i).value = mock.judgments[i-1].dept;
+                    document.getElementById('judgeRank' + i).value = mock.judgments[i-1].rank;
+                } else {
+                    document.getElementById('judgeUniv' + i).value = '';
+                    document.getElementById('judgeDept' + i).value = '';
+                    document.getElementById('judgeRank' + i).value = '';
+                }
             }
         }
 
+        function deleteMockItem(id) {
+            if(confirm('この模試成績レコードを削除しますか？')) { appState.mockResults = appState.mockResults.filter(m => m.id !== id); saveState(); renderMockList(); renderScoreGraph(); renderJudgmentTimeline(); }
+        }
+
         function resetMockForm() {
-            document.getElementById('editMockId').value = "";
-            document.getElementById('mockDate').value = "";
-            document.getElementById('customMockName').value = "";
-            document.getElementById('totalScore').value = "";
-            document.getElementById('totalFull').value = "";
-            document.getElementById('totalDev').value = "";
-            document.getElementById('mockNameSelect').value = "全統共テ模試";
-            document.getElementById('cancelEditBtn').style.display = 'none';
-            document.getElementById('mockFormTitle').innerText = "校外模試成績の自主記録・追加";
+            document.getElementById('editMockId').value = ""; document.getElementById('mockDate').value = ""; document.getElementById('customMockName').value = "";
+            document.getElementById('totalScore').value = ""; document.getElementById('totalFull').value = ""; document.getElementById('totalDev').value = "";
+            document.getElementById('mockNameSelect').value = "全統共テ模試"; document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('mockFormTitle').innerText = "校外模試成績および判定の自主記録";
+            for(let i=1; i<=3; i++) {
+                document.getElementById('judgeUniv'+i).value = i===1?'東京大学':''; document.getElementById('judgeDept'+i).value = i===1?'理科三類':''; document.getElementById('judgeRank'+i).value = '';
+            }
             handleMockNameChange();
         }
 
-        /* --------------------------------------
-         * その他共通処理
-         * -------------------------------------- */
         function logout() {
-            document.getElementById('myPageBox').style.display = 'none';
-            document.getElementById('loginBox').style.display = 'block';
-            document.body.style.display = 'flex';
-            document.body.style.justifyContent = 'center';
-            document.body.style.alignItems = 'center';
-            document.getElementById('studentId').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarOverlay').classList.remove('show');
-            document.getElementById('attendanceDayDetail').style.display = 'none';
+            document.getElementById('myPageBox').style.display = 'none'; document.getElementById('loginBox').style.display = 'block';
+            document.body.style.display = 'flex'; document.body.style.justifyContent = 'center'; document.body.style.alignItems = 'center';
+            document.getElementById('studentId').value = ''; document.getElementById('password').value = '';
+            document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show');
         }
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebarOverlay').classList.toggle('show');
-        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
 
         function switchSection(sectionId, element) {
             document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.menu-link').forEach(lnk => lnk.classList.remove('active'));
             document.getElementById('section-' + sectionId).classList.add('active');
-            element.classList.add('active');
-            document.getElementById('pageTitle').innerText = element.innerText;
+            element.classList.add('active'); document.getElementById('pageTitle').innerText = element.innerText;
             toggleSidebar();
         }
 
         function sendAbsenceEmail() {
-            const reason = document.getElementById('absenceReason').value.trim();
-            if (!reason) { alert('詳細を入力してください。'); return; }
+            const reason = document.getElementById('absenceReason').value.trim(); if (!reason) { alert('詳細を入力してください。'); return; }
             const bodyTemplate = `鉄緑会 医進会 事務局 御中\n\n塾生の柿原 拓真です。\n\n■欠席枠：${document.getElementById('absenceClass').value}\n■詳細理由：\n${reason}`;
-            window.location.href = `mailto:shenj0189@gmail.com?subject=${encodeURIComponent('【欠席連絡】鉄緑会 医進会（柿原 拓真）')}&body=${encodeURIComponent(bodyTemplate)}`;
+            window.location.href = `mailto:shenj0189@gmail.com?subject=${encodeURIComponent('【欠席連絡】鉄緑会 医進会')}&body=${encodeURIComponent(bodyTemplate)}`;
         }
     </script>
 </body>
