@@ -372,16 +372,45 @@
             cursor: pointer;
         }
 
+        /* 【修正】週間スケジュールアイテムのデザイン強化 */
         .schedule-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px dotted #e2e8f0;
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            background-color: #f8fafc;
+            border-left: 4px solid #cbd5e0;
+        }
+
+        .schedule-item.active-day {
+            background-color: #ebf8ff;
+            border-left-color: #3182ce;
+        }
+
+        .schedule-day {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .schedule-time {
             font-size: 0.8rem;
             color: #c5a059;
             font-weight: bold;
+        }
+
+        .schedule-text {
+            font-size: 0.9rem;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .schedule-text span {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-left: 5px;
         }
 
         /* 背景マスク */
@@ -443,7 +472,6 @@
                 <div class="menu-category">メインメニュー</div>
                 <ul>
                     <li><a href="#" class="menu-link active" onclick="switchSection('home', this)">ホーム（ダッシュボード）</a></li>
-                    <!-- 【追加】生徒情報メニュー -->
                     <li><a href="#" class="menu-link" onclick="switchSection('student-profile', this)">所属クラス・生徒情報</a></li>
                 </ul>
 
@@ -498,19 +526,50 @@
                             </table>
                         </div>
                     </div>
+                    <!-- 【修正】右カラム：曜日ごとの1週間受講スケジュールを表示 -->
                     <div class="right-column">
                         <div class="card">
                             <h2>今週の受講スケジュール</h2>
+                            
                             <div class="schedule-item">
-                                <div class="schedule-time">6月24日(水) 17:00〜21:00</div>
-                                <div class="schedule-text">高3医進数学（本館401）</div>
+                                <div class="schedule-day">月曜日</div>
+                                <div class="schedule-text" style="color: #a0aec0; font-weight: normal;">講義なし</div>
+                            </div>
+                            
+                            <div class="schedule-item">
+                                <div class="schedule-day">火曜日</div>
+                                <div class="schedule-text" style="color: #a0aec0; font-weight: normal;">講義なし</div>
+                            </div>
+                            
+                            <div class="schedule-item active-day">
+                                <div class="schedule-day">水曜日 <span class="schedule-time">17:00〜21:00</span></div>
+                                <div class="schedule-text">高3医進数学 <span>[SAクラス / 本館401]</span></div>
+                            </div>
+                            
+                            <div class="schedule-item active-day">
+                                <div class="schedule-day">木曜日 <span class="schedule-time">17:00〜21:00</span></div>
+                                <div class="schedule-text">高3医進化学 <span>[A1クラス / 本館302]</span></div>
+                            </div>
+                            
+                            <div class="schedule-item active-day">
+                                <div class="schedule-day">金曜日 <span class="schedule-time">17:00〜21:00</span></div>
+                                <div class="schedule-text">高3医進英語 <span>[A3クラス / 2号館201]</span></div>
+                            </div>
+                            
+                            <div class="schedule-item active-day">
+                                <div class="schedule-day">土曜日 <span class="schedule-time">14:00〜18:00</span></div>
+                                <div class="schedule-text">高3医進物理 <span>[A3クラス / 本館503]</span></div>
+                            </div>
+                            
+                            <div class="schedule-item">
+                                <div class="schedule-day">日曜日</div>
+                                <div class="schedule-text" style="color: #a0aec0; font-weight: normal;">自習室のみ開放 (9:00〜18:00)</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 【追加】生徒情報セクション -->
             <div id="section-student-profile" class="content-section">
                 <div class="card" style="max-width: 700px; margin: 0 auto;">
                     <h2>ご登録生徒情報</h2>
@@ -553,8 +612,10 @@
                     <div class="form-group">
                         <label for="absenceClass">欠席する講義・日時</label>
                         <select id="absenceClass">
-                            <option value="6月24日(水) 高3医進数学">6月24日(水) 17:00〜21:00 高3医進数学</option>
-                            <option value="6月26日(金) 高3医進英語">6月26日(金) 17:00〜21:00 高3医進英語</option>
+                            <option value="水曜日 高3医進数学">水曜日 17:00〜21:00 高3医進数学</option>
+                            <option value="木曜日 高3医進化学">木曜日 17:00〜21:00 高3医進化学</option>
+                            <option value="金曜日 高3医進英語">金曜日 17:00〜21:00 高3医進英語</option>
+                            <option value="土曜日 高3医進物理">土曜日 14:00〜18:00 高3医進物理</option>
                             <option value="その他講義・模試">その他（自由記述欄に入力してください）</option>
                         </select>
                     </div>
@@ -568,66 +629,72 @@
                 </div>
             </div>
 
-            <!-- 【修正】物理・化学を統合した鉄緑会準拠のカリキュラム表 -->
+            <!-- 【修正】横書きレイアウトに変更した年間カリキュラム表 -->
             <div id="section-curriculum" class="content-section">
                 <div class="card">
-                    <h2>高3 年間カリキュラム・進行表</h2>
+                    <h2>高3 年間カリキュラム・進行表 (教科別横書きレイアウト)</h2>
                     <p style="font-size: 0.85rem; color: #718096; margin-bottom: 15px;">※ 鉄緑会高3カリキュラムに準拠した、東大理Ⅲ・国公立大医学部突破のための実戦演習スケジュールです。</p>
                     <table class="status-table">
                         <thead>
                             <tr>
-                                <th style="width: 15%;">期</th>
-                                <th style="width: 21%;">数学 (高3数学実戦講座/演習)</th>
-                                <th style="width: 21%;">英語 (高3英語実戦講座)</th>
-                                <th style="width: 21%;">物理 (高3物理発展講座)</th>
-                                <th style="width: 21%;">化学 (高3化学発展講座)</th>
+                                <th style="width: 16%;">対象教科</th>
+                                <th style="width: 42%;">第1期 (春期〜1学期)</th>
+                                <th style="width: 42%;">第2期 (夏期〜2学期)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>第1期<br>(春期〜1学期)</strong></td>
+                                <td><strong>数学</strong><br><span style="font-size:0.75rem; color:#718096;">高3数学実戦講座/演習</span></td>
                                 <td>
                                     ・入試数学系統演習<br>
-                                    ・数Ⅲ・微積分徹底演習<br>
-                                    ・鉄緑会オリジナル記述対策
+                                    ・数Ⅲ/微積分徹底演習による計算力の強化<br>
+                                    ・鉄緑会オリジナル記述・論理パターン対策
                                 </td>
                                 <td>
-                                    ・医学部特有長文・精選読解<br>
-                                    ・リスニング基礎・実戦演習<br>
-                                    ・テーマ別英作文・表現精選
-                                </td>
-                                <td>
-                                    ・力学/熱力学の体系化演習<br>
-                                    ・電磁気学の本質理解と応用<br>
-                                    ・発展講座冊子を用いた徹底演習
-                                </td>
-                                <td>
-                                    ・物質の構造と状態方程式<br>
-                                    ・化学平衡/理論化学の全期演習<br>
-                                    ・有機化学の構造決定パターン網羅
+                                    ・東大・国公立大医学部過去問を用いた実践演習<br>
+                                    ・本番形式のテストゼミ主体による総合力錬成<br>
+                                    ・存在条件・通過領域など最難関テーマの完全攻略
                                 </td>
                             </tr>
                             <tr>
-                                <td><strong>第2期<br>(夏期〜2学期)</strong></td>
+                                <td><strong>英語</strong><br><span style="font-size:0.75rem; color:#718096;">高3英語実戦講座</span></td>
                                 <td>
-                                    ・東大・国公立医過去問実践演習<br>
-                                    ・テストゼミ主体の総合演習<br>
-                                    ・存在条件・通過領域の完全攻略
+                                    ・医学部特有の超長文・精選読解演習<br>
+                                    ・リスニング基礎の確立とディクテーション実戦<br>
+                                    ・テーマ別重要表現の精選と英作文の核の構築
                                 </td>
                                 <td>
-                                    ・論理的英文和訳・要約対策<br>
-                                    ・自由英作文 徹底添削指導<br>
-                                    ・超長文速読訓練・時間配分
+                                    ・論理的英文和訳および精緻な要約の対策<br>
+                                    ・自由英作文の徹底的な個別添削・指導<br>
+                                    ・超長文における速読訓練と時間配分の最適化
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>物理</strong><br><span style="font-size:0.75rem; color:#718096;">高3物理発展講座</span></td>
+                                <td>
+                                    ・力学および熱力学分野の体系化・応用演習<br>
+                                    ・電磁気学の本質的理解と難問への応用アプローチ<br>
+                                    ・発展講座冊子問題を用いた徹底的な思考力強化
                                 </td>
                                 <td>
-                                    ・波動/原子物理の集中攻略<br>
-                                    ・東大・医学部入試実戦演習<br>
-                                    ・難系・過去問レベルのテストゼミ
+                                    ・波動・原子物理分野の集中攻略と定着<br>
+                                    ・東大・難関国公立大医学部入試の実戦的演習<br>
+                                    ・難系・ハイレベル過去問ベースのテストゼミ
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>化学</strong><br><span style="font-size:0.75rem; color:#718096;">高3化学発展講座</span></td>
+                                <td>
+                                    ・物質の構造、気体の状態方程式と熱化学の精査<br>
+                                    ・化学平衡を中心に理論化学分野の全期演習<br>
+                                    ・有機化学の構造決定における思考パターンの網羅
                                 </td>
                                 <td>
-                                    ・無機化学の総合整理と各論<br>
-                                    ・高分子化合物/天然物質の決定対策<br>
-                                    ・実戦演習主体の総合テストゼミ
+                                    ・無機化学全般の総合整理と各論各物質の深掘り<br>
+                                    <td>
+                                    ・無機化学全般の総合整理と各論各物質の深掘り<br>
+                                    ・高分子化合物および天然有機物質の決定打対策<br>
+                                    ・入試直結の実戦演習を伴う総合テストゼミ
                                 </td>
                             </tr>
                         </tbody>
@@ -688,11 +755,9 @@
             document.body.style.justifyContent = 'center';
             document.body.style.alignItems = 'center';
             
-            // フォームリセット
             document.getElementById('studentId').value = '';
             document.getElementById('password').value = '';
             document.getElementById('errorMsg').style.display = 'none';
-            // サイドバーを閉じる
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebarOverlay').classList.remove('show');
         }
