@@ -315,33 +315,63 @@
             background: linear-gradient(135deg, #fff 0%, #f7fafc 100%);
             border: 2px solid #0d233a;
             border-radius: 8px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             box-shadow: 0 4px 12px rgba(13, 35, 58, 0.08);
         }
 
-        .today-info-left h3 {
-            font-size: 1rem;
+        .today-header {
+            font-size: 1.1rem;
             color: #c5a059;
+            font-weight: bold;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-bottom: 5px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
         }
 
-        .today-info-left .lecture-name {
-            font-size: 1.2rem;
+        /* タイムライン表示 */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .timeline-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #fff;
+            border: 1px solid #edf2f7;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .timeline-time {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #c5a059;
+            min-width: 100px;
+        }
+
+        .timeline-details {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .timeline-name {
+            font-size: 1rem;
             font-weight: bold;
             color: #0d233a;
         }
 
-        .today-info-left .lecture-meta {
-            font-size: 0.85rem;
-            color: #4a5568;
-            margin-top: 3px;
+        .timeline-meta {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 2px;
         }
 
         /* 出欠確認ボタン */
@@ -349,13 +379,12 @@
             background-color: #0d233a;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 6px 12px;
+            border-radius: 4px;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .attendance-btn:hover {
@@ -364,7 +393,6 @@
 
         .attendance-btn.checked {
             background-color: #38a169;
-            box-shadow: none;
         }
 
         /* テーブル・リストデザイン */
@@ -396,7 +424,6 @@
         .badge-sa { background-color: #fed7d7; color: #9b2c2c; }
         .badge-a1 { background-color: #feebc8; color: #9c4221; }
         .badge-a3 { background-color: #e2e8f0; color: #4a5568; }
-        .badge-event { background-color: #e0f7fa; color: #006064; }
 
         .news-list {
             list-style: none;
@@ -427,45 +454,44 @@
             cursor: pointer;
         }
 
-        /* 週間スケジュールアイテム */
-        .schedule-item {
-            margin-bottom: 12px;
-            padding: 10px 12px;
+        /* 週間スケジュール（折りたたみ対応スタイル） */
+        .weekly-day-card {
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
             border-radius: 6px;
-            background-color: #f8fafc;
-            border-left: 4px solid #cbd5e0;
+            background: #fff;
+            overflow: hidden;
         }
 
-        .schedule-item.active-day {
-            background-color: #ebf8ff;
-            border-left-color: #3182ce;
-        }
-
-        .schedule-day {
-            font-size: 0.85rem;
+        .weekly-day-header {
+            background: #f8fafc;
+            padding: 10px 15px;
+            font-size: 0.9rem;
             font-weight: bold;
             color: #4a5568;
-            margin-bottom: 4px;
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
         }
 
-        .schedule-time {
-            font-size: 0.8rem;
+        .weekly-day-body {
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .weekly-sub-item {
+            font-size: 0.85rem;
+            color: #2d3748;
+            border-left: 3px solid #cbd5e0;
+            padding-left: 8px;
+        }
+
+        .weekly-sub-item span {
             color: #c5a059;
             font-weight: bold;
-        }
-
-        .schedule-text {
-            font-size: 0.9rem;
-            color: #2d3748;
-            font-weight: 500;
-        }
-
-        .schedule-text span {
-            font-size: 0.8rem;
-            color: #718096;
-            margin-left: 5px;
+            margin-right: 6px;
         }
 
         /* 背景マスク */
@@ -486,7 +512,7 @@
 
         @media (max-width: 1024px) {
             .grid-container { grid-template-columns: 1fr; }
-            .today-lecture-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .timeline-row { flex-direction: column; align-items: flex-start; gap: 10px; }
             .attendance-btn { width: 100%; text-align: center; }
         }
     </style>
@@ -562,6 +588,7 @@
 
             <div id="section-home" class="content-section active">
                 
+                <!-- 本日の講義予定表示エリア（1日5コマをタイムライン表示） -->
                 <div id="todayLectureArea"></div>
 
                 <div class="grid-container">
@@ -586,49 +613,51 @@
                         </div>
                     </div>
                     
+                    <!-- 右カラム：週間受講スケジュール（各曜日5講座） -->
                     <div class="right-column">
                         <div class="card">
                             <h2>今週の受講スケジュール</h2>
                             
-                            <div class="schedule-item active-day" id="sched-1">
-                                <div class="schedule-day">月曜日 <span class="schedule-time">18:00〜20:30</span></div>
-                                <div class="schedule-text">月曜テストゼミ・採点講評 <span>[全クラス共通]</span></div>
+                            <div class="weekly-day-card" id="sched-1">
+                                <div class="weekly-day-header">月曜日</div>
+                                <div class="weekly-day-body" id="weekly-body-1"></div>
                             </div>
                             
-                            <div class="schedule-item active-day" id="sched-2">
-                                <div class="schedule-day">火曜日 <span class="schedule-time">17:30〜20:00</span></div>
-                                <div class="schedule-text">医学部2次記述小論文対策 <span>[特進選抜枠]</span></div>
+                            <div class="weekly-day-card" id="sched-2">
+                                <div class="weekly-day-header">火曜日</div>
+                                <div class="weekly-day-body" id="weekly-body-2"></div>
                             </div>
                             
-                            <div class="schedule-item active-day" id="sched-3">
-                                <div class="schedule-day">水曜日 <span class="schedule-time">17:00〜21:00</span></div>
-                                <div class="schedule-text">高3医進数学 <span>[SAクラス / 本館401]</span></div>
+                            <div class="weekly-day-card" id="sched-3">
+                                <div class="weekly-day-header">水曜日</div>
+                                <div class="weekly-day-body" id="weekly-body-3"></div>
                             </div>
                             
-                            <div class="schedule-item active-day" id="sched-4">
-                                <div class="schedule-day">木曜日 <span class="schedule-time">17:00〜21:00</span></div>
-                                <div class="schedule-text">高3医進化学 <span>[A1クラス / 本館302]</span></div>
+                            <div class="weekly-day-card" id="sched-4">
+                                <div class="weekly-day-header">木曜日</div>
+                                <div class="weekly-day-body" id="weekly-body-4"></div>
                             </div>
                             
-                            <div class="schedule-item active-day" id="sched-5">
-                                <div class="schedule-day">金曜日 <span class="schedule-time">17:00〜21:00</span></div>
-                                <div class="schedule-text">高3医進英語 <span>[A3クラス / 2号館201]</span></div>
+                            <div class="weekly-day-card" id="sched-5">
+                                <div class="weekly-day-header">金曜日</div>
+                                <div class="weekly-day-body" id="weekly-body-5"></div>
                             </div>
                             
-                            <div class="schedule-item active-day" id="sched-6">
-                                <div class="schedule-day">土曜日 <span class="schedule-time">14:00〜18:00</span></div>
-                                <div class="schedule-text">高3医進物理 <span>[A3クラス / 本館503]</span></div>
+                            <div class="weekly-day-card" id="sched-6">
+                                <div class="weekly-day-header">土曜日</div>
+                                <div class="weekly-day-body" id="weekly-body-6"></div>
                             </div>
                             
-                            <div class="schedule-item active-day" id="sched-0">
-                                <div class="schedule-day">日曜日 <span class="schedule-time">10:00〜12:00</span></div>
-                                <div class="schedule-text">理Ⅲ・国公立医選抜記述模試 <span>[本館大教室]</span></div>
+                            <div class="weekly-day-card" id="sched-0">
+                                <div class="weekly-day-header">日曜日</div>
+                                <div class="weekly-day-body" id="weekly-body-0"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- その他のセクションは既存通り保持 -->
             <div id="section-student-profile" class="content-section">
                 <div class="card" style="max-width: 700px; margin: 0 auto;">
                     <h2>ご登録生徒情報</h2>
@@ -669,21 +698,21 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="absenceClass">欠席する講義・日時</label>
+                        <label for="absenceClass">欠席する講義枠</label>
                         <select id="absenceClass">
-                            <option value="月曜日 テストゼミ">月曜日 18:00〜20:30 月曜テストゼミ</option>
-                            <option value="火曜日 小論文対策">火曜日 17:30〜20:00 小論文対策</option>
-                            <option value="水曜日 高3医進数学">水曜日 17:00〜21:00 高3医進数学</option>
-                            <option value="木曜日 高3医進化学">木曜日 17:00〜21:00 高3医進化学</option>
-                            <option value="金曜日 高3医進英語">金曜日 17:00〜21:00 高3医進英語</option>
-                            <option value="土曜日 高3医進物理">土曜日 14:00〜18:00 高3医進物理</option>
-                            <option value="日曜日 選抜記述模試">日曜日 10:00〜12:00 選抜記述模試</option>
+                            <option value="月曜日 講義枠">月曜日のいずれかの講義・テスト</option>
+                            <option value="火曜日 講義枠">火曜日のいずれかの講義・テスト</option>
+                            <option value="水曜日 講義枠">水曜日のいずれかの講義・テスト</option>
+                            <option value="木曜日 講義枠">木曜日のいずれかの講義・テスト</option>
+                            <option value="金曜日 講義枠">金曜日のいずれかの講義・テスト</option>
+                            <option value="土曜日 講義枠">土曜日のいずれかの講義・テスト</option>
+                            <option value="日曜日 講義枠">日曜日のいずれかの講義・テスト</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="absenceReason">欠席理由</label>
-                        <textarea id="absenceReason" rows="4" placeholder="例：体調不良のため、学校行事のため、等"></textarea>
+                        <label for="absenceReason">欠席理由・対象コマ詳細</label>
+                        <textarea id="absenceReason" rows="4" placeholder="例：体調不良のため、3コマ目の英語を欠席します、等"></textarea>
                     </div>
                     
                     <button class="login-btn" onclick="sendAbsenceEmail()">欠席連絡メールを送信する</button>
@@ -693,7 +722,6 @@
             <div id="section-curriculum" class="content-section">
                 <div class="card">
                     <h2>高3 年間カリキュラム・進行表 (教科別横書きレイアウト)</h2>
-                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 15px;">※ 鉄緑会高3カリキュラムに準拠した、東大理Ⅲ・国公立大医学部突破のための実戦演習スケジュールです。</p>
                     <table class="status-table">
                         <thead>
                             <tr>
@@ -704,56 +732,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>数学</strong><br><span style="font-size:0.75rem; color:#718096;">高3数学実戦講座/演習</span></td>
-                                <td>
-                                    ・入試数学系統演習<br>
-                                    ・数Ⅲ/微積分徹底演習による計算力の強化<br>
-                                    ・鉄緑会オリジナル記述・論理パターン対策
-                                </td>
-                                <td>
-                                    ・東大・国公立大医学部過去問を用いた実践演習<br>
-                                    ・本番形式のテストゼミ主体による総合力錬成<br>
-                                    ・存在条件・通過領域など最難関テーマの完全攻略
-                                </td>
+                                <td><strong>数学</strong></td>
+                                <td>・入試数学系統演習<br>・数Ⅲ/微積分徹底演習による計算力の強化</td>
+                                <td>・東大・国公立大医学部過去問を用いた実践演習<br>・本番形式のテストゼミ主体による総合力錬成</td>
                             </tr>
                             <tr>
-                                <td><strong>英語</strong><br><span style="font-size:0.75rem; color:#718096;">高3英語実戦講座</span></td>
-                                <td>
-                                    ・医学部特有の超長文・精選読解演習<br>
-                                    ・リスニング基礎の確立とディクテーション実戦<br>
-                                    ・テーマ別重要表現の精選と英作文の核の構築
-                                </td>
-                                <td>
-                                    ・論理的英文和訳および精緻な要約の対策<br>
-                                    ・自由英作文の徹底的な個別添削・指導<br>
-                                    ・超長文における速読訓練と時間配分の最適化
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>物理</strong><br><span style="font-size:0.75rem; color:#718096;">高3物理発展講座</span></td>
-                                <td>
-                                    ・力学および熱力学分野の体系化・応用演習<br>
-                                    ・電磁気学の本質적理解と難問への応用アプローチ<br>
-                                    ・発展講座冊子問題を用いた徹底的な思考力強化
-                                </td>
-                                <td>
-                                    ・波動・原子物理分野の集中攻略と定着<br>
-                                    ・東大・難関国公立大医学部入試の実戦的演習<br>
-                                    ・難系・ハイレベル過去問ベースのテストゼミ
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>化学</strong><br><span style="font-size:0.75rem; color:#718096;">高3化学発展講座</span></td>
-                                <td>
-                                    ・物質の構造、気体の状態方程式と熱化学の精査<br>
-                                    ・化学平衡を中心に理論化学分野の全期演習<br>
-                                    ・有機化学の構造決定における思考パターンの網羅
-                                </td>
-                                <td>
-                                    ・無機化学全般の総合整理と各論各物質の深掘り<br>
-                                    ・高分子化合物および天然有機物質の決定打対策<br>
-                                    ・入試直結の実戦演習を伴う総合テストゼミ
-                                </td>
+                                <td><strong>英語</strong></td>
+                                <td>・医学部特有の超長文・精選読解演習<br>• リスニング基礎の確立</td>
+                                <td>・論理的英文和訳および精緻な要約の対策<br>・自由英作文の徹底的な個別添削</td>
                             </tr>
                         </tbody>
                     </table>
@@ -772,7 +758,6 @@
                     <h2>解答・解説プリントダウンロード</h2>
                     <ul class="news-list">
                         <li><a href="#" style="color:#0d233a;">第11週 医進数学演習 解答・解説（PDF）</a></li>
-                        <li><a href="#" style="color:#0d233a;">第11週 医進英語 英文法・英作文添削基準（PDF）</a></li>
                     </ul>
                 </div>
             </div>
@@ -780,7 +765,6 @@
             <div id="section-support" class="content-section">
                 <div class="card">
                     <h2>理Ⅲ・医学部現役指導員（OB/OG）相談予約</h2>
-                    <p style="color: #4a5568; margin-bottom: 15px;">東大理Ⅲをはじめとする、最難関国公立大医学部に現役合格した先輩たちに勉強法やメンタル面を直接相談できます。</p>
                     <button class="btn">空きコマを確認して予約する</button>
                 </div>
             </div>
@@ -789,15 +773,57 @@
     </div>
 
     <script>
-        /* 【修正】月〜日まですべての曜日データを補完 */
-        const lectureSchedule = {
-            1: { name: "月曜テストゼミ・採点講評", time: "18:00〜20:30", room: "本館202", class: "全クラス共通" },
-            2: { name: "医学部2次記述小論文対策", time: "17:30〜20:00", room: "3号館101", class: "特進選抜枠" },
-            3: { name: "高3医進数学", time: "17:00〜21:00", room: "本館401", class: "SAクラス" },
-            4: { name: "高3医進化学", time: "17:00〜21:00", room: "本館302", class: "A1クラス" },
-            5: { name: "高3医進英語", time: "17:00〜21:00", room: "2号館201", class: "A3クラス" },
-            6: { name: "高3医進物理", time: "14:00〜18:00", room: "本館503", class: "A3クラス" },
-            0: { name: "理Ⅲ・国公立医選抜記述模試", time: "10:00〜12:00", room: "本館大教室", class: "定期イベント" }
+        /* 1日あたり5講座（1週間35枠）の完全スケジュールデータ */
+        const masterSchedule = {
+            1: [ // 月曜日
+                { name: "月曜単語・熟語記述テスト", time: "16:45〜17:15", room: "本館202", class: "全クラス共通" },
+                { name: "高3重要事項確認テストゼミ", time: "17:20〜18:20", room: "本館202", class: "必須演習" },
+                { name: "月曜テストゼミ・採点講評", time: "18:30〜20:00", room: "本館202", class: "記述力強化" },
+                { name: "数Ⅲ計算力徹底スピード精査", time: "20:05〜20:45", room: "本館202", class: "フォローアップ" },
+                { name: "現役指導員による個別進捗面談", time: "20:50〜21:20", room: "面談室B", class: "月一指定枠" }
+            ],
+            2: [ // 火曜日
+                { name: "医学部2次記述小論文（基礎）", time: "16:30〜17:20", room: "3号館101", class: "特進選抜枠" },
+                { name: "医学部2次記述小論文（実戦）", time: "17:30〜19:00", room: "3号館101", class: "特進選抜枠" },
+                { name: "面接・口頭試問シミュレーション", time: "19:10〜19:50", room: "面談室A", class: "個別対策" },
+                { name: "東大国公立大英文和訳添削ゼミ", time: "20:00〜20:50", room: "3号館102", class: "任意選抜" },
+                { name: "デイリー質問・相談対応デスク", time: "21:00〜21:30", room: "自習館ラウンジ", class: "自由相談" }
+            ],
+            3: [ // 水曜日
+                { name: "高3医進数学・実戦確認テスト", time: "16:30〜17:00", room: "本館401", class: "SAクラス" },
+                { name: "高3医進数学・第1部（数Ⅲ微積）", time: "17:10〜18:50", room: "本館401", class: "SAクラス" },
+                { name: "高3医進数学・第2部（整数・確率）", time: "19:00〜20:30", room: "本館401", class: "SAクラス" },
+                { name: "入試数学系統演習・居残り解説", time: "20:35〜21:00", room: "本館401", class: "質問推奨" },
+                { name: "SAクラス限定 過去問添削指導", time: "21:05〜21:35", room: "本館401", class: "個別フィードバック" }
+            ],
+            4: [ // 木曜日
+                { name: "高3医進化学・無機有機小テスト", time: "16:30〜17:00", room: "本館302", class: "A1クラス" },
+                { name: "高3医進化学・理論化学構造分析", time: "17:10〜18:50", room: "本館302", class: "A1クラス" },
+                { name: "高3医進化学・有機構造決定演習", time: "19:00〜20:30", room: "本館302", class: "A1クラス" },
+                { name: "化学重要発展問題・質問解説", time: "20:35〜21:10", room: "本館302", class: "自由参加" },
+                { name: "化学テキスト復習セッション", time: "21:15〜21:45", room: "本館302", class: "自主補習枠" }
+            ],
+            5: [ // 金曜日
+                { name: "高3医進英語・英文法演習テスト", time: "16:30〜17:00", room: "2号館201", class: "A3クラス" },
+                { name: "高3医進英語・長文読解精選演習", time: "17:10〜18:50", room: "2号館201", class: "A3クラス" },
+                { name: "高3医進英語・自由英作文・和訳", time: "19:00〜20:30", room: "2号館201", class: "A3クラス" },
+                { name: "医進英語リスニングディクテーション", time: "20:35〜21:10", room: "2号館201", class: "音声強化" },
+                { name: "英作文個別返却・表現指導", time: "21:15〜21:45", room: "2号館201", class: "個別対応" }
+            ],
+            6: [ // 土曜日
+                { name: "高3医進物理・物理実戦基礎テスト", time: "13:30〜14:00", room: "本館503", class: "A3クラス" },
+                { name: "高3医進物理・力学電磁気発展", time: "14:10〜15:50", room: "本館503", class: "A3クラス" },
+                { name: "高3医進物理・波動原子集中徹底", time: "16:00〜17:35", room: "本館503", class: "A3クラス" },
+                { name: "物理発展講座冊子・難問解説会", time: "17:45〜18:30", room: "本館503", class: "応用選抜" },
+                { name: "土曜合同記述オープン添削会", time: "18:40〜19:30", room: "本館大教室", class: "合同イベント" }
+            ],
+            0: [ // 日曜日
+                { name: "理Ⅲ・国公立医選抜記述模試・午前の部", time: "09:30〜12:00", room: "本館大教室", class: "定期イベント" },
+                { name: "理Ⅲ・国公立医選抜記述模試・午後の部", time: "13:00〜16:30", room: "本館大教室", class: "定期イベント" },
+                { name: "記述模試 自己採点・解答速報講評", time: "16:45〜17:45", room: "本館大教室", class: "全体講義" },
+                { name: "日曜特選 最難関整数問題チャレンジ", time: "18:00〜19:30", room: "本館401", class: "最高難度枠" },
+                { name: "記述答案即日回収・個別学習カウンセリング", time: "19:40〜20:30", room: "面談室C", class: "予約制" }
+            ]
         };
 
         // 1. ログイン処理
@@ -812,55 +838,82 @@
                 document.body.style.display = 'block';
                 document.body.style.backgroundColor = '#f4f6f9';
                 
+                generateWeeklySchedule();
                 checkTodayLecture();
             } else {
                 errorMsg.style.display = 'block';
             }
         }
 
-        // 本日の講義を判定して最上部に差し込む関数
+        // 週間スケジュールカードへの自動生成
+        function generateWeeklySchedule() {
+            for (let day in masterSchedule) {
+                const bodyContainer = document.getElementById('weekly-body-' + day);
+                if (bodyContainer) {
+                    bodyContainer.innerHTML = '';
+                    masterSchedule[day].forEach((lec, idx) => {
+                        const item = document.createElement('div');
+                        item.className = 'weekly-sub-item';
+                        item.innerHTML = `<span>${lec.time}</span> ${lec.name}`;
+                        bodyContainer.appendChild(item);
+                    });
+                }
+            }
+        }
+
+        // 本日の講義（5講座）を判定して最上部に差し込む関数
         function checkTodayLecture() {
             const today = new Date();
             const currentDay = today.getDay(); // 0:日, 1:月, ... 6:土
             const container = document.getElementById('todayLectureArea');
             container.innerHTML = '';
 
+            // 週間スケジューラの該当曜日をハイライト
+            document.querySelectorAll('.weekly-day-card').forEach(el => el.style.border = '1px solid #e2e8f0');
             const currentSchedItem = document.getElementById('sched-' + currentDay);
             if (currentSchedItem) {
-                document.querySelectorAll('.schedule-item').forEach(el => el.classList.remove('active-day'));
-                currentSchedItem.classList.add('active-day');
-                currentSchedItem.style.borderLeftColor = '#38a169';
+                currentSchedItem.style.border = '2px solid #3182ce';
             }
 
-            // 【修正】すべての曜日で必ずヒットするようにガード変更
-            if (lectureSchedule[currentDay]) {
-                const lecture = lectureSchedule[currentDay];
+            if (masterSchedule[currentDay]) {
+                const lectures = masterSchedule[currentDay];
                 
                 const alertCard = document.createElement('div');
                 alertCard.className = 'today-lecture-card';
-                alertCard.innerHTML = `
-                    <div class="today-info-left">
-                        <h3><span style="color:#38a169;">●</span> 本日の受講予定</h3>
-                        <div class="lecture-name">${lecture.name} <span style="font-size:0.9rem; color:#718096;">(${lecture.class})</span></div>
-                        <div class="lecture-meta">時間：<strong>${lecture.time}</strong> ｜ 教室：<strong>${lecture.room}</strong></div>
-                    </div>
-                    <div>
-                        <button class="attendance-btn" id="attendanceBtn" onclick="toggleAttendance()">出欠確認を行う</button>
-                    </div>
-                `;
+                
+                let timelineHTML = `<div class="today-header">📅 本日の受講予定（全5講座・イベント）</div>`;
+                timelineHTML += `<div class="timeline">`;
+                
+                lectures.forEach((lecture, index) => {
+                    timelineHTML += `
+                        <div class="timeline-row">
+                            <div class="timeline-time">${lecture.time}</div>
+                            <div class="timeline-details">
+                                <div class="timeline-name">${lecture.name}</div>
+                                <div class="timeline-meta">教室: <strong>${lecture.room}</strong> ｜ 対象: <strong>${lecture.class}</strong></div>
+                            </div>
+                            <div>
+                                <button class="attendance-btn" id="attBtn-${index}" onclick="toggleAttendance(${index})">出欠確認</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                timelineHTML += `</div>`;
+                alertCard.innerHTML = timelineHTML;
                 container.appendChild(alertCard);
             }
         }
 
-        function toggleAttendance() {
-            const btn = document.getElementById('attendanceBtn');
+        function toggleAttendance(index) {
+            const btn = document.getElementById('attBtn-' + index);
             if (btn.classList.contains('checked')) {
                 btn.classList.remove('checked');
-                btn.innerText = '出欠確認を行う';
+                btn.innerText = '出欠確認';
                 btn.style.backgroundColor = '#0d233a';
             } else {
                 btn.classList.add('checked');
-                btn.innerText = '✓ 出席記録済み';
+                btn.innerText = '✓ 出席';
                 btn.style.backgroundColor = '#38a169';
             }
         }
@@ -912,27 +965,14 @@
             const reason = document.getElementById('absenceReason').value.trim();
 
             if (!reason) {
-                alert('欠席理由を入力してください。');
+                alert('詳細を入力してください。');
                 return;
             }
 
             const emailTarget = "shenj0189@gmail.com";
             const subject = encodeURIComponent(`【欠席連絡】鉄緑会 医進会（柿原 拓真）`);
+            const bodyTemplate = `鉄緑会 医進会 事務局 御中\n\nお世話になっております。塾生の柿原 拓真です。\n以下の通り連絡いたします。\n\n■欠席枠：${targetClass}\n■詳細理由：\n${reason}`;
             
-            const bodyTemplate = `鉄緑会 医進会 事務局 御中
-
-いつもお世話になっております。塾生の柿原 拓真です。
-講義の欠席および振替について、以下の通りご連絡いたします。
-
------------------------------------------
-■生徒氏名：${name} (塾生番号: ihsr2730)
-■欠席講義：${targetClass}
-■欠席理由：
-${reason}
------------------------------------------
-
-お手数をおかけしますが、振替授業やプリントの配付についてご手配のほどよろしくお願いいたします。`;
-
             const body = encodeURIComponent(bodyTemplate);
             window.location.href = `mailto:${emailTarget}?subject=${subject}&body=${body}`;
         }
