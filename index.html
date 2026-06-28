@@ -1,1360 +1,1730 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ふんわり勉強タイマー & ミュージックプレイヤー</title>
-    
-    <!-- Safari ホーム画面追加時のアイコン設定 -->
-    <link rel="apple-touch-icon" href="IMG_1973.PNG">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
-    
+    <title>塾生マイページ | 鉄緑会 医進会</title>
     <style>
-        :root {
-            --bg-color: #fef9f3;
-            --bg-rest-color: #eef7f9; 
-            --main-pink: #fbc4ab;
-            --sub-cream: #ffedd8;
-            --text-color: #6d5952;
-            --font-number: "Bodoni Moda", serif;
-            --font-jp: "Noto Sans JP", sans-serif;
-            
-            /* アバターのカラー */
-            --avatar-skin: #fff5eb;
-            --avatar-blush: #ffb5a7;
-        }
-
+        /* 全体のリセットと基本スタイル */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
         }
 
         body {
-            font-family: var(--font-jp);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow: hidden;
-            height: 100vh;
+            background-color: #f4f6f9;
+            color: #333;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
+            overflow-x: hidden;
         }
 
-        body.rest-mode-bg {
-            background-color: var(--bg-rest-color) !important;
-        }
-
-        /* 画面上部の共通SP表示 */
-        .global-sp-counter {
-            position: absolute;
-            top: 25px;
-            left: 20px;
-            font-size: 1rem;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px dashed var(--main-pink);
-            box-shadow: 0 4px 10px rgba(243, 224, 211, 0.2);
-            z-index: 110;
-        }
-        .global-sp-counter span {
-            font-family: var(--font-number);
-            font-weight: bold;
-            color: #e29578;
-        }
-
-        /* 音楽コントローラーコンテナ */
-        .music-widget {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 120;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 10px;
-        }
-
-        .bgm-trigger {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 2px solid var(--sub-cream);
-            padding: 10px 18px;
-            border-radius: 25px;
-            box-shadow: 0 4px 10px rgba(243, 224, 211, 0.4);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            user-select: none;
-        }
-        .bgm-trigger:hover {
-            border-color: var(--main-pink);
-            transform: translateY(-1px);
-        }
-        .bgm-trigger.playing {
-            background-color: var(--sub-cream);
-            border-color: var(--main-pink);
-        }
-
-        .player-panel {
-            display: none;
-            width: 280px;
-            background: #ffffff;
-            border: 2px solid var(--sub-cream);
-            border-radius: 20px;
-            padding: 15px;
-            box-shadow: 0 10px 25px rgba(109, 89, 82, 0.1);
-            animation: fadeInDown 0.3s ease forwards;
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .track-info {
+        /* --------------------------------------
+         * ログイン画面のスタイル
+         * -------------------------------------- */
+        .login-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
-            margin-bottom: 12px;
-        }
-        .track-title {
-            font-size: 0.95rem;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .player-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 16px;
+        .login-logo {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #0d233a;
+            margin-bottom: 5px;
+            letter-spacing: 0.1em;
+        }
+
+        .login-subtitle {
+            color: #c5a059;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #0d233a;
+        }
+
+        .checkbox-group-label {
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .subject-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
             margin-bottom: 15px;
         }
-        .control-btn {
-            background: none; border: none; box-shadow: none; padding: 5px;
-            font-size: 0.9rem; font-weight: bold; cursor: pointer; color: var(--text-color);
-            transition: color 0.2s, transform 0.1s; width: auto; height: auto; border-radius: 0;
-        }
-        .control-btn:hover { background: none; color: var(--main-pink); transform: scale(1.1); box-shadow: none; }
-        .control-btn.active { color: #e29578; }
-        .play-pause-btn { font-size: 1.2rem; }
 
-        .playlist {
-            border-top: 1px dashed var(--sub-cream);
-            padding-top: 10px;
-            max-height: 100px;
-            overflow-y: auto;
-        }
-        .playlist-title {
-            font-size: 0.75rem; color: #8a736a; margin-bottom: 5px; font-weight: 500;
-        }
-        .track-item {
-            font-size: 0.85rem; padding: 6px 8px; border-radius: 8px;
-            cursor: pointer; display: flex; justify-content: space-between; transition: background 0.2s;
-        }
-        .track-item:hover { background-color: var(--bg-color); }
-        .track-item.current { background-color: var(--sub-cream); font-weight: 500; }
-
-        /* 画面共通スタイル */
-        .screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            transform: scale(0.95); background-color: transparent; padding: 20px;
-            z-index: 10;
-        }
-        .screen.active { opacity: 1; pointer-events: auto; transform: scale(1); }
-        h1 { font-size: 2.5rem; margin-bottom: 5px; font-weight: 400; letter-spacing: 0.05em; text-align: center; }
-        h2 { font-size: 1.5rem; margin-bottom: 15px; font-weight: 300; text-align: center; }
-        p { font-size: 1rem; margin-bottom: 20px; color: #8a736a; text-align: center; }
-
-        .record-box {
-            background-color: #ffffff; border: 1px dashed var(--main-pink);
-            padding: 12px 25px; border-radius: 15px; margin-bottom: 25px; font-size: 0.95rem; text-align: center;
-            box-shadow: 0 4px 10px rgba(243, 224, 211, 0.2);
-        }
-        .record-box span { font-family: var(--font-number); font-size: 1.4rem; font-weight: bold; color: #e29578; margin: 0 4px; }
-        .btn-container { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 300px; }
-        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 400px; margin-bottom: 20px; }
-
-        button {
-            font-family: var(--font-jp); background-color: #ffffff; border: 2px solid var(--sub-cream);
-            color: var(--text-color); padding: 15px 25px; font-size: 1.1rem; border-radius: 30px; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(243, 224, 211, 0.4); transition: all 0.3s ease;
-        }
-        button:hover { background-color: var(--main-pink); color: white; border-color: var(--main-pink); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(251, 196, 171, 0.6); }
-        button.secondary { background-color: transparent; border: 1px solid #d3c4be; box-shadow: none; margin-top: 15px; font-size: 0.95rem; padding: 10px 20px; }
-        button.secondary:hover { background-color: #d3c4be; color: white; }
-
-        .spinner-container {
-            display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 30px;
-            background: #fff; padding: 15px 30px; border-radius: 40px; border: 2px solid var(--sub-cream); box-shadow: 0 4px 15px rgba(243, 224, 211, 0.2);
-        }
-        .spinner-display { font-family: var(--font-number); font-size: 3rem; font-weight: 400; width: 90px; text-align: center; user-select: none; }
-        .spinner-unit { font-size: 1.2rem; color: var(--text-color); margin-right: 10px; }
-        .spinner-nav { display: flex; flex-direction: column; gap: 8px; }
-        .spinner-arrow { background: none; border: none; box-shadow: none; padding: 0; width: 32px; height: 32px; cursor: pointer; color: #bfa397; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s; }
-        .spinner-arrow:hover { background: none; color: var(--main-pink); transform: scale(1.1); box-shadow: none; }
-
-        /* ⏱️ タイマー・カウントダウン関連 */
-        .timer-container-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .timer-display { font-family: var(--font-number); font-size: 6rem; font-weight: 400; margin-bottom: 20px; letter-spacing: 2px; }
-        .status-badge { background-color: var(--sub-cream); padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; margin-bottom: 15px; font-weight: 500; }
-        .cycle-count { font-size: 1.1rem; margin-bottom: 20px; }
-        .cycle-count span { font-family: var(--font-number); font-size: 1.5rem; font-weight: bold; }
-
-        /* スタート前カウントダウン表示 */
-        .countdown-overlay {
-            display: none;
-            font-family: var(--font-number);
-            font-size: 7rem;
-            font-weight: bold;
-            color: #e29578;
-            text-shadow: 0 4px 15px rgba(226, 149, 120, 0.2);
-            animation: pulseScale 0.5s ease-in-out infinite alternate;
-            z-index: 50;
-            margin-bottom: 20px;
-        }
-        @keyframes pulseScale {
-            from { transform: scale(0.95); opacity: 0.8; }
-            to { transform: scale(1.05); opacity: 1; }
-        }
-
-        .cute-alarm-bg { background-color: #fff0f3 !important; }
-        .alarm-overlay { display: none; position: absolute; top: 12%; background: #ffb5a7; color: white; padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 1.05rem; box-shadow: 0 8px 20px rgba(251, 181, 167, 0.4); letter-spacing: 0.05em; }
-
-        /* 🛒 ショップモード専用背景・レイアウト */
-        #screen-shop {
-            background-image: url('cafe.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            padding: 10px;
-        }
-
-        #screen-shop h2 {
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .shop-layout {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 500px;
-            height: 72vh;
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 24px;
-            padding: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        /* 🥚 インタラクティブCSSアバター */
-        .avatar-area {
+        .subject-checkboxes label {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            padding: 12px 20px;
-            background: rgba(254, 249, 243, 0.85);
-            border-radius: 18px;
-            margin-bottom: 12px;
-            min-height: 110px;
-            border: 1px solid rgba(251, 196, 171, 0.4);
+            gap: 5px;
+            font-size: 0.85rem;
             cursor: pointer;
-            user-select: none;
-            gap: 15px;
+            font-weight: normal;
         }
-        
-        .avatar-body-wrapper {
+
+        .login-btn {
+            width: 100%;
+            background-color: #0d233a;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login-btn:hover {
+            background-color: #1a3a5c;
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* --------------------------------------
+         * マイページ（ログイン後）のレイアウト
+         * -------------------------------------- */
+        .mypage-container {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
             position: relative;
-            width: 64px;
-            height: 64px;
+        }
+
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #0d233a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .fixed-logo {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+
+        .fixed-logo span {
+            color: #c5a059;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            font-weight: normal;
+        }
+
+        .menu-toggle {
+            background: #1a3a5c;
+            color: white;
+            border: 1px solid #2c5282;
+            border-radius: 4px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .avatar-body-wrapper.jump {
-            animation: avatarJump 0.4s ease;
-        }
-        @keyframes avatarJump {
-            0%, 100% { transform: translateY(0) scale(1, 1); }
-            30% { transform: translateY(-16px) scale(0.9, 1.1); }
-            70% { transform: translateY(2px) scale(1.05, 0.95); }
+            transition: background 0.2s;
         }
 
-        .avatar-character {
-            position: relative;
-            width: 56px;
-            height: 56px;
-            background: var(--avatar-skin);
-            border-radius: 50% 50% 45% 45%;
-            box-shadow: 0 4px 10px rgba(109, 89, 82, 0.15), inset 0 -3px 6px rgba(109, 89, 82, 0.05);
-            border: 2px solid var(--text-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* おめめ（自動まばたき） */
-        .avatar-eye {
-            position: absolute;
-            top: 24px;
-            width: 7px;
-            height: 7px;
-            background: var(--text-color);
-            border-radius: 50%;
-            animation: blinkEyes 4s infinite;
-            transition: all 0.1s ease;
-        }
-        .avatar-eye.left { left: 14px; }
-        .avatar-eye.right { right: 14px; }
-        
-        @keyframes blinkEyes {
-            0%, 96%, 100% { transform: scaleY(1); height: 7px; border-radius: 50%; background: var(--text-color); }
-            98% { transform: scaleY(0.1); height: 2px; }
-        }
-
-        .avatar-character.happy .avatar-eye {
-            animation: none;
-            height: 5px;
-            width: 8px;
-            background: transparent;
-            border-radius: 0;
-            border-top: 2.5px solid var(--text-color);
-            top: 25px;
-        }
-        .avatar-character.happy .avatar-eye.left { transform: rotate(-10deg); }
-        .avatar-character.happy .avatar-eye.right { transform: rotate(10deg); }
-
-        /* ほっぺ */
-        .avatar-blush-cheek {
-            position: absolute;
-            top: 30px;
-            width: 10px;
-            height: 6px;
-            background: var(--avatar-blush);
-            border-radius: 50%;
-            opacity: 0.6;
-            filter: blur(0.5px);
-        }
-        .avatar-blush-cheek.left { left: 8px; }
-        .avatar-blush-cheek.right { right: 8px; }
-
-        /* おくち */
-        .avatar-mouth {
-            position: absolute;
-            top: 32px;
-            width: 8px;
-            height: 4px;
-            border-bottom: 2px solid var(--text-color);
-            border-radius: 0 0 4px 4px;
-            transition: all 0.1s ease;
-        }
-        .avatar-character.happy .avatar-mouth {
-            width: 10px;
-            height: 7px;
-            background: #ff758f;
-            border: 2px solid var(--text-color);
-            border-radius: 2px 2px 50% 50%;
-        }
-
-        /* ふきだし */
-        .avatar-right-balloon-box {
-            flex: 1;
+        aside {
+            width: 280px;
+            background-color: #0d233a;
+            color: #fff;
+            padding: 25px 15px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-        }
-        .avatar-balloon {
-            font-size: 0.85rem;
-            color: #6d5952;
-            line-height: 1.4;
-            font-weight: 500;
+            position: fixed;
+            top: 60px;
+            left: -280px;
+            height: calc(100% - 60px);
+            z-index: 999;
+            transition: left 0.3s ease;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+            border-top: 1px solid #1a3a5c;
         }
 
-        .shop-shelves {
+        aside.open {
+            left: 0;
+        }
+
+        aside nav {
             flex: 1;
             overflow-y: auto;
-            padding-right: 4px;
         }
-        
-        .shop-shelves::-webkit-scrollbar { width: 6px; }
-        .shop-shelves::-webkit-scrollbar-track { background: transparent; }
-        .shop-shelves::-webkit-scrollbar-thumb { background: var(--main-pink); border-radius: 10px; }
 
-        .shelf-title {
-            font-size: 0.85rem;
+        .menu-category {
+            font-size: 0.75rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 15px 0 5px 10px;
             font-weight: bold;
-            padding: 6px 12px;
-            background: rgba(255, 237, 216, 0.9);
-            border-radius: 20px;
-            margin: 15px 0 8px 0;
-            border-left: 4px solid var(--main-pink);
         }
-        .shelf-title:first-child { margin-top: 0; }
-        
-        .items-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+
+        aside nav ul {
+            list-style: none;
+            margin-bottom: 15px;
         }
-        .shop-item-card {
+
+        aside nav ul li a {
+            color: #b8c7ce;
+            text-decoration: none;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        aside nav ul li a:hover {
+            background-color: #1a3a5c;
+            color: #fff;
+        }
+
+        aside nav ul li a.active {
+            background-color: #c5a059;
+            color: #0d233a;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background-color: #c53030;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: auto;
+        }
+
+        main {
+            padding: 40px;
+            padding-top: 100px;
+            min-height: 100vh;
+            background-color: #f4f6f9;
+            width: 100%;
+        }
+
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(230, 230, 230, 0.7);
-            padding: 10px 14px;
-            border-radius: 14px;
-            transition: all 0.2s ease;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
         }
-        .shop-item-card:hover {
-            border-color: var(--main-pink);
-            background: #ffffff;
-            transform: translateY(-1px);
+
+        header h1 {
+            font-size: 1.5rem;
+            color: #0d233a;
         }
-        .item-info-left {
-            display: flex;
-            flex-direction: column;
+
+        .student-info {
+            font-size: 0.95rem;
+            text-align: right;
         }
-        .item-name {
-            font-size: 0.9rem;
-            font-weight: 500;
+
+        .student-info strong {
+            font-size: 1.1rem;
+            color: #0d233a;
         }
-        .item-price {
-            font-size: 0.8rem;
-            color: #e29578;
-            font-family: var(--font-number);
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            font-size: 1.1rem;
+            color: #0d233a;
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .card h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 3px;
+            width: 4px;
+            height: 18px;
+            background-color: #c5a059;
+            border-radius: 2px;
+        }
+
+        .today-lecture-card {
+            background: linear-gradient(135deg, #fff 0%, #f7fafc 100%);
+            border: 2px solid #0d233a;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(13, 35, 58, 0.08);
+        }
+
+        .today-header {
+            font-size: 1.1rem;
+            color: #c5a059;
             font-weight: bold;
-            margin-top: 1px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 8px;
         }
-        .buy-btn {
-            padding: 6px 16px;
-            font-size: 0.8rem;
-            border-radius: 20px;
-            box-shadow: none;
-            border: 1px solid var(--main-pink);
-            background: #ffffff;
-        }
-        
-        .secret-command-area {
-            background: rgba(250, 246, 240, 0.9);
-            border: 1px dashed #d3c4be;
-            border-radius: 14px;
-            padding: 12px;
-            margin-top: 5px;
+
+        .timeline {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 15px;
         }
-        .secret-input-row {
+
+        .timeline-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #fff;
+            border: 1px solid #edf2f7;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .timeline-time {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #c5a059;
+            min-width: 100px;
+        }
+
+        .timeline-details {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .timeline-name {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #0d233a;
+        }
+
+        .timeline-meta {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 2px;
+        }
+
+        .btn-group {
             display: flex;
             gap: 8px;
         }
-        .secret-input {
-            flex: 1;
-            padding: 10px 14px;
-            font-size: 0.85rem;
-            border: 1px solid #d3c4be;
-            border-radius: 20px;
-            outline: none;
-            font-family: var(--font-jp);
-            background: #ffffff;
-        }
-        .secret-input:focus {
-            border-color: var(--main-pink);
-        }
-        .secret-btn {
-            padding: 6px 16px;
-            font-size: 0.85rem;
-            border-radius: 20px;
-            box-shadow: none;
-            background: var(--main-pink);
+
+        .attendance-btn {
+            background-color: #0d233a;
             color: white;
             border: none;
+            padding: 7px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        #screen-shop .secondary {
-            background-color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-            border: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            margin-top: 10px;
-            padding: 12px 24px;
-        }
-        #screen-shop .secondary:hover {
-            background-color: var(--main-pink);
+        .attendance-btn.checked {
+            background-color: #38a169;
         }
 
-        /* 📱 スマホ縦画面・レスポンシブ微調整 */
-        @media (max-width: 480px) {
-            h1 { font-size: 2rem; }
-            h2 { font-size: 1.3rem; }
-            .timer-display { font-size: 4.5rem; }
-            .shop-layout { height: 68vh; }
-            .global-sp-counter { top: 20px; left: 15px; font-size: 0.85rem; padding: 4px 12px; }
-            .bgm-trigger { padding: 8px 14px; font-size: 0.85rem; }
-            .music-widget { top: 15px; right: 15px; }
-            .player-panel { width: 250px; }
-            .countdown-overlay { font-size: 5rem; }
+        .detail-trigger-btn {
+            background-color: #fff;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+            padding: 7px 14px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
         }
+
+        .detail-trigger-btn:hover {
+            background-color: #edf2f7;
+        }
+
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .status-table th, .status-table td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 0.9rem;
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .status-table th {
+            background-color: #f7fafc;
+            color: #4a5568;
+        }
+
+        .class-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        .badge-sa { background-color: #fed7d7; color: #9b2c2c; }
+        .badge-a1 { background-color: #feebc8; color: #9c4221; }
+        .badge-a3 { background-color: #e2e8f0; color: #4a5568; }
+
+        .news-list { list-style: none; }
+        .news-list li { padding: 10px 0; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .news-date { color: #718096; margin-right: 10px; font-size: 0.8rem; }
+
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .weekly-day-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .weekly-day-header {
+            background: #0d233a;
+            color: #fff;
+            padding: 12px 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .weekly-day-header.today-highlight { background: #c5a059; color: #0d233a; }
+        .weekly-day-body { padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        .weekly-sub-item { font-size: 0.9rem; color: #2d3748; border-left: 3px solid #cbd5e0; padding-left: 10px; }
+        .weekly-sub-item span { color: #c5a059; font-weight: bold; display: block; font-size: 0.8rem; margin-bottom: 2px; }
+
+        /* --------------------------------------
+         * カレンダー表示用の共通スタイル
+         * -------------------------------------- */
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .calendar-header-cell {
+            background-color: #0d233a;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .calendar-day-cell {
+            background-color: #fff;
+            border: 1px solid #e2e8f0;
+            min-height: 90px;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .calendar-day-cell:hover { background-color: #f0f4f8; }
+        .calendar-day-cell.selected { background-color: #ebf8ff; border-color: #3182ce; }
+        .calendar-day-cell.empty { background-color: #edf2f7; cursor: not-allowed; }
+        .day-number { font-weight: bold; font-size: 0.9rem; color: #4a5568; }
+
+        .calendar-info-box { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; font-size: 0.72rem; }
+        .info-badge-attendance { background-color: #c6f6d5; color: #22543d; padding: 2px; border-radius: 3px; font-weight: bold; text-align: center; }
+        .info-badge-meeting { background-color: #feebc8; color: #9c4221; padding: 2px; border-radius: 3px; font-weight: bold; text-align: center; }
+        .info-badge-hokou { background-color: #ebf8ff; color: #2b6cb0; padding: 2px; border-radius: 3px; font-weight: bold; text-align: center; }
+
+        .day-detail-panel { margin-top: 25px; padding: 20px; background: #f7fafc; border: 1px dashed #cbd5e0; border-radius: 8px; }
+        .detail-row-item { padding: 8px 0; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; }
+        .action-group { margin-top: 10px; display: flex; gap: 10px; }
+        .action-btn-secondary { background-color: #718096; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        .action-btn-danger { background-color: #e53e3e; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+
+        .time-slots-container { margin-top: 20px; display: none; border-top: 1px dashed #cbd5e0; padding-top: 20px; }
+        .slots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 10px; }
+        
+        .time-slot-btn {
+            background-color: #fff; border: 1px solid #cbd5e0; padding: 10px; border-radius: 6px;
+            font-weight: bold; font-size: 0.85rem; cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .time-slot-btn:hover { border-color: #0d233a; background-color: #f7fafc; }
+        .time-slot-btn.active { background-color: #0d233a; color: #fff; border-color: #0d233a; }
+
+        .confirm-container { margin-top: 25px; display: none; text-align: right; }
+        .success-banner { display: none; background-color: #c6f6d5; color: #22543d; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; border: 1px solid #98e6b1; font-size: 0.95rem; }
+
+        .hokou-btn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .hokou-selector-btn {
+            background-color: #fff; border: 2px solid #edf2f7; padding: 15px; border-radius: 6px;
+            font-weight: bold; font-size: 0.95rem; color: #0d233a; cursor: pointer; text-align: center; transition: all 0.2s;
+        }
+        .hokou-selector-btn:hover { border-color: #c5a059; background-color: #fcf9f2; }
+        .hokou-selector-btn.active { background-color: #c5a059; color: #0d233a; border-color: #0d233a; }
+
+        /* --------------------------------------
+         * 成績管理（スコアテーブル・入力欄）
+         * -------------------------------------- */
+        .score-input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 15px;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .score-input-row {
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #edf2f7;
+        }
+        .score-sub-label { font-size: 0.85rem; font-weight: bold; color: #2d3748; margin-bottom: 6px; display: block;}
+        .score-fields { display: flex; gap: 5px; align-items: center; }
+        .score-fields input { padding: 6px; font-size: 0.85rem; text-align: center; }
+
+        /* 志望校判定フォームエリア */
+        .judgment-input-title { font-size: 0.95rem; margin-top: 25px; margin-bottom: 10px; color:#0d233a; font-weight: bold; }
+        .judgment-input-box { background: #fdfaf4; border: 1px solid #f3e6cb; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .judgment-row { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .judgment-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8rem; text-align: center; }
+        .badge-a { background-color: #fed7d7; color: #9b2c2c; }
+        .badge-b { background-color: #feebc8; color: #9c4221; }
+        .badge-c { background-color: #e2e8f0; color: #4a5568; }
+        .badge-d { background-color: #edf2f7; color: #4a5568; }
+        .badge-e { background-color: #cbd5e0; color: #1a202c; }
+
+        /* グラフエリアのコンテナ */
+        .graph-container { background: #fff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 25px; }
+        .graph-wrapper { position: relative; width: 100%; height: 220px; border-left: 2px solid #cbd5e0; border-bottom: 2px solid #cbd5e0; margin-top: 15px; display: flex; align-items: flex-end; justify-content: space-around; padding: 0 20px; }
+        .graph-bar-col { display: flex; flex-direction: column; align-items: center; position: relative; width: 45px; height: 100%; justify-content: flex-end; }
+        .graph-dot { width: 12px; height: 12px; background-color: #c5a059; border: 2px solid #0d233a; border-radius: 50%; position: absolute; z-index: 5; transition: bottom 0.3s ease; }
+        .graph-line-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+        .graph-label { font-size: 0.72rem; color: #718096; position: absolute; bottom: -25px; text-align: center; white-space: nowrap; width: 70px; }
+        .graph-value { font-size: 0.8rem; font-weight: bold; color: #0d233a; position: absolute; top: -20px; }
+
+        .mock-list-container { margin-top: 25px; }
+        .mock-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .mock-card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #cbd5e0; padding-bottom: 8px; margin-bottom: 10px; }
+        .mock-title { font-weight: bold; color: #0d233a; font-size: 1rem; }
+        .mock-date { font-size: 0.8rem; color: #718096; }
+        .mock-scores-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; font-size: 0.85rem; margin-bottom: 10px; }
+        .mock-score-tag { background: #f7fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #edf2f7; }
+
+        /* --------------------------------------
+         * モーダル（ポップアップ窓）の共通スタイル
+         * -------------------------------------- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #a0aec0;
+        }
+        .modal-close:hover { color: #4a5568; }
+
+        .sidebar-overlay { display: none; position: fixed; top: 60px; left: 0; width: 100%; height: calc(100% - 60px); background: rgba(0,0,0,0.4); z-index: 998; }
+        .sidebar-overlay.show { display: block; }
+        @media (max-width: 1024px) { .timeline-row { flex-direction: column; align-items: flex-start; gap: 10px; } .btn-group { width: 100%; } .attendance-btn, .detail-trigger-btn { flex: 1; text-align: center; } .calendar-day-cell { min-height: 75px; } }
     </style>
 </head>
 <body>
 
-    <!-- 共通所持SP表示カウント -->
-    <div class="global-sp-counter">所持: <span id="global-sp-display">0</span> SP</div>
+    <div class="login-container" id="loginBox">
+        <div class="login-logo">鉄緑会</div>
+        <div class="login-subtitle">医進会 塾生ログイン</div>
+        <div class="form-group">
+            <label for="studentId">生徒ID (塾生番号)</label>
+            <input type="text" id="studentId" placeholder="塾生番号を入力">
+        </div>
+        <div class="form-group">
+            <label for="password">パスワード</label>
+            <input type="password" id="password" placeholder="パスワードを入力">
+        </div>
+        <button class="login-btn" onclick="attemptLogin()">ログイン</button>
+        <div class="error-message" id="errorMsg">生徒IDまたはパスワードが正しくありません。</div>
+    </div>
 
-    <!-- オーディオ要素 -->
-    <audio id="bgm-player"></audio>
-    <audio id="shop-player" src="shop.mp3" loop></audio>
-    <audio id="alarm-player" src="huurin.mp3"></audio>
-    
-    <!-- 効果音用プレイヤー -->
-    <audio id="se-player"></audio>
-    <audio id="avatar-se-player" src="abata.mp3"></audio>
-    <audio id="click-se-player" src="click.mp3"></audio> <!-- ボタンクリック音用 -->
-
-    <!-- ミュージックウィジェット -->
-    <div class="music-widget">
-        <div id="bgm-btn" class="bgm-trigger" onclick="playClickSE(); togglePlayerPanel()">
-            <span id="bgm-icon">BGM</span>
-            <span id="bgm-status-text">Menu</span>
+    <div class="mypage-container" id="myPageBox">
+        
+        <div class="top-navbar">
+            <div class="fixed-logo">鉄緑会<span>医進会 塾生ページ</span></div>
+            <button class="menu-toggle" onclick="toggleSidebar()">メニュー</button>
         </div>
         
-        <!-- プレイヤー本体パネル -->
-        <div id="player-panel" class="player-panel">
-            <div class="track-info">
-                <div id="current-track-title" class="track-title">選択されていません</div>
-            </div>
-            
-            <div class="player-controls">
-                <button class="control-btn" onclick="playClickSE(); toggleRepeatMode()" id="btn-repeat">LOOP ALL</button>
-                <button class="control-btn" onclick="playClickSE(); prevTrack()">|◀</button>
-                <button class="control-btn play-pause-btn" onclick="playClickSE(); togglePlayPause()" id="btn-play-pause">PLAY</button>
-                <button class="control-btn" onclick="playClickSE(); nextTrack()">▶|</button>
-            </div>
-            
-            <div class="playlist">
-                <div class="playlist-title">曲一覧</div>
-                <div id="playlist-items"></div>
-            </div>
-        </div>
-    </div>
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <!-- 1. メインメニュー画面 -->
-    <div id="screen-main" class="screen active">
-        <h1>Study Room</h1>
-        <p>今日も自分のペースで、心地よく。</p>
-        <div class="record-box">今日の勉強時間: <span id="today-record-time">0分</span></div>
-        <div class="btn-container">
-            <button onclick="playClickSE(); changeScreen('screen-class-select')">授業記録モード</button>
-            <button onclick="playClickSE(); changeScreen('screen-self-select')">自習モード</button>
-            <button onclick="playClickSE(); openShopScreen()" style="border-color: #bdedf2; background-color: #f4fcfd;">ショップモード</button>
-        </div>
-    </div>
+        <aside id="sidebar">
+            <nav>
+                <div class="menu-category">メインメニュー</div>
+                <ul>
+                    <li><a href="#" class="menu-link active" onclick="switchSection('home', this)">ホーム（ダッシュボード）</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('weekly-schedule', this)">今週の受講スケジュール</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('attendance-calendar', this)">出欠記録・面談予定</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('student-profile', this)">所属クラス・生徒情報</a></li>
+                </ul>
+                <div class="menu-category">学習・講義管理</div>
+                <ul>
+                    <li><a href="#" class="menu-link" onclick="switchSection('absence', this)">欠席連絡・振替授業申請</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('curriculum', this)">カリキュラムスケジュール</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('medical-supplement', this)">医学部特進補講</a></li>
+                </ul>
+                <div class="menu-category">成績・演習</div>
+                <ul>
+                    <li><a href="#" class="menu-link" onclick="switchSection('grades', this)">模試成績</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('judgment-history', this)">志望校判定推移</a></li>
+                    <li><a href="#" class="menu-link" onclick="switchSection('materials', this)">教材・解答プリントDL</a></li>
+                </ul>
+                <div class="menu-category">医学部受験サポート</div>
+                <ul>
+                    <li><a href="#" class="menu-link" onclick="switchSection('support', this)">現役医大生指導員 相談予約</a></li>
+                </ul>
+            </nav>
+            <button class="logout-btn" onclick="logout()">ログアウト</button>
+        </aside>
 
-    <!-- 2. 授業記録：時間選択画面 -->
-    <div id="screen-class-select" class="screen">
-        <h2>授業時間をえらぶ</h2>
-        <div class="grid-buttons">
-            <button onclick="playClickSE(); preStartTimer('class', 60)">1時間</button>
-            <button onclick="playClickSE(); preStartTimer('class', 80)">1時間20分</button>
-            <button onclick="playClickSE(); preStartTimer('class', 90)">1時間30分</button>
-            <button onclick="playClickSE(); preStartTimer('class', 200)">3時間20分</button>
-        </div>
-        <button class="secondary" onclick="playClickSE(); changeScreen('screen-main')">もどる</button>
-    </div>
-
-    <!-- 3. 自習：モード選択画面 -->
-    <div id="screen-self-select" class="screen">
-        <h2>自習スタイルをえらぶ</h2>
-        <div class="btn-container">
-            <button onclick="playClickSE(); preStartTimer('pomodoro')">ポモドーロ集中</button>
-            <button onclick="playClickSE(); preStartTimer('stopwatch')">ストップウォッチ</button>
-            <button onclick="playClickSE(); changeScreen('screen-custom-timer-set')">タイマー（カスタム）</button>
-        </div>
-        <button class="secondary" onclick="playClickSE(); changeScreen('screen-main')">もどる</button>
-    </div>
-
-    <!-- 3.5 自習：カスタムタイマー時間設定画面 -->
-    <div id="screen-custom-timer-set" class="screen">
-        <h2>タイマー時間をセット</h2>
-        <div class="spinner-container">
-            <div id="custom-minutes-display" class="spinner-display">10</div>
-            <div class="spinner-unit">分</div>
-            <div class="spinner-nav">
-                <button class="spinner-arrow" onclick="playClickSE(); adjustMinutes(1)">▲</button>
-                <button class="spinner-arrow" onclick="playClickSE(); adjustMinutes(-1)">▼</button>
-            </div>
-        </div>
-        <div class="btn-container"><button onclick="playClickSE(); preStartTimer('custom')">タイマーを開始する</button></div>
-        <button class="secondary" onclick="playClickSE(); changeScreen('screen-self-select')">もどる</button>
-    </div>
-
-    <!-- 4. タイマー作動全画面 -->
-    <div id="screen-timer" class="screen">
-        <div id="alarm-banner" class="alarm-overlay">おつかれさま！時間になりました</div>
-        
-        <!-- カウントダウン演出レイヤー -->
-        <div id="countdown-display" class="countdown-overlay">3</div>
-
-        <div id="timer-box" class="timer-container-box">
-            <div id="timer-status" class="status-badge">授業記録</div>
-            <div id="pomo-cycle" class="cycle-count" style="display: none;">ただいま <span>1</span> サイクル目</div>
-            <div id="timer-text" class="timer-display">00:00:00</div>
-        </div>
-        
-        <!-- 操作部コンテナ（カウントダウン中は隠す） -->
-        <div id="timer-controls-container" class="btn-container" style="flex-direction: row; justify-content: center; z-index: 10;">
-            <button id="btn-pause" onclick="playClickSE(); togglePause()">一時停止</button>
-            <button id="btn-stop" class="secondary" style="margin-top:0;" onclick="playClickSE(); stopTimer()">終了する</button>
-        </div>
-    </div>
-
-    <!-- 5. ショップ画面 -->
-    <div id="screen-shop" class="screen">
-        <h2>すたでぃショップ</h2>
-        <div class="shop-layout">
-            <!-- アバターエリア（クリック音なし、専用SEのみ） -->
-            <div class="avatar-area" onclick="tapAvatar()">
-                <div id="avatar-wrapper" class="avatar-body-wrapper">
-                    <div id="avatar-character" class="avatar-character">
-                        <div class="avatar-eye left"></div>
-                        <div class="avatar-eye right"></div>
-                        <div class="avatar-blush-cheek left"></div>
-                        <div class="avatar-blush-cheek right"></div>
-                        <div class="avatar-mouth"></div>
-                    </div>
+        <main>
+            <header>
+                <h1 id="pageTitle">塾生ダッシュボード</h1>
+                <div class="student-info">
+                    塾生番号: <strong>ihsr2730</strong><br>
+                    <strong>柿原 拓真</strong> 様（医学部特進コース）
                 </div>
-                <div class="avatar-right-balloon-box">
-                    <div id="avatar-speech" class="avatar-balloon">なにか食べたいな…！</div>
-                </div>
-            </div>
-            
-            <!-- 商品の棚（クリック音なし、専用演出のみ） -->
-            <div class="shop-shelves">
-                <div class="shelf-title">のみもの</div>
-                <div id="shop-drinks-list" class="items-grid"></div>
-                
-                <div class="shelf-title">たべもの</div>
-                <div id="shop-foods-list" class="items-grid"></div>
-                
-                <!-- ごほうびをもらう（隠しコマンドエリア） -->
-                <div class="shelf-title">ごほうびをもらう</div>
-                <div class="secret-command-area">
-                    <div class="secret-input-row">
-                        <input type="text" id="secret-code-input" class="secret-input" placeholder="ひみつのコトバを入力...">
-                        <button class="secret-btn" onclick="submitSecretCommand()">決定</button>
+            </header>
+
+            <div id="section-home" class="content-section active">
+                <div id="todayLectureArea"></div>
+                <div class="grid-container">
+                    <div class="card">
+                        <h2>事務局からの最新情報</h2>
+                        <ul class="news-list">
+                            <li><span class="news-date">2026/06/21</span><strong style="color: #c53030;">[重要]</strong> 【医進会】第2回東大・国公立大医学部記述模試の申込受付開始</li>
+                            <li><span class="news-date">2026/06/18</span> ［夏期講習］医進数学・医進英語特論の推奨クラス分け発表</li>
+                        </ul>
                     </div>
                 </div>
             </div>
+
+            <div id="section-weekly-schedule" class="content-section">
+                <div class="weekly-grid">
+                    <div class="weekly-day-card" id="sched-1"><div class="weekly-day-header" id="sched-head-1">月曜日</div><div class="weekly-day-body" id="weekly-body-1"></div></div>
+                    <div class="weekly-day-card" id="sched-2"><div class="weekly-day-header" id="sched-head-2">火曜日</div><div class="weekly-day-body" id="weekly-body-2"></div></div>
+                    <div class="weekly-day-card" id="sched-3"><div class="weekly-day-header" id="sched-head-3">水曜日</div><div class="weekly-day-body" id="weekly-body-3"></div></div>
+                    <div class="weekly-day-card" id="sched-4"><div class="weekly-day-header" id="sched-head-4">木曜日</div><div class="weekly-day-body" id="weekly-body-4"></div></div>
+                    <div class="weekly-day-card" id="sched-5"><div class="weekly-day-header" id="sched-head-5">金曜日</div><div class="weekly-day-body" id="weekly-body-5"></div></div>
+                    <div class="weekly-day-card" id="sched-6"><div class="weekly-day-header" id="sched-head-6">土曜日</div><div class="weekly-day-body" id="weekly-body-6"></div></div>
+                    <div class="weekly-day-card" id="sched-0"><div class="weekly-day-header" id="sched-head-0">日曜日</div><div class="weekly-day-body" id="weekly-body-0"></div></div>
+                </div>
+            </div>
+
+            <div id="section-attendance-calendar" class="content-section">
+                <div class="card">
+                    <h2>出欠および指導員面談・特進補講予定（2026年6月）</h2>
+                    <p style="font-size: 0.85rem; color: #718096; margin-bottom: 15px;">
+                        日付をクリックすると、詳細の確認や、面談・補講の変更およびキャンセル手続きが行えます。
+                    </p>
+                    <div class="calendar-container" id="attendanceCalendarGrid"></div>
+
+                    <div class="day-detail-panel" id="attendanceDayDetail" style="display: none;">
+                        <h3 id="detailPanelTitle" style="color: #0d233a; margin-bottom: 15px; font-size: 1rem;">日付を選択してください</h3>
+                        <div id="detailPanelContent"></div>
+                        
+                        <div id="inlineModArea" style="display: none; margin-top: 15px; border-top: 1px dashed #cbd5e0; padding-top: 15px;">
+                            <h4 id="inlineModTitle" style="font-size: 0.9rem; color: #0d233a; margin-bottom: 10px;">新しい時間枠を選択してください</h4>
+                            <div class="slots-grid" id="inlineSlotsGrid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-student-profile" class="content-section">
+                <div class="card" style="max-width: 700px; margin: 0 auto;">
+                    <h2>ご登録生徒情報</h2>
+                    <table class="status-table" style="margin-top: 15px;">
+                        <tbody>
+                            <tr><th style="width: 30%;">塾生番号</th><td><strong>ihsr2730</strong></td></tr>
+                            <tr><th>氏名</th><td>柿原 拓真 様</td></tr>
+                            <tr><th>出身高校</th><td>開成高校</td></tr>
+                            <tr><th>在籍コース</th><td>医学部特進</td></tr>
+                        </tbody>
+                    </table>
+                    <h2 style="margin-top: 35px;">教科別所属クラス</h2>
+                    <table class="status-table" style="margin-top: 15px;">
+                        <thead><tr><th style="width: 40%;">教科</th><th>現在の所属クラス</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>数学</strong></td><td><span class="class-badge badge-sa">SAクラス</span></td></tr>
+                            <tr><td><strong>化学</strong></td><td><span class="class-badge badge-a1">A1クラス</span></td></tr>
+                            <tr><td><strong>物理</strong></td><td><span class="class-badge badge-a3">A3クラス</span></td></tr>
+                            <tr><td><strong>英語</strong></td><td><span class="class-badge badge-a3">A3クラス</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-absence" class="content-section">
+                <div class="card" style="max-width: 600px; margin: 0 auto;">
+                    <h2>欠席連絡・振替申請フォーム</h2>
+                    <div class="form-group">
+                        <label>生徒氏名</label>
+                        <input type="text" id="absenceName" value="柿原 拓真" readonly style="background-color: #edf2f7;">
+                    </div>
+                    <div class="form-group">
+                        <label for="absenceClass">欠席する講義枠</label>
+                        <select id="absenceClass">
+                            <option value="月曜日 講義枠">月曜日の講義枠</option>
+                            <option value="火曜日 講義枠">火曜日の講義枠</option>
+                            <option value="水曜日 講義枠">水曜日の講義枠</option>
+                            <option value="木曜日 講義枠">木曜日の講義枠</option>
+                            <option value="金曜日 講義枠">金曜日の講義枠</option>
+                            <option value="土曜日 講義枠">土曜日の講義枠</option>
+                            <option value="日曜日 講義枠">日曜日の講義枠</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="absenceReason">欠席理由・対象コマ詳細</label>
+                        <textarea id="absenceReason" rows="4" placeholder="理由を入力してください"></textarea>
+                    </div>
+                    <button class="login-btn" onclick="sendAbsenceEmail()">欠席連絡メールを送信する</button>
+                </div>
+            </div>
+
+            <div id="section-curriculum" class="content-section">
+                <div class="card">
+                    <h2>高3 年間カリキュラム・進行表</h2>
+                    <table class="status-table">
+                        <thead><tr><th>対象教科</th><th>第1期 (春期〜1学期)</th><th>第2期 (夏期〜2学期)</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>数学</strong></td><td>入試数学系統演習／数Ⅲ微積分徹底演習</td><td>東大・医学部過去問実践演習／テストゼミ</td></tr>
+                            <tr><td><strong>物理</strong></td><td>力学・電磁気・波動の発展的体系化</td><td>初見難問演習ゼミ／原子物理完全攻略</td></tr>
+                            <tr><td><strong>化学</strong></td><td>理論化学定量的計算／無機構造分析</td><td>有機構造決定最難関パターン／高分子スピード演習</td></tr>
+                            <tr><td><strong>英語</strong></td><td>医学部超長文精選読解／リスニング基礎</td><td>論理的英文和訳・要約／自由英作文個別添削</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-medical-supplement" class="content-section">
+                <div class="success-banner" id="hokouSuccess">補講の予約が完了しました。</div>
+                <div class="card">
+                    <h2>医学部特進特別補講 オンライン予約システム</h2>
+                    <h3>ステップ1：講座を選択</h3>
+                    <div class="hokou-btn-grid">
+                        <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進数学SA', this)">医学部特進数学SA</button>
+                        <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進英語SA', this)">医学部特進英語SA</button>
+                        <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進物理SA', this)">医学部特進物理SA</button>
+                        <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進化学SA', this)">医学部特進化学SA</button>
+                        <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進小論文', this)">医学部特進小論文</button>
+                        <button class="hokou-selector-btn" onclick="selectHokouCourse('医学部特進対策講座', this)">医学部特進対策講座</button>
+                    </div>
+                    <div id="hokouDateTimeArea" style="display: none;">
+                        <h3>ステップ2：希望日を選択</h3>
+                        <div class="calendar-container" id="hokouCalendarGrid"></div>
+                        <div class="time-slots-container" id="hokouTimeSlotsArea">
+                            <h3>ステップ3：希望時間を選択</h3>
+                            <div class="slots-grid" id="hokouSlotsGridContainer"></div>
+                        </div>
+                        <div class="confirm-container" id="hokouConfirmArea">
+                            <button class="login-btn" style="max-width: 200px;" onclick="submitHokouReservation()">補講予約を確定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-grades" class="content-section">
+                <div class="success-banner" id="mockSuccessBanner">模試成績を登録・更新しました。</div>
+                
+                <div class="card">
+                    <h2 id="mockFormTitle">校外模試成績および判定の自主記録</h2>
+                    <input type="hidden" id="editMockId" value="">
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div class="form-group">
+                            <label for="mockDate">受験日</label>
+                            <input type="date" id="mockDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="mockNameSelect">模試の種類</label>
+                            <select id="mockNameSelect" onchange="handleMockNameChange()">
+                                <option value="全統共テ模試">全統共テ模試</option>
+                                <option value="全統記述模試">全統記述模試</option>
+                                <option value="東大オープン模試">東大オープン模試</option>
+                                <option value="東大実戦模試">東大実戦模試</option>
+                                <option value="その他">その他</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="customMockNameGroup" style="display: none;">
+                            <label for="customMockName">模試名（自由入力）</label>
+                            <input type="text" id="customMockName" placeholder="独自の模試名を入力">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+                        <div class="form-group">
+                            <label for="mockGrade">学年</label>
+                            <select id="mockGrade">
+                                <option value="高３">高３</option>
+                                <option value="高１">高１</option>
+                                <option value="高２">高２</option>
+                                <option value="既卒生">既卒生</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="mockRoundGroup">
+                            <label for="mockRound" id="mockRoundLabel">回数・季節</label>
+                            <select id="mockRound"></select>
+                        </div>
+                    </div>
+
+                    <div id="customSubjectToggleArea" style="display: none; margin-top: 15px;">
+                        <span class="checkbox-group-label">受験した教科にチェックを入れてください：</span>
+                        <div class="subject-checkboxes" id="subjectCheckboxContainer"></div>
+                    </div>
+
+                    <h3 style="font-size: 0.95rem; margin-top: 20px; margin-bottom: 10px; color:#0d233a;">各教科・総合の成績入力</h3>
+                    <div class="score-input-grid" id="dynamicScoreInputContainer"></div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; background: #f0f4f8; padding: 15px; border-radius: 6px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>総合得点</label>
+                            <input type="number" id="totalScore" placeholder="得点">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>総合配点</label>
+                            <input type="number" id="totalFull" placeholder="配点">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>総合偏差値</label>
+                            <input type="number" id="totalDev" step="0.1" placeholder="偏差値">
+                        </div>
+                    </div>
+
+                    <div class="judgment-input-title">■ 志望校判定の記録（最大3枚まで）</div>
+                    <div class="judgment-input-box">
+                        <div class="judgment-row">
+                            <label style="font-size:0.8rem; font-weight:bold; color:#4a5568;">第一志望大学・学部名</label>
+                            <label style="font-size:0.8rem; font-weight:bold; color:#4a5568;">学科・方式等</label>
+                            <label style="font-size:0.8rem; font-weight:bold; color:#4a5568;">判定</label>
+                        </div>
+                        <div class="judgment-row">
+                            <input type="text" id="judgeUniv1" placeholder="例: 東京大学" value="東京大学">
+                            <input type="text" id="judgeDept1" placeholder="例: 理科三類" value="理科三類">
+                            <select id="judgeRank1">
+                                <option value="">選択</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+                            </select>
+                        </div>
+                        <div class="judgment-row">
+                            <input type="text" id="judgeUniv2" placeholder="例: 京都大学">
+                            <input type="text" id="judgeDept2" placeholder="例: 医学部医学科">
+                            <select id="judgeRank2">
+                                <option value="">選択</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+                            </select>
+                        </div>
+                        <div class="judgment-row">
+                            <input type="text" id="judgeUniv3" placeholder="例: 大阪大学">
+                            <input type="text" id="judgeDept3" placeholder="例: 医学部">
+                            <select id="judgeRank3">
+                                <option value="">選択</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; text-align: right; display: flex; justify-content: flex-end; gap: 10px;">
+                        <button class="action-btn-secondary" id="cancelEditBtn" style="display: none;" onclick="resetMockForm()">編集をキャンセル</button>
+                        <button class="login-btn" style="max-width: 180px;" onclick="saveMockResult()">成績・判定を保存する</button>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h2 style="margin-bottom:0;">模試別 総合偏差値推移グラフ</h2>
+                        <select id="graphMockSelector" onchange="renderScoreGraph()" style="width:200px; padding:6px; border-radius:4px; font-size:0.9rem;">
+                            <option value="全統共テ模試">全統共テ模試</option>
+                            <option value="全統記述模試" selected>全統記述模試</option>
+                            <option value="東大オープン模試">東大オープン模試</option>
+                            <option value="東大実戦模試">東大実戦模試</option>
+                        </select>
+                    </div>
+                    <div class="graph-wrapper" id="graphWrapperArea">
+                        </div>
+                    <div style="height: 25px;"></div>
+                </div>
+
+                <div class="card">
+                    <h2>登録済みの模試成績一覧</h2>
+                    <div class="mock-list-container" id="savedMockListArea"></div>
+                </div>
+            </div>
+
+            <div id="section-judgment-history" class="content-section">
+                <div class="card">
+                    <h2>志望校別 判定推移履歴</h2>
+                    <p style="font-size:0.85rem; color:#718096; margin-bottom:20px;">
+                        これまでに模試成績とともに登録・記録された各志望校の判定の推移一覧です。
+                    </p>
+                    <div id="judgmentTimelineContainer"></div>
+                </div>
+            </div>
+
+            <div id="section-materials" class="content-section">
+                <div class="card">
+                    <h2>解答・解説プリントダウンロード</h2>
+                    <ul class="news-list">
+                        <li><a href="#" style="color:#0d233a; font-weight:bold;">第11週 医進数学演習 解答・解説（PDF）</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="section-support" class="content-section">
+                <div class="success-banner" id="reserveSuccess"></div>
+                <div class="card">
+                    <h2>指導員（OB/OG）相談予約</h2>
+                    <h3>ステップ1：希望日を選択</h3>
+                    <div class="calendar-container" id="reservationCalendarGrid"></div>
+                    <div class="time-slots-container" id="timeSlotsArea">
+                        <h3>ステップ2：希望時間を選択</h3>
+                        <div class="slots-grid" id="slotsGridContainer"></div>
+                    </div>
+                    <div class="confirm-container" id="confirmArea">
+                        <button class="login-btn" style="max-width: 200px;" onclick="submitFinalReservation()">予約を確定</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="lectureDetailModal">
+        <div class="modal-box">
+            <span class="modal-close" onclick="closeLectureModal()">&times;</span>
+            <h2 id="modalLectureName" style="color:#0d233a; font-size:1.1rem; margin-bottom:15px; padding-bottom:8px; border-bottom:2px solid #c5a059;">講義詳細情報</h2>
+            <div style="margin-bottom: 15px;">
+                <h4 style="font-size:0.9rem; color:#4a5568; margin-bottom:5px;">■ 必要となる教材・持参物</h4>
+                <p id="modalLectureMaterials" style="font-size:0.95rem; background:#f7fafc; padding:10px; border-radius:4px; line-height:1.4; border:1px solid #e2e8f0;"></p>
+            </div>
+            <div>
+                <h4 style="font-size:0.9rem; color:#4a5568; margin-bottom:5px;">■ 本日の学習予定範囲・テーマ</h4>
+                <p id="modalLectureRange" style="font-size:0.95rem; background:#f7fafc; padding:10px; border-radius:4px; line-height:1.4; border:1px solid #e2e8f0;"></p>
+            </div>
         </div>
-        <!-- ショップを抜けるボタンにはクリック音をつける -->
-        <button class="secondary" onclick="playClickSE(); closeShopScreen()">メインにもどる</button>
     </div>
 
     <script>
-        let timerInterval = null;
-        let countdownInterval = null; // カウントダウン用
-        let totalSeconds = 0;
-        let elapsedSecondsInSession = 0; 
-        let isPaused = false;
-        let currentMode = ''; 
-        let pomodoroCycle = 1;
-        let currentCustomMinutes = 10;
-
-        let currentSP = parseFloat(localStorage.getItem('study_sp') || '0');
-        let isInfiniteSP = false; 
-
-        let usedCommands = JSON.parse(localStorage.getItem('study_used_commands') || '{"nenatta":false, "eraiko":false, "ganbatta":false}');
-
-        const shopItems = {
-            drinks: [
-                { name: "げんきドリンク", price: 150 },
-                { name: "おいしいコーヒー", price: 300 },
-                { name: "やさしいミルクティー", price: 350 },
-                { name: "しんさくフラペチーノ", price: 600 },
-                { name: "高級抹茶茶碗", price: 1000 }
+        /* 1日あたり5講座の完全スケジュール・教材・予定範囲マスターデータ */
+        const masterSchedule = {
+            1: [
+                { name: "数学発展/実戦講座Ⅰ/Ⅱ", time: "9:45〜12:30", room: "本館202", class: "共通", mat: "鉄壁英単語熟語帳、テスト用バインダー", range: "第21章〜第25章 派生語・語法記述チェック" },
+                { name: "数学基礎/実戦講座Ⅲ", time: "13:30〜14:30", room: "本館202", class: "必須", mat: "記述解答用万年筆またはボールペン", range: "1学期定例重要公式・定理の証明、および記述論証精査" },
+                { name: "化学基礎/発展講座", time: "14:40〜16:00", room: "本館202", class: "記述", mat: "前週の添削済み答案、講評冊子", range: "文脈適合・条件英作文の減点基準解説、個別フィードバック" },
+                { name: "英語実戦講座", time: "16:10〜17:30", room: "本館202", class: "補習", mat: "数Ⅲ極限・微積分計算ドリル", range: "置換積分・部分積分の高速処理、定積分と不等式の頻出パターン" },
+                { name: "共テ政経", time: "20:30〜22:00", room: "面談室B", class: "指定", mat: "週間学習計画表（ポートフォリオ）", range: "6月中旬の進捗セルフチェック、夏期講習の講座選定講座" }
             ],
-            foods: [
-                { name: "ふがし", price: 100 },
-                { name: "クッキー", price: 300 },
-                { name: "カヌレ", price: 250 },
-                { name: "マドレーヌ", price: 350 },
-                { name: "ドーナツ", price: 400 },
-                { name: "生チョコ", price: 600 },
-                { name: "ごうかなケーキ", price: 1000 }
+            2: [
+                { name: "数学発展/実戦講座Ⅰ/Ⅱ", time: "16:30〜17:20", room: "3号館101", class: "特進", mat: "医事小論文テキスト、原稿用紙", range: "医療倫理の基本原則（インフォームドコンセント）" },
+                { name: "数学基礎/実戦講座Ⅲ", time: "17:30〜19:00", room: "3号館101", class: "特進", mat: "時事医療トピックプリント、ノート", range: "「先端医療と遺伝子編集」をテーマとする600字論述および相互添削" },
+                { name: "面接・口頭試問シミュレーション", time: "19:10〜19:50", room: "面談室A", class: "個別", mat: "自己分析シート、志望理由書控", range: "大学志望理由のブラッシュアップ、頻出質問に対する論理的応答" },
+                { name: "東大国公立大英文和訳添削ゼミ", time: "20:00〜20:50", room: "3号館102", class: "選抜", mat: "英文解釈クラシックテキスト", range: "抽象度の高い論説文における倒置・挿入句の正確な構造分解" },
+                { name: "デイリー質問・相談対応デスク", time: "21:00〜21:30", room: "自習館", class: "自由", mat: "各自不明点の残るテキスト・問題集", range: "常駐指導員への自由質問（質問随時受付・個別解説）" }
+            ],
+            3: [
+                { name: "数学発展/実戦講座Ⅰ/Ⅱ", time: "16:30〜17:00", room: "本館401", class: "SA", mat: "確認テスト解答用紙、計算用紙", range: "前週範囲（複素数平面と極方程式）の選抜初見問題演習" },
+                { name: "高3医進数学・第1部（数Ⅲ微積）", time: "17:10〜18:50", room: "本館401", class: "SA", mat: "特進数学テキストSA、演習ノート", range: "第12講「定積分で表された関数・微積分方程式の難問攻略」" },
+                { name: "高3医進数学・第2部（整数・確率）", time: "19:00〜20:30", room: "本館401", class: "SA", mat: "入試数学系統演習「整数・代数」冊子", range: "東大過去問にみる「n進法・ユークリッドの互除法を用いた高度な整数証明」" },
+                { name: "入試数学系統演習・居残り解説", time: "20:35〜21:00", room: "本館401", class: "任意", mat: "授業内配布の補助レジュメ", range: "第2部で扱った極限融合整数問題の別解・拡張アプローチの解説" },
+                { name: "SAクラス限定 過去問添削指導", time: "21:05〜21:35", room: "本館401", class: "個別", mat: "過去問答案（各自作成のもの）", range: "東京大学理科一〜三類・過去10年分の数学問題個別添削指導" }
+            ],
+            4: [
+                { name: "数学発展/実戦講座Ⅰ/Ⅱ", time: "16:30〜17:00", room: "本館302", class: "A1", mat: "化学重要定着確認テスト用紙", range: "遷移金属元素（鉄、銅、銀、クロム、マンガン）の沈殿・錯イオン反応" },
+                { name: "高3医進化学・理論化学構造分析", time: "17:10〜18:50", room: "本館302", class: "A1", mat: "医進化学テキスト（上巻）、ノート", range: "第14講「溶液の平衡・電離平衡・緩衝液と滴定曲線の定量的計算」" },
+                { name: "高3医進化学・有機構造決定演習", time: "19:00〜20:30", room: "本館302", class: "A1", mat: "有機化学構造決定パターン演習プリント", range: "エステル加水分解、オゾン分解を伴う高度な芳香族化合物の決定" },
+                { name: "化学重要発展問題・質問解説", time: "20:35〜21:10", room: "本館302", class: "自由", mat: "化学発展講座問題集", range: "難関国公立大医学部で頻出の気体の状態方程式と飽和蒸気圧の融合問題" },
+                { name: "化学テキスト復習セッション", time: "21:15〜21:45", room: "本館302", class: "補習", mat: "基本確認問題集（化学）", range: "結晶格子（配位数・充填率の計算）の再確認と個別フォロー" }
+            ],
+            5: [
+                { name: "数学発展/実戦講座Ⅰ/Ⅱ", time: "16:30〜17:00", room: "2号館201", class: "A3", mat: "文法演述チェックシート", range: "時制・助動詞・仮定法におけるハイレベル正誤判定・語順整序" },
+                { name: "高3医進英語・長文読解精選演習", time: "17:10〜18:50", room: "2号館201", class: "A3", mat: "医進英語長文精選テキスト", range: "第11講「生命科学・バイオテクノロジーに関する医学部頻出超長文」" },
+                { name: "高3医進英語・自由英作文・和訳", time: "19:00〜20:30", room: "2号館201", class: "A3", mat: "英作文ワークシート、ノート", range: "「尊厳死の是非」に関する80-100語の論理的自由英作文のドラフティング" },
+                { name: "医進英語リスニングディクテーション", time: "20:35〜21:10", room: "2号館201", class: "音声", mat: "音声配信用端末（またはイヤホン）", range: "科学論説文をベースとしたシャドーイングおよびスクリプト空欄埋め" },
+                { name: "英作文個別返却・表現指導", time: "21:15〜21:45", room: "2号館201", class: "個別", mat: "返却添削答案、ミスノート", range: "冠詞の誤用、コロケーション不一致の個別指摘と改善指導" }
+            ],
+            6: [
+                { name: "数学発展/実戦講座Ⅰ/Ⅱ", time: "13:30〜14:00", room: "本館503", class: "A3", mat: "実戦物理確認テスト用紙", range: "力学的エネルギー保存則と角運動量保存則の融合問題" },
+                { name: "高3医進物理・力学電磁気発展", time: "14:10〜15:50", room: "本館503", class: "A3", mat: "医進物理テキスト、演習ノート", range: "第13講「電磁誘導・ローレンツ力とコイルを含む複合格子回路」" },
+                { name: "高3医進物理・波動原子集中徹底", time: "16:00〜17:35", room: "本館503", class: "A3", mat: "物理発展講座（原子物理編）", range: "「光電効果とX線の回折・ブラッグの条件」の数理的アプローチ" },
+                { name: "物理発展講座冊子・難問解説会", time: "17:45〜18:30", room: "本館503", class: "応用", mat: "授業内配布・難問冊子", range: "京都大学過去問「二重スリットによる光の干渉と薄膜による変化」の深掘り" },
+                { name: "土曜合同記述オープン添削会", time: "18:40〜19:30", room: "大教室", class: "合同", mat: "自己答案、赤ペン", range: "他者の解答を採点基準表に則って採点し、記述の過不足を学ぶ演習" }
+            ],
+            0: [
+                { name: "数学発展/実戦講座Ⅰ/Ⅱ", time: "09:30〜12:00", room: "大教室", class: "定期", mat: "受験票、筆記用具、時計", range: "第1限：数学（記述式 150分問）東大レベル選抜模試試験" },
+                { name: "理Ⅲ・選抜記述模試・午後の部", time: "13:00〜16:30", room: "大教室", class: "定期", mat: "受験票、筆記用具", range: "第2限：英語（120分）、第3限：理科（物理・化学 150分）" },
+                { name: "記述模試 自己採点・解答速報講評", time: "16:45〜17:45", room: "大教室", class: "全体", mat: "解答解説冊子、自己採点用シート", range: "各教科の配点基準、部分点獲得のための記述境界線の速報講評" },
+                { name: "日曜特選 最難関整数問題チャレンジ", time: "18:00〜19:30", room: "本館401", class: "特選", mat: "チャレンジ問題レジュメ", range: "難関国公立大医学部・単科医大の過去問から抽出した「超難発想の整数論」" },
+                { name: "答案即日回収・学習カウンセリング", time: "19:40〜20:30", room: "面談室C", class: "予約", mat: "本日実施の模試問題・自己採点結果", range: "模試の手応えに基づく弱点分野の即時判定と、次週自習計画の修正" }
             ]
         };
 
-        const tracks = [
-            { id: 0, title: "三葉のテーマ", file: "music1.mp3" },
-            { id: 1, title: "夢灯籠", file: "music2.mp3" }
+        const masterTimeSlots = ["17:00〜17:30", "17:30〜18:00", "18:00〜18:30", "19:00〜19:30", "19:30〜20:00", "20:00〜20:30", "21:00〜21:30"];
+        
+        const allSubjectsMaster = [
+            { id: "math1", label: "数学①" }, { id: "math2", label: "数学②" }, { id: "englishL", label: "英語L" },
+            { id: "englishR", label: "英語R" }, { id: "math", label: "数学" }, { id: "english", label: "英語" },
+            { id: "japanese", label: "国語" }, { id: "physics", label: "物理" }, { id: "chemistry", label: "化学" },
+            { id: "politics", label: "政経" }, { id: "info", label: "情報" }
         ];
-        let currentTrackIndex = 0;
-        let isPlaying = false;
-        let repeatMode = 'all'; 
-        let nextTrackTimeout = null;
 
-        // アバター制御用のタイムアウト管理用変数を宣言
-        let avatarTimeout = null;
-        let avatarTapTimeout = null;
-
-        const bgmPlayer = document.getElementById('bgm-player');
-        const shopPlayer = document.getElementById('shop-player');
-        const alarmPlayer = document.getElementById('alarm-player');
-        const sePlayer = document.getElementById('se-player');
-        const avatarSePlayer = document.getElementById('avatar-se-player');
-        const clickSePlayer = document.getElementById('click-se-player');
-
-        let wasPlayingBeforeShop = false; 
-
-        window.onload = function() {
-            displayTodayRecord();
-            updateSPDisplay();
-            renderPlaylist();
-            buildShopMenu();
-            loadTrack(currentTrackIndex);
-            
-            bgmPlayer.onended = function() {
-                if (repeatMode === 'one') {
-                    bgmPlayer.play();
-                } else {
-                    clearTimeout(nextTrackTimeout);
-                    document.getElementById('current-track-title').innerText = "間隔をあけています (3秒)...";
-                    nextTrackTimeout = setTimeout(() => {
-                        nextTrack();
-                    }, 3000);
-                }
-            };
-
-            sePlayer.onended = function() {
-                fadeAudioVolumeOnly(shopPlayer, 0.05, 1.0, 300);
-            };
+        /* アプリケーション永続化データステート */
+        let appState = {
+            attendance: {}, 
+            meetings: {},    
+            supplements: {}, 
+            mockResults: []  
         };
 
-        // ショップ画面以外用の共通クリックSE再生関数
-        function playClickSE() {
-            clickSePlayer.currentTime = 0;
-            clickSePlayer.volume = 0.5;
-            clickSePlayer.play().catch(()=>{});
-        }
-
-        function updateSPDisplay() {
-            const displayEl = document.getElementById('global-sp-display');
-            if (isInfiniteSP) {
-                displayEl.innerText = "無制限";
+        function loadState() {
+            const saved = localStorage.getItem('tetsuryoku_v3_state');
+            if (saved) {
+                appState = JSON.parse(saved);
+                if (!appState.supplements) appState.supplements = {};
+                if (!appState.mockResults) appState.mockResults = [];
             } else {
-                displayEl.innerText = Math.floor(currentSP);
-                localStorage.setItem('study_sp', currentSP.toString());
-            }
-        }
-
-        function buildShopMenu() {
-            const drinksContainer = document.getElementById('shop-drinks-list');
-            drinksContainer.innerHTML = '';
-            shopItems.drinks.forEach(item => {
-                drinksContainer.appendChild(createItemCard(item));
-            });
-
-            const foodsContainer = document.getElementById('shop-foods-list');
-            foodsContainer.innerHTML = '';
-            shopItems.foods.forEach(item => {
-                foodsContainer.appendChild(createItemCard(item));
-            });
-        }
-
-        function createItemCard(item) {
-            const card = document.createElement('div');
-            card.className = 'shop-item-card';
-            card.innerHTML = `
-                <div class="item-info-left">
-                    <span class="item-name">${item.name}</span>
-                    <span class="item-price">${item.price} SP</span>
-                </div>
-                <button class="buy-btn" onclick="buyItem('${item.name}', ${item.price})">かう</button>
-            `;
-            return card;
-        }
-
-        function fadeAudio(audioElement, startVol, endVol, duration, callback) {
-            const steps = 20;
-            const stepTime = duration / steps;
-            const volDelta = (endVol - startVol) / steps;
-            let currentStep = 0;
-
-            if (startVol === 0 && endVol > 0) {
-                audioElement.volume = 0;
-                audioElement.play().catch(()=>{});
-            }
-
-            const interval = setInterval(() => {
-                currentStep++;
-                let nextVol = startVol + (volDelta * currentStep);
-                if (nextVol < 0) nextVol = 0;
-                if (nextVol > 1) nextVol = 1;
-                audioElement.volume = nextVol;
-
-                if (currentStep >= steps) {
-                    clearInterval(interval);
-                    audioElement.volume = endVol;
-                    if (endVol === 0) {
-                        audioElement.pause();
+                // 初期ダッシュボード用のサンプル過去データ
+                appState.mockResults = [
+                    {
+                        id: "demo-pre-1", date: "2026-02-15", name: "全統記述模試", grade: "高２", round: "第３回",
+                        subjects: { "数学": { score: 152, full: 200, dev: 68.4 }, "英語": { score: 135, full: 200, dev: 64.2 }, "国語": { score: 112, full: 200, dev: 56.1 } },
+                        total: { score: 399, full: 600, dev: 63.8 },
+                        judgments: [{univ:"東京大学", dept:"理科三類", rank:"D"}, {univ:"京都大学", dept:"医学部", rank:"C"}]
+                    },
+                    {
+                        id: "demo-1", date: "2026-05-10", name: "全統記述模試", grade: "高３", round: "第１回",
+                        subjects: { "数学": { score: 172, full: 200, dev: 73.1 }, "英語": { score: 148, full: 200, dev: 69.5 }, "国語": { score: 120, full: 200, dev: 59.8 }, "物理": { score: 85, full: 100, dev: 71.4 }, "化学": { score: 88, full: 100, dev: 72.0 } },
+                        total: { score: 513, full: 800, dev: 71.8 },
+                        judgments: [{univ:"東京大学", dept:"理科三類", rank:"B"}, {univ:"京都大学", dept:"医学部", rank:"A"}]
                     }
-                    if (callback) callback();
-                }
-            }, stepTime);
+                ];
+                saveState();
+            }
         }
 
-        function fadeAudioVolumeOnly(audioElement, startVol, endVol, duration) {
-            const steps = 15;
-            const stepTime = duration / steps;
-            const volDelta = (endVol - startVol) / steps;
-            let currentStep = 0;
-
-            const interval = setInterval(() => {
-                currentStep++;
-                let nextVol = startVol + (volDelta * currentStep);
-                if (nextVol < 0) nextVol = 0;
-                if (nextVol > 1) nextVol = 1;
-                audioElement.volume = nextVol;
-
-                if (currentStep >= steps) {
-                    clearInterval(interval);
-                    audioElement.volume = endVol;
-                }
-            }, stepTime);
+        function saveState() {
+            localStorage.setItem('tetsuryoku_v3_state', JSON.stringify(appState));
         }
 
-        function openShopScreen() {
-            changeScreen('screen-shop');
-            resetAvatarState();
-            document.getElementById('avatar-speech').innerText = "なにか食べたいな…！";
-            document.getElementById('secret-code-input').value = '';
+        function attemptLogin() {
+            const idInput = document.getElementById('studentId').value.trim();
+            const passInput = document.getElementById('password').value.trim();
+            if (idInput === 'ihsr2730' && passInput === 'etf20064') {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('myPageBox').style.display = 'block';
+                document.body.style.display = 'block';
+                document.body.style.backgroundColor = '#f4f6f9';
+                
+                loadState();
+                generateWeeklySchedule();
+                checkTodayLecture();
+                buildAttendanceCalendar();
+                buildReservationCalendar();
+                buildHokouCalendar();
+                handleMockNameChange(); 
+                renderMockList();
+                renderScoreGraph();
+                renderJudgmentTimeline();
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
 
-            wasPlayingBeforeShop = isPlaying;
+        function generateWeeklySchedule() {
+            const currentDay = new Date().getDay();
+            for (let day in masterSchedule) {
+                const bodyContainer = document.getElementById('weekly-body-' + day);
+                const headerContainer = document.getElementById('sched-head-' + day);
+                if (bodyContainer) {
+                    bodyContainer.innerHTML = '';
+                    masterSchedule[day].forEach((lec) => {
+                        const item = document.createElement('div');
+                        item.className = 'weekly-sub-item';
+                        item.innerHTML = `<span>${lec.time} [${lec.room}]</span> ${lec.name}`;
+                        bodyContainer.appendChild(item);
+                    });
+                }
+                if (parseInt(day) === currentDay && headerContainer) {
+                    headerContainer.classList.add('today-highlight');
+                    headerContainer.innerHTML += " (本日)";
+                }
+            }
+        }
 
-            if (isPlaying) {
-                fadeAudio(bgmPlayer, 1.0, 0, 400, () => {
-                    fadeAudio(shopPlayer, 0, 1.0, 400);
+        function checkTodayLecture() {
+            const currentDay = new Date().getDay(); 
+            const container = document.getElementById('todayLectureArea');
+            container.innerHTML = '';
+
+            if (masterSchedule[currentDay]) {
+                const lectures = masterSchedule[currentDay];
+                const alertCard = document.createElement('div');
+                alertCard.className = 'today-lecture-card';
+                
+                let timelineHTML = `<div class="today-header">本日の受講予定（全5講座・イベント）</div><div class="timeline">`;
+                const dateKeyStr = getTodayKeyString();
+
+                lectures.forEach((lecture, index) => {
+                    const isChecked = appState.attendance[`${dateKeyStr}-${index}`] || false;
+                    const btnClass = isChecked ? 'attendance-btn checked' : 'attendance-btn';
+                    const btnText = isChecked ? '出席済み' : '出欠確認';
+
+                    timelineHTML += `
+                        <div class="timeline-row">
+                            <div class="timeline-time">${lecture.time}</div>
+                            <div class="timeline-details">
+                                <div class="timeline-name">${lecture.name}</div>
+                                <div class="timeline-meta">教室: <strong>${lecture.room}</strong> ｜ クラス: <strong>${lecture.class}</strong></div>
+                            </div>
+                            <div class="btn-group">
+                                <button class="detail-trigger-btn" onclick="openLectureModal(${currentDay}, ${index})">詳細</button>
+                                <button class="${btnClass}" id="attBtn-${index}" onclick="toggleAttendance(${index})">${btnText}</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                timelineHTML += `</div>`;
+                alertCard.innerHTML = timelineHTML;
+                container.appendChild(alertCard);
+            }
+        }
+
+        function getTodayKeyString() {
+            const today = new Date();
+            return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        }
+
+        function toggleAttendance(index) {
+            const btn = document.getElementById('attBtn-' + index);
+            const dateKeyStr = getTodayKeyString();
+            const stateKey = `${dateKeyStr}-${index}`;
+
+            if (btn.classList.contains('checked')) {
+                btn.classList.remove('checked');
+                btn.innerText = '出欠確認';
+                appState.attendance[stateKey] = false;
+            } else {
+                btn.classList.add('checked');
+                btn.innerText = '出席済み';
+                appState.attendance[stateKey] = true;
+            }
+            saveState();
+            buildAttendanceCalendar(); 
+        }
+
+        function openLectureModal(day, index) {
+            const lecture = masterSchedule[day][index];
+            document.getElementById('modalLectureName').innerText = `${lecture.name}（${lecture.time}）`;
+            document.getElementById('modalLectureMaterials').innerText = lecture.mat;
+            document.getElementById('modalLectureRange').innerText = lecture.range;
+            document.getElementById('lectureDetailModal').classList.add('show');
+        }
+
+        function closeLectureModal() {
+            document.getElementById('lectureDetailModal').classList.remove('show');
+        }
+
+        function getJune2026Grid() { return { padding: 1, days: 30 }; }
+
+        function buildAttendanceCalendar() {
+            const grid = document.getElementById('attendanceCalendarGrid');
+            if (!grid) return; grid.innerHTML = '';
+
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => {
+                const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell);
+            });
+            const conf = getJune2026Grid();
+            for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
+
+            for (let d = 1; d <= conf.days; d++) {
+                const cell = document.createElement('div'); cell.className = 'calendar-day-cell';
+                const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
+                let innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">`;
+
+                let hasAttendance = false;
+                for (let idx = 0; idx < 5; idx++) { if (appState.attendance[`${dateKey}-${idx}`]) { hasAttendance = true; break; } }
+                if (hasAttendance) innerHTML += `<span class="info-badge-attendance">出席あり</span>`;
+                if (appState.meetings[dateKey]) innerHTML += `<span class="info-badge-meeting">面談:${appState.meetings[dateKey].split('〜')[0]}</span>`;
+                if (appState.supplements && appState.supplements[dateKey]) innerHTML += `<span class="info-badge-hokou">補講:${appState.supplements[dateKey].time.split('〜')[0]}</span>`;
+
+                innerHTML += `</div>`; cell.innerHTML = innerHTML;
+                cell.onclick = () => {
+                    document.querySelectorAll('#attendanceCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected'));
+                    cell.classList.add('selected'); showDayDetails(d, dateKey);
+                };
+                grid.appendChild(cell);
+            }
+        }
+
+        function showDayDetails(dayNum, dateKey) {
+            const panel = document.getElementById('attendanceDayDetail');
+            const title = document.getElementById('detailPanelTitle');
+            const content = document.getElementById('detailPanelContent');
+            document.getElementById('inlineModArea').style.display = 'none';
+            panel.style.display = 'block'; title.innerText = `2026年6月${dayNum}日の詳細情報`;
+
+            const dayOfWeek = dayNum % 7; 
+            const lectures = masterSchedule[dayOfWeek];
+            let html = `<h4 style="font-size:0.9rem; margin-bottom:5px; color:#4a5568;">レギュラー講義・イベントの出欠：</h4>`;
+            if (lectures) {
+                html += `<ul style="list-style:none; padding-left:10px; margin-bottom:15px;">`;
+                lectures.forEach((lec, idx) => {
+                    const isAttended = appState.attendance[`${dateKey}-${idx}`];
+                    html += `<li class="detail-row-item">${lec.time} ${lec.name} ｜ ${isAttended ? '<span style="color:#38a169; font-weight:bold;">出席済み</span>':'<span style="color:#718096;">未マーク</span>'}</li>`;
+                });
+                html += `</ul>`;
+            } else { html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">設定はありません。</p>`; }
+
+            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">医学部特進補講の予定・管理：</h4>`;
+            if (appState.supplements && appState.supplements[dateKey]) {
+                html += `<div class="detail-row-item" style="margin-bottom:15px;">講座：<strong>${appState.supplements[dateKey].course}</strong> ｜ 時間：<strong>${appState.supplements[dateKey].time}</strong><div class="action-group"><button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'hokou')">補講時間を変更する</button><button class="action-btn-danger" onclick="cancelHokou('${dateKey}')">補講をキャンセルする</button></div></div>`;
+            } else { html += `<p class="detail-row-item" style="color:#718096; margin-bottom:15px;">補講の予約はありません。</p>`; }
+
+            html += `<h4 style="font-size:0.9rem; margin-top:10px; margin-bottom:5px; color:#4a5568;">指導員面談の予定・管理：</h4>`;
+            if (appState.meetings[dateKey]) {
+                html += `<div class="detail-row-item">時間：<strong>${appState.meetings[dateKey]}</strong><div class="action-group"><button class="action-btn-secondary" onclick="prepareModifyItem('${dateKey}', 'meeting')">面談時間を変更する</button><button class="action-btn-danger" onclick="cancelMeeting('${dateKey}')">面談をキャンセルする</button></div></div>`;
+            } else { html += `<p class="detail-row-item" style="color:#718096;">面談の予約はありません。</p>`; }
+            content.innerHTML = html;
+        }
+
+        function cancelHokou(dateKey) {
+            if (confirm('この特進補講の予約をキャンセルしますか？')) { delete appState.supplements[dateKey]; saveState(); buildAttendanceCalendar(); buildHokouCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); }
+        }
+        function cancelMeeting(dateKey) {
+            if (confirm('この指導員面談の予約をキャンセルしますか？')) { delete appState.meetings[dateKey]; saveState(); buildAttendanceCalendar(); buildReservationCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); }
+        }
+
+        function prepareModifyItem(dateKey, type) {
+            const modArea = document.getElementById('inlineModArea'); const grid = document.getElementById('inlineSlotsGrid'); const title = document.getElementById('inlineModTitle');
+            grid.innerHTML = ''; modArea.style.display = 'block';
+            if (type === 'hokou') {
+                title.innerText = `補講の新しい時間枠を選択してください`;
+                masterTimeSlots.forEach(slot => {
+                    const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot; if (appState.supplements[dateKey].time === slot) btn.classList.add('active');
+                    btn.onclick = () => { if (confirm(`補講時間を ${slot} に変更しますか？`)) { appState.supplements[dateKey].time = slot; saveState(); buildAttendanceCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); } };
+                    grid.appendChild(btn);
                 });
             } else {
-                fadeAudio(shopPlayer, 0, 1.0, 400);
+                title.innerText = `面談の新しい時間枠を選択してください`;
+                masterTimeSlots.forEach(slot => {
+                    const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot; if (appState.meetings[dateKey] === slot) btn.classList.add('active');
+                    btn.onclick = () => { if (confirm(`面談時間を ${slot} に変更しますか？`)) { appState.meetings[dateKey] = slot; saveState(); buildAttendanceCalendar(); showDayDetails(parseInt(dateKey.split('-')[2]), dateKey); } };
+                    grid.appendChild(btn);
+                });
             }
         }
 
-        function closeShopScreen() {
-            changeScreen('screen-main');
+        let selectedDateKey = null; let selectedTimeSlot = null;
+        function buildReservationCalendar() {
+            const grid = document.getElementById('reservationCalendarGrid'); if (!grid) return; grid.innerHTML = '';
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => { const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell); });
+            const conf = getJune2026Grid(); for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
+            for (let d = 1; d <= conf.days; d++) {
+                const cell = document.createElement('div'); cell.className = 'calendar-day-cell'; const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
+                cell.innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">${appState.meetings[dateKey] ? '<span class="info-badge-meeting">予約あり</span>':''}</div>`;
+                cell.onclick = () => { document.querySelectorAll('#reservationCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected')); cell.classList.add('selected'); selectedDateKey = dateKey; showTimeSlots(); };
+                grid.appendChild(cell);
+            }
+        }
 
-            fadeAudio(shopPlayer, 1.0, 0, 400, () => {
-                if (wasPlayingBeforeShop) {
-                    fadeAudio(bgmPlayer, 0, 1.0, 400);
-                }
+        function showTimeSlots() {
+            selectedTimeSlot = null; document.getElementById('confirmArea').style.display = 'none';
+            const container = document.getElementById('timeSlotsArea'); const grid = document.getElementById('slotsGridContainer'); grid.innerHTML = ''; container.style.display = 'block';
+            masterTimeSlots.forEach(slot => {
+                const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot;
+                btn.onclick = () => { document.querySelectorAll('#slotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedTimeSlot = slot; document.getElementById('confirmArea').style.display = 'block'; };
+                grid.appendChild(btn);
             });
         }
 
-        function resetAvatarState() {
-            const charEl = document.getElementById('avatar-character');
-            const wrapperEl = document.getElementById('avatar-wrapper');
-            charEl.classList.remove('happy');
-            wrapperEl.classList.remove('jump');
+        function submitFinalReservation() {
+            if (!selectedDateKey || !selectedTimeSlot) return;
+            if (confirm(`6月${selectedDateKey.split('-')[2]}日 ${selectedTimeSlot} で相談を確定しますか？`)) {
+                appState.meetings[selectedDateKey] = selectedTimeSlot; saveState();
+                document.getElementById('reserveSuccess').innerText = `相談予約が完了しました。【6月${selectedDateKey.split('-')[2]}日 ${selectedTimeSlot}】`;
+                document.getElementById('reserveSuccess').style.display = 'block';
+                buildReservationCalendar(); buildAttendanceCalendar(); container.style.display = 'none';
+            }
         }
 
-        function tapAvatar() {
-            avatarSePlayer.currentTime = 0;
-            avatarSePlayer.play().catch(()=>{});
-
-            const charEl = document.getElementById('avatar-character');
-            const wrapperEl = document.getElementById('avatar-wrapper');
-            const speechEl = document.getElementById('avatar-speech');
-            
-            clearTimeout(avatarTimeout);
-            clearTimeout(avatarTapTimeout);
-            resetAvatarState();
-
-            setTimeout(() => { wrapperEl.classList.add('jump'); }, 10);
-            
-            const lines = [
-                "なになにー？いっしょにがんばろうね！",
-                "つつくと、ちょっとくすぐったいぞっ！",
-                "カフェの雰囲気、すごく落ち着くねぇ",
-                "応援してるよ！ひと息ついたらまた始めよう"
-            ];
-            const randomLine = lines[Math.floor(Math.random() * lines.length)];
-            speechEl.innerText = randomLine;
-
-            avatarTapTimeout = setTimeout(() => {
-                resetAvatarState();
-                speechEl.innerText = "次は何をくれるの？";
-            }, 3000);
+        let selectedHokouCourse = null; let selectedHokouDateKey = null; let selectedHokouTimeSlot = null;
+        function selectHokouCourse(courseName, btnElement) {
+            document.querySelectorAll('.hokou-selector-btn').forEach(b => b.classList.remove('active')); btnElement.classList.add('active');
+            selectedHokouCourse = courseName; selectedHokouDateKey = null; selectedHokouTimeSlot = null;
+            document.getElementById('hokouTimeSlotsArea').style.display = 'none'; document.getElementById('hokouConfirmArea').style.display = 'none'; document.getElementById('hokouDateTimeArea').style.display = 'block';
+            buildHokouCalendar();
         }
 
-        function buyItem(name, price) {
-            if (!isInfiniteSP && currentSP < price) {
-                alert("SP（すたでぃポイント）が足りません。勉強して貯めましょう！");
+        function buildHokouCalendar() {
+            const grid = document.getElementById('hokouCalendarGrid'); if (!grid) return; grid.innerHTML = '';
+            ['日', '月', '火', '水', '木', '金', '土'].forEach(w => { const cell = document.createElement('div'); cell.className = 'calendar-header-cell'; cell.innerText = w; grid.appendChild(cell); });
+            const conf = getJune2026Grid(); for (let i = 0; i < conf.padding; i++) { grid.appendChild(document.createElement('div')).className = 'calendar-day-cell empty'; }
+            for (let d = 1; d <= conf.days; d++) {
+                const cell = document.createElement('div'); cell.className = 'calendar-day-cell'; const dateKey = `2026-06-${String(d).padStart(2, '0')}`;
+                cell.innerHTML = `<div class="day-number">${d}</div><div class="calendar-info-box">${(appState.supplements && appState.supplements[dateKey]) ? '<span class="info-badge-hokou">予約あり</span>':''}</div>`;
+                cell.onclick = () => { document.querySelectorAll('#hokouCalendarGrid .calendar-day-cell').forEach(c => c.classList.remove('selected')); cell.classList.add('selected'); selectedHokouDateKey = dateKey; showHokouTimeSlots(); };
+                grid.appendChild(cell);
+            }
+        }
+
+        function showHokouTimeSlots() {
+            selectedHokouTimeSlot = null; document.getElementById('hokouConfirmArea').style.display = 'none';
+            const container = document.getElementById('hokouTimeSlotsArea'); const grid = document.getElementById('hokouSlotsGridContainer'); grid.innerHTML = ''; container.style.display = 'block';
+            masterTimeSlots.forEach(slot => {
+                const btn = document.createElement('button'); btn.className = 'time-slot-btn'; btn.innerText = slot;
+                btn.onclick = () => { document.querySelectorAll('#hokouSlotsGridContainer .time-slot-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); selectedHokouTimeSlot = slot; document.getElementById('hokouConfirmArea').style.display = 'block'; };
+                grid.appendChild(btn);
+            });
+        }
+
+        function submitHokouReservation() {
+            if (!selectedHokouCourse || !selectedHokouDateKey || !selectedHokouTimeSlot) return;
+            if (confirm(`補講予約を確定しますか？`)) {
+                if (!appState.supplements) appState.supplements = {};
+                appState.supplements[selectedHokouDateKey] = { course: selectedHokouCourse, time: selectedHokouTimeSlot }; saveState();
+                document.getElementById('hokouSuccess').style.display = 'block'; buildHokouCalendar(); buildAttendanceCalendar();
+            }
+        }
+
+        /* --------------------------------------
+         * 模試成績の動的フォームロジック
+         * -------------------------------------- */
+        function handleMockNameChange() {
+            const name = document.getElementById('mockNameSelect').value;
+            const roundSelect = document.getElementById('mockRound'); const roundGroup = document.getElementById('mockRoundGroup');
+            const customNameGroup = document.getElementById('customMockNameGroup'); const customSubjectArea = document.getElementById('customSubjectToggleArea');
+            
+            roundSelect.innerHTML = ''; customNameGroup.style.display = 'none'; customSubjectArea.style.display = 'none'; roundGroup.style.display = 'block';
+            let targetSubjects = [];
+
+            if (name === '全統共テ模試') {
+                ['第１回', '第２回', '第３回', 'プレ'].forEach(r => roundSelect.add(new Option(r, r)));
+                targetSubjects = ["数学①", "数学②", "英語L", "英語R", "国語", "物理", "化学", "政経", "情報"];
+            } else if (name === '全統記述模試') {
+                ['第１回', '第２回', '第３回'].forEach(r => roundSelect.add(new Option(r, r)));
+                targetSubjects = ["数学", "英語", "国語", "物理", "化学"];
+            } else if (name === '東大オープン模試' || name === '東大実戦模試') {
+                ['夏季', '秋季'].forEach(r => roundSelect.add(new Option(r, r)));
+                targetSubjects = ["数学", "英語", "国語", "物理", "化学"];
+            } else if (name === 'その他') {
+                roundGroup.style.display = 'none'; customNameGroup.style.display = 'block'; customSubjectArea.style.display = 'block';
+                buildCustomSubjectCheckboxes(); return;
+            }
+            buildDynamicScoreFields(targetSubjects);
+        }
+
+        function buildCustomSubjectCheckboxes() {
+            const container = document.getElementById('subjectCheckboxContainer'); container.innerHTML = '';
+            allSubjectsMaster.forEach(sub => {
+                const label = document.createElement('label'); label.innerHTML = `<input type="checkbox" value="${sub.label}" onchange="updateCustomSubjectsForm()"> ${sub.label}`;
+                container.appendChild(label);
+            });
+            buildDynamicScoreFields([]);
+        }
+
+        function updateCustomSubjectsForm() {
+            const checkedBoxes = document.querySelectorAll('#subjectCheckboxContainer input:checked');
+            buildDynamicScoreFields(Array.from(checkedBoxes).map(cb => cb.value));
+        }
+
+        function buildDynamicScoreFields(subjectsList) {
+            const container = document.getElementById('dynamicScoreInputContainer'); container.innerHTML = '';
+            if(subjectsList.length === 0) { container.innerHTML = '<p style="color:#718096; font-size:0.85rem; padding:10px;">表示する教科がありません。</p>'; return; }
+            subjectsList.forEach(sub => {
+                const row = document.createElement('div'); row.className = 'score-input-row';
+                row.innerHTML = `
+                    <span class="score-sub-label">${sub}</span>
+                    <div class="score-fields">
+                        <input type="number" class="mock-sub-score" data-sub="${sub}" placeholder="得点" style="width:70px;">
+                        <span style="font-size:0.8rem; color:#718096;">/</span>
+                        <input type="number" class="mock-sub-full" data-sub="${sub}" placeholder="配点" style="width:70px;">
+                        <input type="number" class="mock-sub-dev" data-sub="${sub}" step="0.1" placeholder="偏差値" style="width:70px; margin-left:auto;">
+                    </div>`;
+                container.appendChild(row);
+            });
+        }
+
+        /* 模試成績および志望校判定の保存 */
+        function saveMockResult() {
+            const date = document.getElementById('mockDate').value;
+            const nameSelect = document.getElementById('mockNameSelect').value;
+            const grade = document.getElementById('mockGrade').value;
+            const editId = document.getElementById('editMockId').value;
+            if(!date) { alert('受験日を入力してください。'); return; }
+
+            let finalName = nameSelect === 'その他' ? (document.getElementById('customMockName').value.trim() || "その他自由模試") : nameSelect;
+            let finalRound = nameSelect === 'その他' ? "独自枠" : document.getElementById('mockRound').value;
+
+            const subjectData = {};
+            document.querySelectorAll('.score-input-row').forEach(row => {
+                const subLabel = row.querySelector('.score-sub-label').innerText;
+                const scoreVal = parseInt(row.querySelector('.mock-sub-score').value);
+                const fullVal = parseInt(row.querySelector('.mock-sub-full').value);
+                const devVal = parseFloat(row.querySelector('.mock-sub-dev').value);
+                if(!isNaN(scoreVal) || !isNaN(fullVal) || !isNaN(devVal)) {
+                    subjectData[subLabel] = { score: isNaN(scoreVal)?0:scoreVal, full: isNaN(fullVal)?0:fullVal, dev: isNaN(devVal)?0:devVal };
+                }
+            });
+
+            // 志望校判定データの集約
+            const judgments = [];
+            for (let i = 1; i <= 3; i++) {
+                const u = document.getElementById('judgeUniv' + i).value.trim();
+                const d = document.getElementById('judgeDept' + i).value.trim();
+                const r = document.getElementById('judgeRank' + i).value;
+                if(u && r) { judgments.push({ univ: u, dept: d, rank: r }); }
+            }
+
+            const mockRecord = {
+                id: editId ? editId : 'mock-' + Date.now(), date: date, name: finalName, grade: grade, round: finalRound,
+                subjects: subjectData, total: { score: parseInt(document.getElementById('totalScore').value)||0, full: parseInt(document.getElementById('totalFull').value)||0, dev: parseFloat(document.getElementById('totalDev').value)||0 },
+                judgments: judgments
+            };
+
+            if(editId) {
+                const idx = appState.mockResults.findIndex(m => m.id === editId); if(idx !== -1) appState.mockResults[idx] = mockRecord;
+            } else { appState.mockResults.push(mockRecord); }
+
+            saveState(); resetMockForm(); renderMockList(); renderScoreGraph(); renderJudgmentTimeline();
+            document.getElementById('mockSuccessBanner').style.display = 'block';
+            setTimeout(() => document.getElementById('mockSuccessBanner').style.display = 'none', 4000);
+        }
+
+        /* 【新規】成績推移グラフの動的描画（SVG折れ線自動生成） */
+        function renderScoreGraph() {
+            const targetType = document.getElementById('graphMockSelector').value;
+            const wrapper = document.getElementById('graphWrapperArea');
+            wrapper.innerHTML = '';
+
+            // 対象模試データを過去から順にソート
+            const filtered = appState.mockResults.filter(m => m.name === targetType).sort((a,b) => new Date(a.date) - new Date(b.date));
+
+            if(filtered.length === 0) {
+                wrapper.innerHTML = `<p style="color:#718096; font-size:0.9rem; align-self:center;">${targetType} の蓄積データがまだありません。</p>`;
                 return;
             }
 
-            if (!isInfiniteSP) {
-                currentSP -= price;
-                updateSPDisplay();
-            }
+            const minDev = 40; const maxDev = 80; const heightRange = 220;
+            let pointsCoords = []; let colHTML = '';
 
-            const charEl = document.getElementById('avatar-character');
-            const wrapperEl = document.getElementById('avatar-wrapper');
-            const speechEl = document.getElementById('avatar-speech');
-            
-            clearTimeout(avatarTimeout);
-            clearTimeout(avatarTapTimeout);
-            resetAvatarState();
+            filtered.forEach((mock, idx) => {
+                const dev = mock.total.dev || 50;
+                // 偏差値40〜80を高さ0〜220pxに正規化マッピング
+                let pct = (dev - minDev) / (maxDev - minDev);
+                if(pct > 1) pct = 1; if(pct < 0) pct = 0;
+                const bottomPx = pct * heightRange;
 
-            let hasSE = false;
+                colHTML += `
+                    <div class="graph-bar-col">
+                        <span class="graph-value">${dev.toFixed(1)}</span>
+                        <div class="graph-dot" style="bottom: ${bottomPx - 6}px;"></div>
+                        <span class="graph-label">${mock.date.substring(5)}<br>${mock.round}</span>
+                    </div>`;
+                pointsCoords.push({ bottom: bottomPx });
+            });
 
-            if (price >= 1000) {
-                hasSE = true;
-                shopPlayer.volume = 0.05; 
-                sePlayer.src = "oishi01.mp3";
-                sePlayer.play().catch(()=>{ shopPlayer.volume = 1.0; });
+            wrapper.innerHTML = colHTML;
 
-                charEl.classList.add('happy');
-                setTimeout(() => { wrapperEl.classList.add('jump'); }, 10);
-                speechEl.innerText = `すごすぎる！高級な ${name} だー！！幸せ！`;
-            } else if (price >= 600) {
-                hasSE = true;
-                shopPlayer.volume = 0.05; 
-                sePlayer.src = "oishi02.mp3";
-                sePlayer.play().catch(()=>{ shopPlayer.volume = 1.0; });
+            // 各点を結ぶSVGポリラインをインライン動的計算
+            setTimeout(() => {
+                const cols = wrapper.querySelectorAll('.graph-bar-col');
+                if(cols.length < 2) return;
+                let pathPoints = '';
+                cols.forEach((col, idx) => {
+                    const dot = col.querySelector('.graph-dot');
+                    const x = dot.offsetLeft + 6; 
+                    const y = heightRange - pointsCoords[idx].bottom;
+                    pathPoints += `${x},${y} `;
+                });
 
-                charEl.classList.add('happy');
-                setTimeout(() => { wrapperEl.classList.add('jump'); }, 10);
-                speechEl.innerText = `わあー！贅沢な ${name} ！！すっごく嬉しい！`;
-            } else if (price >= 300) {
-                hasSE = true;
-                shopPlayer.volume = 0.05; 
-                sePlayer.src = "oishi03.mp3";
-                sePlayer.play().catch(()=>{ shopPlayer.volume = 1.0; });
-
-                charEl.classList.add('happy');
-                speechEl.innerText = `おいしい ${name} ありがとう！やる気が出るよ！`;
-            } else {
-                charEl.classList.add('happy');
-                speechEl.innerText = `${name} もぐもぐ！美味しいよ、ありがとう！`;
-            }
-
-            avatarTimeout = setTimeout(() => {
-                resetAvatarState();
-                speechEl.innerText = "次は何をくれるの？";
-                if(!hasSE) shopPlayer.volume = 1.0;
-            }, 4000);
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute("class", "graph-line-svg");
+                svg.innerHTML = `<polyline points="${pathPoints}" style="fill:none; stroke:#0d233a; stroke-width:3;" />`;
+                wrapper.appendChild(svg);
+            }, 50);
         }
 
-        function submitSecretCommand() {
-            const inputEl = document.getElementById('secret-code-input');
-            const code = inputEl.value.trim();
-            
-            if (!code) return;
+        /* 【新規】志望校判定推移のタイムライン生成 */
+        function renderJudgmentTimeline() {
+            const container = document.getElementById('judgmentTimelineContainer');
+            if(!container) return; container.innerHTML = '';
 
-            const charEl = document.getElementById('avatar-character');
-            const speechEl = document.getElementById('avatar-speech');
-            clearTimeout(avatarTimeout);
-            clearTimeout(avatarTapTimeout);
-            resetAvatarState();
+            // 大学・学部ごとにデータを再集約
+            const map = {};
+            const sortedMock = [...appState.mockResults].sort((a,b) => new Date(a.date) - new Date(b.date));
 
-            if (code === "ねなかった") {
-                if (usedCommands.nenatta) {
-                    alert("このコマンドはすでに1回使われています。");
-                } else {
-                    usedCommands.nenatta = true;
-                    localStorage.setItem('study_used_commands', JSON.stringify(usedCommands));
-                    if (!isInfiniteSP) currentSP += 1000;
-                    updateSPDisplay();
-                    charEl.classList.add('happy');
-                    speechEl.innerText = "誘惑に負けずに起きてて本当にえらい！1000SPをあげるね！";
+            sortedMock.forEach(mock => {
+                if(mock.judgments && mock.judgments.length > 0) {
+                    mock.judgments.forEach(j => {
+                        const key = `${j.univ} ${j.dept}`;
+                        if(!map[key]) map[key] = [];
+                        map[key].push({ date: mock.date, mockName: mock.name, round: mock.round, rank: j.rank });
+                    });
                 }
-            } 
-            else if (code === "えらいこ") {
-                if (usedCommands.eraiko) {
-                    alert("このコマンドはすでに1回使われています。");
-                } else {
-                    usedCommands.eraiko = true;
-                    localStorage.setItem('study_used_commands', JSON.stringify(usedCommands));
-                    if (!isInfiniteSP) currentSP += 1000;
-                    updateSPDisplay();
-                    charEl.classList.add('happy');
-                    speechEl.innerText = "あなたは最高のえらいこ！いつも見てるよ。1000SPをどうぞ！";
-                }
-            } 
-            else if (code === "がんばった") {
-                if (usedCommands.ganbatta) {
-                    alert("このコマンドはすでに1回使われています。");
-                } else {
-                    usedCommands.ganbatta = true;
-                    localStorage.setItem('study_used_commands', JSON.stringify(usedCommands));
-                    if (!isInfiniteSP) currentSP += 1000;
-                    updateSPDisplay();
-                    charEl.classList.add('happy');
-                    speechEl.innerText = "本当にお疲れ様！努力の成果だね。1000SPを受け取って！";
-                }
-            }
-            else if (code === "動作確認") {
-                isInfiniteSP = true;
-                updateSPDisplay();
-                speechEl.innerText = "管理者モード：SPを【無制限】に切り替えました。";
-            } 
-            else if (code === "動作確認終了") {
-                isInfiniteSP = false;
-                currentSP = 0;
-                updateSPDisplay();
-                speechEl.innerText = "管理者モード終了：SPを【0】にリセットしました。";
-            } 
-            else {
-                alert("コトバが違うみたい。もう一度確かめてみてね。");
+            });
+
+            if(Object.keys(map).length === 0) {
+                container.innerHTML = '<p style="color:#718096; font-size:0.9rem; text-align:center; padding:20px;">登録された志望校判定データはありません。</p>';
                 return;
             }
 
-            inputEl.value = ''; 
-            
-            avatarTimeout = setTimeout(() => {
-                resetAvatarState();
-                speechEl.innerText = "なにか食べたいな…！";
-            }, 6000);
+            for(let targetSchool in map) {
+                const block = document.createElement('div');
+                block.className = 'card';
+                block.style.boxShadow = 'none'; block.style.border = '1px solid #e2e8f0'; block.style.background = '#fafbfc';
+                
+                let timelineItemsHTML = `<h3 style="color:#0d233a; font-size:1rem; margin-bottom:15px; border-bottom:2px solid #0d233a; padding-bottom:5px;">${targetSchool}</h3>`;
+                
+                map[targetSchool].forEach(item => {
+                    const rClass = item.rank.toLowerCase();
+                    timelineItemsHTML += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:10px 15px; border-radius:4px; margin-bottom:8px; border:1px solid #edf2f7;">
+                            <div style="font-size:0.9rem;">
+                                <span style="color:#718096; margin-right:10px; font-weight:bold;">${item.date}</span>
+                                <span style="color:#2d3748;">${item.mockName} (${item.round})</span>
+                            </div>
+                            <span class="judgment-badge badge-${rClass}" style="width:40px; font-size:0.9rem; padding:4px 0;">${item.rank}</span>
+                        </div>`;
+                });
+                block.innerHTML = timelineItemsHTML;
+                container.appendChild(block);
+            }
         }
 
-        // 🎵 ミュージックプレイヤーコントロール
-        function togglePlayerPanel() {
-            const panel = document.getElementById('player-panel');
-            panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
-        }
+        /* 登録済み模試一覧カードのレンダリング */
+        function renderMockList() {
+            const container = document.getElementById('savedMockListArea'); container.innerHTML = '';
+            if(appState.mockResults.length === 0) { container.innerHTML = '<p style="color:#718096; font-size:0.9rem; text-align:center; padding:20px;">登録された校外模試データはありません。</p>'; return; }
 
-        function renderPlaylist() {
-            const listContainer = document.getElementById('playlist-items');
-            listContainer.innerHTML = '';
-            tracks.forEach((track, index) => {
-                const item = document.createElement('div');
-                item.className = `track-item ${index === currentTrackIndex ? 'current' : ''}`;
-                item.innerText = `${track.title}`;
-                item.onclick = () => { playClickSE(); selectTrack(index); };
-                listContainer.appendChild(item);
+            [...appState.mockResults].sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(mock => {
+                const card = document.createElement('div'); card.className = 'mock-card';
+                let subHTML = ''; for(let subName in mock.subjects) { const s = mock.subjects[subName]; subHTML += `<div class="mock-score-tag"><strong>${subName}</strong>: ${s.score}/${s.full} (偏:${s.dev})</div>`; }
+
+                let judgeHTML = '';
+                if(mock.judgments && mock.judgments.length > 0) {
+                    judgeHTML = '<div style="margin-top:10px; font-size:0.85rem; border-top:1px dashed #e2e8f0; padding-top:8px; display:flex; gap:15px; flex-wrap:wrap;">';
+                    mock.judgments.forEach(j => { judgeHTML += `<span>${j.univ}${j.dept ? ' '+j.dept : ''}: <strong class="judgment-badge badge-${j.rank.toLowerCase()}">${j.rank}判定</strong></span>`; });
+                    judgeHTML += '</div>';
+                }
+
+                card.innerHTML = `
+                    <div class="mock-card-header">
+                        <div><span class="mock-title">${mock.name} (${mock.round})</span><span style="font-size:0.8rem; background:#edf2f7; padding:2px 6px; border-radius:3px; margin-left:8px; color:#4a5568;">${mock.grade}</span></div>
+                        <span class="mock-date">受験日: ${mock.date}</span>
+                    </div>
+                    <div class="mock-scores-summary">${subHTML}</div>
+                    ${judgeHTML}
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f7fafc; padding:8px 12px; border-radius:4px; margin-top:10px;">
+                        <div style="font-size:0.9rem; color:#0d233a;">総合点: <strong>${mock.total.score} / ${mock.total.full}</strong> ｜ 総合偏差値: <strong style="color:#c53030; font-size:1rem;">${mock.total.dev}</strong></div>
+                        <div class="btn-group">
+                            <button class="action-btn-secondary" style="padding:4px 8px; font-size:0.75rem;" onclick="editMockItem('${mock.id}')">編集</button>
+                            <button class="action-btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteMockItem('${mock.id}')">削除</button>
+                        </div>
+                    </div>`;
+                container.appendChild(card);
             });
         }
 
-        function loadTrack(index) {
-            currentTrackIndex = index;
-            bgmPlayer.src = tracks[index].file;
-            bgmPlayer.volume = 1.0; 
-            document.getElementById('current-track-title').innerText = tracks[index].title;
-            renderPlaylist();
-        }
+        /* 模試データの編集モード移行 */
+        function editMockItem(id) {
+            const mock = appState.mockResults.find(m => m.id === id); if(!mock) return;
+            window.scrollTo({ top: document.getElementById('mockFormTitle').offsetTop - 80, behavior: 'smooth' });
 
-        function selectTrack(index) {
-            clearTimeout(nextTrackTimeout);
-            loadTrack(index);
-            if (isPlaying) {
-                bgmPlayer.play().catch(()=>{});
+            document.getElementById('editMockId').value = mock.id;
+            document.getElementById('mockDate').value = mock.date;
+            document.getElementById('mockGrade').value = mock.grade;
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+            document.getElementById('mockFormTitle').innerText = `校外模試成績の編集：${mock.name}`;
+
+            const knownNames = ['全統共テ模試', '全統記述模試', '東大オープン模試', '東大実戦模試'];
+            if(knownNames.includes(mock.name)) {
+                document.getElementById('mockNameSelect').value = mock.name; handleMockNameChange();
+                document.getElementById('mockRound').value = mock.round;
             } else {
-                togglePlayPause();
-            }
-        }
-
-        function togglePlayPause() {
-            clearTimeout(nextTrackTimeout);
-            const btn = document.getElementById('btn-play-pause');
-            const triggerBtn = document.getElementById('bgm-btn');
-            const icon = document.getElementById('bgm-icon');
-
-            if (!isPlaying) {
-                bgmPlayer.volume = 1.0;
-                bgmPlayer.play().then(() => {
-                    isPlaying = true;
-                    btn.innerText = 'PAUSE';
-                    triggerBtn.classList.add('playing');
-                    icon.innerText = 'BGM ON';
-                }).catch(err => {
-                    alert('音楽ファイルが読み込めないか見つかりません。');
-                });
-            } else {
-                bgmPlayer.pause();
-                isPlaying = false;
-                btn.innerText = 'PLAY';
-                triggerBtn.classList.remove('playing');
-                icon.innerText = 'BGM';
-            }
-        }
-
-        function nextTrack() {
-            clearTimeout(nextTrackTimeout);
-            let nextIndex = currentTrackIndex + 1;
-            if (nextIndex >= tracks.length) nextIndex = 0;
-            loadTrack(nextIndex);
-            if (isPlaying) bgmPlayer.play().catch(()=>{});
-        }
-
-        function prevTrack() {
-            clearTimeout(nextTrackTimeout);
-            let prevIndex = currentTrackIndex - 1;
-            if (prevIndex < 0) prevIndex = tracks.length - 1;
-            loadTrack(prevIndex);
-            if (isPlaying) bgmPlayer.play().catch(()=>{});
-        }
-
-        function toggleRepeatMode() {
-            const btn = document.getElementById('btn-repeat');
-            if (repeatMode === 'all') {
-                repeatMode = 'one';
-                btn.innerText = 'LOOP ONE';
-                btn.classList.add('active');
-            } else {
-                repeatMode = 'all';
-                btn.innerText = 'LOOP ALL';
-                btn.classList.remove('active');
-            }
-        }
-
-        function playChimeSound() {
-            alarmPlayer.currentTime = 0;
-            alarmPlayer.volume = 0.8; 
-            alarmPlayer.play().catch(e => console.log("再生制限回避"));
-        }
-
-        function getTodayString() {
-            const d = new Date();
-            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-        }
-
-        function displayTodayRecord() {
-            const todayStr = getTodayString();
-            if (localStorage.getItem('study_date') !== todayStr) {
-                localStorage.setItem('study_date', todayStr);
-                localStorage.setItem('study_today_minutes', '0');
-            }
-            const todayMinutes = parseFloat(localStorage.getItem('study_today_minutes') || '0');
-            document.getElementById('today-record-time').innerText = todayMinutes.toFixed(1) + '分';
-        }
-
-        function saveStudyTimeAndSP(seconds) {
-            if (seconds <= 0) return;
-            const minutesEarned = seconds / 60;
-            
-            const currentTotalMinutes = parseFloat(localStorage.getItem('study_today_minutes') || '0');
-            localStorage.setItem('study_today_minutes', currentTotalMinutes + minutesEarned);
-            displayTodayRecord();
-
-            if (!isInfiniteSP) {
-                const pointsEarned = minutesEarned * 10;
-                currentSP += pointsEarned;
-            }
-            updateSPDisplay();
-        }
-
-        function adjustMinutes(amount) {
-            currentCustomMinutes += amount;
-            if (currentCustomMinutes < 1) currentCustomMinutes = 1;
-            document.getElementById('custom-minutes-display').innerText = currentCustomMinutes;
-        }
-
-        function changeScreen(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            document.body.classList.remove('cute-alarm-bg');
-            document.getElementById('timer-box').classList.remove('cute-poyo');
-            document.getElementById('alarm-banner').style.display = 'none';
-            
-            if (screenId === 'screen-main' || screenId === 'screen-self-select') {
-                document.body.classList.remove('rest-mode-bg');
-            }
-        }
-
-        function formatTime(seconds) {
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = seconds % 60;
-            return `${h > 0 ? String(h).padStart(2,'0')+':' : ''}${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-        }
-
-        function updateDisplay() {
-            document.getElementById('timer-text').innerText = formatTime(totalSeconds);
-        }
-
-        // ⏱️ カウントダウンを挟むための準備関数
-        function preStartTimer(mode, arg = null) {
-            currentMode = mode;
-            isPaused = false;
-            elapsedSecondsInSession = 0;
-
-            // 各種タイマーの初期化設定
-            if (mode === 'class') {
-                totalSeconds = arg * 60;
-                document.getElementById('timer-status').innerText = '授業記録';
-                document.getElementById('pomo-cycle').style.display = 'none';
-            } else if (mode === 'pomodoro') {
-                currentMode = 'pomodoro-work';
-                totalSeconds = 25 * 60;
-                pomodoroCycle = 1;
-                document.body.classList.remove('rest-mode-bg'); 
-                document.getElementById('timer-status').innerText = 'ポモドーロ：集中タイム';
-                document.getElementById('pomo-cycle').style.display = 'block';
-                document.getElementById('pomo-cycle').querySelector('span').innerText = pomodoroCycle;
-            } else if (mode === 'stopwatch') {
-                totalSeconds = 0;
-                document.getElementById('timer-status').innerText = 'ストップウォッチ（自習）';
-                document.getElementById('pomo-cycle').style.display = 'none';
-            } else if (mode === 'custom') {
-                totalSeconds = currentCustomMinutes * 60;
-                document.getElementById('timer-status').innerText = 'カスタムタイマー';
-                document.getElementById('pomo-cycle').style.display = 'none';
+                document.getElementById('mockNameSelect').value = 'その他'; handleMockNameChange();
+                document.getElementById('customMockName').value = mock.name;
+                document.querySelectorAll('#subjectCheckboxContainer input').forEach(cb => { if(mock.subjects[cb.value]) cb.checked = true; });
+                updateCustomSubjectsForm();
             }
 
-            // タイマー画面に切り替え、数字表記をセット
-            updateDisplay();
-            changeScreen('screen-timer');
+            for(let subName in mock.subjects) {
+                const data = mock.subjects[subName];
+                const scoreInput = document.querySelector(`.mock-sub-score[data-sub="${subName}"]`);
+                const fullInput = document.querySelector(`.mock-sub-full[data-sub="${subName}"]`);
+                const devInput = document.querySelector(`.mock-sub-dev[data-sub="${subName}"]`);
+                if(scoreInput) scoreInput.value = data.score; if(fullInput) fullInput.value = data.full; if(devInput) devInput.value = data.dev;
+            }
 
-            // カウントダウン中のUI制御
-            const countdownEl = document.getElementById('countdown-display');
-            const timerBox = document.getElementById('timer-box');
-            const controlsBox = document.getElementById('timer-controls-container');
+            document.getElementById('totalScore').value = mock.total.score;
+            document.getElementById('totalFull').value = mock.total.full;
+            document.getElementById('totalDev').value = mock.total.dev;
 
-            timerBox.style.display = 'none';       // タイマー本体を隠す
-            controlsBox.style.display = 'none';    // 操作パネルを一時的に隠す
-            countdownEl.style.display = 'block';   // カウントダウン表示を出す
-
-            let count = 3;
-            countdownEl.innerText = count;
-
-            if (countdownInterval) clearInterval(countdownInterval);
-            if (timerInterval) clearInterval(timerInterval);
-
-            countdownInterval = setInterval(() => {
-                count--;
-                if (count > 0) {
-                    countdownEl.innerText = count;
-                } else if (count === 0) {
-                    countdownEl.innerText = "START!";
+            // 判定欄の復元
+            for (let i = 1; i <= 3; i++) {
+                if(mock.judgments && mock.judgments[i-1]) {
+                    document.getElementById('judgeUniv' + i).value = mock.judgments[i-1].univ;
+                    document.getElementById('judgeDept' + i).value = mock.judgments[i-1].dept;
+                    document.getElementById('judgeRank' + i).value = mock.judgments[i-1].rank;
                 } else {
-                    // カウントダウン終了時の処理
-                    clearInterval(countdownInterval);
-                    countdownEl.style.display = 'none';
-                    timerBox.style.display = 'flex';
-                    controlsBox.style.display = 'flex';
-
-                    // 実際の計測スタート
-                    startActualTimer();
+                    document.getElementById('judgeUniv' + i).value = '';
+                    document.getElementById('judgeDept' + i).value = '';
+                    document.getElementById('judgeRank' + i).value = '';
                 }
-            }, 1000);
-        }
-
-        // 実際のタイマー刻み処理
-        function startActualTimer() {
-            if (currentMode.startsWith('pomodoro')) {
-                runPomodoroTimer();
-            } else {
-                timerInterval = setInterval(() => {
-                    if (!isPaused) {
-                        if (currentMode === 'stopwatch') {
-                            totalSeconds++;
-                            elapsedSecondsInSession++;
-                            updateDisplay();
-                        } else {
-                            if (totalSeconds > 0) {
-                                totalSeconds--;
-                                elapsedSecondsInSession++;
-                                updateDisplay();
-                            } else {
-                                clearInterval(timerInterval);
-                                triggerAlarmEffect();
-                            }
-                        }
-                    }
-                }, 1000);
             }
         }
 
-        function runPomodoroTimer() {
-            if(timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                if (!isPaused) {
-                    if (totalSeconds > 0) {
-                        totalSeconds--;
-                        if (currentMode === 'pomodoro-work') elapsedSecondsInSession++;
-                        updateDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        
-                        if (currentMode === 'pomodoro-work') {
-                            playChimeSound(); 
-                            saveStudyTimeAndSP(elapsedSecondsInSession);
-                            elapsedSecondsInSession = 0;
-
-                            document.body.classList.add('rest-mode-bg'); 
-                            document.getElementById('alarm-banner').innerText = 'おつかれさま！5分休憩してね';
-                            document.body.classList.add('cute-alarm-bg');
-                            document.getElementById('timer-box').classList.add('cute-poyo');
-                            document.getElementById('alarm-banner').style.display = 'block';
-                            
-                            setTimeout(() => {
-                                document.body.classList.remove('cute-alarm-bg');
-                                document.getElementById('timer-box').classList.remove('cute-poyo');
-                                document.getElementById('alarm-banner').style.display = 'none';
-                                
-                                currentMode = 'pomodoro-rest';
-                                totalSeconds = 5 * 60; 
-                                document.getElementById('timer-status').innerText = 'ポモドーロ：休憩タイム';
-                                updateDisplay(); runPomodoroTimer();
-                            }, 4000);
-                        } else {
-                            playChimeSound(); 
-                            document.body.classList.remove('rest-mode-bg'); 
-                            
-                            pomodoroCycle++;
-                            currentMode = 'pomodoro-work';
-                            totalSeconds = 25 * 60;
-                            document.getElementById('timer-status').innerText = 'ポモドーロ：集中タイム';
-                            document.getElementById('pomo-cycle').querySelector('span').innerText = pomodoroCycle;
-                            updateDisplay(); runPomodoroTimer();
-                        }
-                    }
-                }
-            }, 1000);
+        function deleteMockItem(id) {
+            if(confirm('この模試成績レコードを削除しますか？')) { appState.mockResults = appState.mockResults.filter(m => m.id !== id); saveState(); renderMockList(); renderScoreGraph(); renderJudgmentTimeline(); }
         }
 
-        function triggerAlarmEffect() {
-            playChimeSound(); 
-            document.getElementById('alarm-banner').innerText = 'おつかれさま！時間になりました';
-            document.body.classList.add('cute-alarm-bg');
-            document.getElementById('timer-box').classList.add('cute-poyo');
-            document.getElementById('alarm-banner').style.display = 'block';
-            setTimeout(() => { stopTimer(); }, 4000);
+        function resetMockForm() {
+            document.getElementById('editMockId').value = ""; document.getElementById('mockDate').value = ""; document.getElementById('customMockName').value = "";
+            document.getElementById('totalScore').value = ""; document.getElementById('totalFull').value = ""; document.getElementById('totalDev').value = "";
+            document.getElementById('mockNameSelect').value = "全統共テ模試"; document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('mockFormTitle').innerText = "校外模試成績および判定の自主記録";
+            for(let i=1; i<=3; i++) {
+                document.getElementById('judgeUniv'+i).value = i===1?'東京大学':''; document.getElementById('judgeDept'+i).value = i===1?'理科三類':''; document.getElementById('judgeRank'+i).value = '';
+            }
+            handleMockNameChange();
         }
 
-        function togglePause() {
-            isPaused = !isPaused;
-            document.getElementById('btn-pause').innerText = isPaused ? '再開する' : '一時停止';
+        function logout() {
+            document.getElementById('myPageBox').style.display = 'none'; document.getElementById('loginBox').style.display = 'block';
+            document.body.style.display = 'flex'; document.body.style.justifyContent = 'center'; document.body.style.alignItems = 'center';
+            document.getElementById('studentId').value = ''; document.getElementById('password').value = '';
+            document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show');
         }
 
-        function stopTimer() {
-            if (countdownInterval) clearInterval(countdownInterval);
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = null;
-            
-            saveStudyTimeAndSP(elapsedSecondsInSession);
-            elapsedSecondsInSession = 0;
-            document.body.classList.remove('rest-mode-bg'); 
-            changeScreen('screen-main');
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
+
+        function switchSection(sectionId, element) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.menu-link').forEach(lnk => lnk.classList.remove('active'));
+            document.getElementById('section-' + sectionId).classList.add('active');
+            element.classList.add('active'); document.getElementById('pageTitle').innerText = element.innerText;
+            toggleSidebar();
+        }
+
+        function sendAbsenceEmail() {
+            const reason = document.getElementById('absenceReason').value.trim(); if (!reason) { alert('詳細を入力してください。'); return; }
+            const bodyTemplate = `鉄緑会 医進会 事務局 御中\n\n塾生の柿原 拓真です。\n\n■欠席枠：${document.getElementById('absenceClass').value}\n■詳細理由：\n${reason}`;
+            window.location.href = `mailto:shenj0189@gmail.com?subject=${encodeURIComponent('【欠席連絡】鉄緑会 医進会')}&body=${encodeURIComponent(bodyTemplate)}`;
         }
     </script>
 </body>
